@@ -1,0 +1,225 @@
+{
+  "passed": [
+    {
+      "test": "ENV_FILE",
+      "status": "PASS",
+      "message": "Environment file exists",
+      "timestamp": "2025-08-20T17:11:06.386713",
+      "details": null
+    },
+    {
+      "test": "ENV_JWT_SECRET_KEY",
+      "status": "PASS",
+      "message": "JWT_SECRET_KEY is set",
+      "timestamp": "2025-08-20T17:11:06.386713",
+      "details": null
+    },
+    {
+      "test": "ENV_OAI_ENCRYPTION_SECRET",
+      "status": "PASS",
+      "message": "OAI_ENCRYPTION_SECRET is set",
+      "timestamp": "2025-08-20T17:11:06.386713",
+      "details": null
+    },
+    {
+      "test": "DB_TABLE_users",
+      "status": "PASS",
+      "message": "Table users exists",
+      "timestamp": "2025-08-20T17:11:06.389722",
+      "details": null
+    },
+    {
+      "test": "DB_TABLE_automations",
+      "status": "PASS",
+      "message": "Table automations exists",
+      "timestamp": "2025-08-20T17:11:06.390736",
+      "details": null
+    },
+    {
+      "test": "DB_TABLE_tickets",
+      "status": "PASS",
+      "message": "Table tickets exists",
+      "timestamp": "2025-08-20T17:11:06.390736",
+      "details": null
+    },
+    {
+      "test": "DB_TABLE_payments",
+      "status": "PASS",
+      "message": "Table payments exists",
+      "timestamp": "2025-08-20T17:11:06.390736",
+      "details": null
+    },
+    {
+      "test": "DB_CONNECTION",
+      "status": "PASS",
+      "message": "Database connection successful",
+      "timestamp": "2025-08-20T17:11:06.390736",
+      "details": null
+    },
+    {
+      "test": "IMPORT_fastapi",
+      "status": "PASS",
+      "message": "Module fastapi imported successfully",
+      "timestamp": "2025-08-20T17:11:06.922971",
+      "details": null
+    },
+    {
+      "test": "IMPORT_sqlalchemy",
+      "status": "PASS",
+      "message": "Module sqlalchemy imported successfully",
+      "timestamp": "2025-08-20T17:11:07.071732",
+      "details": null
+    },
+    {
+      "test": "IMPORT_pydantic",
+      "status": "PASS",
+      "message": "Module pydantic imported successfully",
+      "timestamp": "2025-08-20T17:11:07.071732",
+      "details": null
+    },
+    {
+      "test": "IMPORT_jwt",
+      "status": "PASS",
+      "message": "Module jwt imported successfully",
+      "timestamp": "2025-08-20T17:11:07.121402",
+      "details": null
+    },
+    {
+      "test": "IMPORT_bcrypt",
+      "status": "PASS",
+      "message": "Module bcrypt imported successfully",
+      "timestamp": "2025-08-20T17:11:07.121402",
+      "details": null
+    },
+    {
+      "test": "IMPORT_cryptography",
+      "status": "PASS",
+      "message": "Module cryptography imported successfully",
+      "timestamp": "2025-08-20T17:11:07.121402",
+      "details": null
+    },
+    {
+      "test": "IMPORT_requests",
+      "status": "PASS",
+      "message": "Module requests imported successfully",
+      "timestamp": "2025-08-20T17:11:07.122421",
+      "details": null
+    },
+    {
+      "test": "IMPORT_uvicorn",
+      "status": "PASS",
+      "message": "Module uvicorn imported successfully",
+      "timestamp": "2025-08-20T17:11:07.171750",
+      "details": null
+    },
+    {
+      "test": "IMPORT_LOCAL_database",
+      "status": "PASS",
+      "message": "Local module database imported successfully",
+      "timestamp": "2025-08-20T17:11:07.271393",
+      "details": null
+    },
+    {
+      "test": "IMPORT_LOCAL_models.user",
+      "status": "PASS",
+      "message": "Local module models.user imported successfully",
+      "timestamp": "2025-08-20T17:11:07.308690",
+      "details": null
+    },
+    {
+      "test": "IMPORT_LOCAL_utils.jwt",
+      "status": "PASS",
+      "message": "Local module utils.jwt imported successfully",
+      "timestamp": "2025-08-20T17:11:07.319862",
+      "details": null
+    },
+    {
+      "test": "IMPORT_LOCAL_utils.security",
+      "status": "PASS",
+      "message": "Local module utils.security imported successfully",
+      "timestamp": "2025-08-20T17:11:07.321873",
+      "details": null
+    },
+    {
+      "test": "IMPORT_LOCAL_routers.users",
+      "status": "PASS",
+      "message": "Local module routers.users imported successfully",
+      "timestamp": "2025-08-20T17:11:07.427700",
+      "details": null
+    },
+    {
+      "test": "JWT_SECRET",
+      "status": "PASS",
+      "message": "JWT secret key is properly configured",
+      "timestamp": "2025-08-20T17:11:07.427700",
+      "details": null
+    },
+    {
+      "test": "PASSWORD_HASHING",
+      "status": "PASS",
+      "message": "Password hashing works correctly",
+      "timestamp": "2025-08-20T17:11:07.855529",
+      "details": null
+    },
+    {
+      "test": "UPLOAD_DIR",
+      "status": "PASS",
+      "message": "Upload directory exists",
+      "timestamp": "2025-08-20T17:11:07.855529",
+      "details": null
+    },
+    {
+      "test": "DB_FILE",
+      "status": "PASS",
+      "message": "Database file exists",
+      "timestamp": "2025-08-20T17:11:07.855529",
+      "details": null
+    },
+    {
+      "test": "RATE_LIMITING",
+      "status": "PASS",
+      "message": "Rate limiting middleware is implemented",
+      "timestamp": "2025-08-20T17:11:11.940060",
+      "details": null
+    },
+    {
+      "test": "TRUSTED_HOST",
+      "status": "PASS",
+      "message": "Trusted host middleware is implemented",
+      "timestamp": "2025-08-20T17:11:11.942090",
+      "details": null
+    },
+    {
+      "test": "HARDCODED_SECRET",
+      "status": "PASS",
+      "message": "No hardcoded secrets found",
+      "timestamp": "2025-08-20T17:11:11.942090",
+      "details": null
+    },
+    {
+      "test": "FASTAPI_VERSION",
+      "status": "PASS",
+      "message": "FastAPI version: 0.104.1",
+      "timestamp": "2025-08-20T17:11:11.942090",
+      "details": null
+    },
+    {
+      "test": "SQLALCHEMY_VERSION",
+      "status": "PASS",
+      "message": "SQLAlchemy version: 2.0.23",
+      "timestamp": "2025-08-20T17:11:11.942090",
+      "details": null
+    }
+  ],
+  "failed": [],
+  "warnings": [
+    {
+      "test": "API_CONNECTION",
+      "status": "WARNING",
+      "message": "API server is not running (expected for testing)",
+      "timestamp": "2025-08-20T17:11:11.938479",
+      "details": null
+    }
+  ],
+  "critical": []
+}

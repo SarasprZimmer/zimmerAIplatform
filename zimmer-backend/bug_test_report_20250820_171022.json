@@ -1,0 +1,226 @@
+{
+  "passed": [
+    {
+      "test": "ENV_FILE",
+      "status": "PASS",
+      "message": "Environment file exists",
+      "timestamp": "2025-08-20T17:10:15.992532",
+      "details": null
+    },
+    {
+      "test": "DB_TABLE_users",
+      "status": "PASS",
+      "message": "Table users exists",
+      "timestamp": "2025-08-20T17:10:15.992532",
+      "details": null
+    },
+    {
+      "test": "DB_TABLE_automations",
+      "status": "PASS",
+      "message": "Table automations exists",
+      "timestamp": "2025-08-20T17:10:15.992532",
+      "details": null
+    },
+    {
+      "test": "DB_TABLE_tickets",
+      "status": "PASS",
+      "message": "Table tickets exists",
+      "timestamp": "2025-08-20T17:10:15.992532",
+      "details": null
+    },
+    {
+      "test": "DB_TABLE_payments",
+      "status": "PASS",
+      "message": "Table payments exists",
+      "timestamp": "2025-08-20T17:10:15.992532",
+      "details": null
+    },
+    {
+      "test": "DB_CONNECTION",
+      "status": "PASS",
+      "message": "Database connection successful",
+      "timestamp": "2025-08-20T17:10:15.992532",
+      "details": null
+    },
+    {
+      "test": "IMPORT_fastapi",
+      "status": "PASS",
+      "message": "Module fastapi imported successfully",
+      "timestamp": "2025-08-20T17:10:16.990924",
+      "details": null
+    },
+    {
+      "test": "IMPORT_sqlalchemy",
+      "status": "PASS",
+      "message": "Module sqlalchemy imported successfully",
+      "timestamp": "2025-08-20T17:10:17.429749",
+      "details": null
+    },
+    {
+      "test": "IMPORT_pydantic",
+      "status": "PASS",
+      "message": "Module pydantic imported successfully",
+      "timestamp": "2025-08-20T17:10:17.429749",
+      "details": null
+    },
+    {
+      "test": "IMPORT_jwt",
+      "status": "PASS",
+      "message": "Module jwt imported successfully",
+      "timestamp": "2025-08-20T17:10:17.581293",
+      "details": null
+    },
+    {
+      "test": "IMPORT_bcrypt",
+      "status": "PASS",
+      "message": "Module bcrypt imported successfully",
+      "timestamp": "2025-08-20T17:10:17.581293",
+      "details": null
+    },
+    {
+      "test": "IMPORT_cryptography",
+      "status": "PASS",
+      "message": "Module cryptography imported successfully",
+      "timestamp": "2025-08-20T17:10:17.581293",
+      "details": null
+    },
+    {
+      "test": "IMPORT_requests",
+      "status": "PASS",
+      "message": "Module requests imported successfully",
+      "timestamp": "2025-08-20T17:10:17.581293",
+      "details": null
+    },
+    {
+      "test": "IMPORT_uvicorn",
+      "status": "PASS",
+      "message": "Module uvicorn imported successfully",
+      "timestamp": "2025-08-20T17:10:17.810912",
+      "details": null
+    },
+    {
+      "test": "IMPORT_LOCAL_database",
+      "status": "PASS",
+      "message": "Local module database imported successfully",
+      "timestamp": "2025-08-20T17:10:18.105513",
+      "details": null
+    },
+    {
+      "test": "IMPORT_LOCAL_models.user",
+      "status": "PASS",
+      "message": "Local module models.user imported successfully",
+      "timestamp": "2025-08-20T17:10:18.189730",
+      "details": null
+    },
+    {
+      "test": "IMPORT_LOCAL_utils.jwt",
+      "status": "PASS",
+      "message": "Local module utils.jwt imported successfully",
+      "timestamp": "2025-08-20T17:10:18.207491",
+      "details": null
+    },
+    {
+      "test": "IMPORT_LOCAL_utils.security",
+      "status": "PASS",
+      "message": "Local module utils.security imported successfully",
+      "timestamp": "2025-08-20T17:10:18.210567",
+      "details": null
+    },
+    {
+      "test": "IMPORT_LOCAL_routers.users",
+      "status": "PASS",
+      "message": "Local module routers.users imported successfully",
+      "timestamp": "2025-08-20T17:10:18.289023",
+      "details": null
+    },
+    {
+      "test": "JWT_SECRET",
+      "status": "PASS",
+      "message": "JWT secret key is properly configured",
+      "timestamp": "2025-08-20T17:10:18.289023",
+      "details": null
+    },
+    {
+      "test": "PASSWORD_HASHING",
+      "status": "PASS",
+      "message": "Password hashing works correctly",
+      "timestamp": "2025-08-20T17:10:18.704566",
+      "details": null
+    },
+    {
+      "test": "UPLOAD_DIR",
+      "status": "PASS",
+      "message": "Upload directory exists",
+      "timestamp": "2025-08-20T17:10:18.706359",
+      "details": null
+    },
+    {
+      "test": "DB_FILE",
+      "status": "PASS",
+      "message": "Database file exists",
+      "timestamp": "2025-08-20T17:10:18.706359",
+      "details": null
+    },
+    {
+      "test": "RATE_LIMITING",
+      "status": "PASS",
+      "message": "Rate limiting middleware is implemented",
+      "timestamp": "2025-08-20T17:10:22.794863",
+      "details": null
+    },
+    {
+      "test": "TRUSTED_HOST",
+      "status": "PASS",
+      "message": "Trusted host middleware is implemented",
+      "timestamp": "2025-08-20T17:10:22.794863",
+      "details": null
+    },
+    {
+      "test": "FASTAPI_VERSION",
+      "status": "PASS",
+      "message": "FastAPI version: 0.104.1",
+      "timestamp": "2025-08-20T17:10:22.794863",
+      "details": null
+    },
+    {
+      "test": "SQLALCHEMY_VERSION",
+      "status": "PASS",
+      "message": "SQLAlchemy version: 2.0.23",
+      "timestamp": "2025-08-20T17:10:22.794863",
+      "details": null
+    }
+  ],
+  "failed": [],
+  "warnings": [
+    {
+      "test": "API_CONNECTION",
+      "status": "WARNING",
+      "message": "API server is not running (expected for testing)",
+      "timestamp": "2025-08-20T17:10:22.794863",
+      "details": null
+    }
+  ],
+  "critical": [
+    {
+      "test": "ENV_JWT_SECRET_KEY",
+      "status": "CRITICAL",
+      "message": "JWT_SECRET_KEY is not set",
+      "timestamp": "2025-08-20T17:10:15.992532",
+      "details": null
+    },
+    {
+      "test": "ENV_OAI_ENCRYPTION_SECRET",
+      "status": "CRITICAL",
+      "message": "OAI_ENCRYPTION_SECRET is not set",
+      "timestamp": "2025-08-20T17:10:15.992532",
+      "details": null
+    },
+    {
+      "test": "HARDCODED_SECRET",
+      "status": "CRITICAL",
+      "message": "Hardcoded secret found in JWT config",
+      "timestamp": "2025-08-20T17:10:22.794863",
+      "details": null
+    }
+  ]
+}
