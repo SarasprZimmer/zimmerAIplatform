@@ -51,7 +51,6 @@ sudo apt-get install -y \
     redis-server \
     nginx \
     nodejs \
-    npm \
     build-essential \
     libpq-dev \
     git \
@@ -87,17 +86,17 @@ sudo mkdir -p /opt/zimmer
 sudo chown $USER:$USER /opt/zimmer
 
 # 7. Clone repository (if not already present)
-if [ ! -d "/opt/zimmer/zimmer-platform-final" ]; then
+if [ ! -d "/home/zimmer/zimmerAIplatform" ]; then
     print_status "Cloning repository..."
     cd /opt/zimmer
-    git clone https://github.com/SarasprZimmer/zimmer-platform-final.git
+    # git clone https://github.com/SarasprZimmer/zimmer-platform-final.git
 else
     print_status "Repository already exists, updating..."
-    cd /opt/zimmer/zimmer-platform-final
+    cd /home/zimmer/zimmerAIplatform
     git pull origin main
 fi
 
-cd /opt/zimmer/zimmer-platform-final
+cd /home/zimmer/zimmerAIplatform
 
 print_success "Repository ready"
 

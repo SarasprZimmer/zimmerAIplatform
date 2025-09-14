@@ -26,7 +26,7 @@ export default function KBMonitoringDebug() {
   const testAPI = async () => {
     try {
       console.log('🔍 Testing API call...');
-      const res = await fetch('${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_BASE_URL || "https://api.zimmerai.com"}/api/admin/kb-status', {
+      const res = await fetch('${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_BASE_URL || "https://193.162.129.243:8000"}/api/admin/kb-status', {
         headers: {
           'Authorization': `Bearer ${authClient.getAccessToken()}`,
           'Content-Type': 'application/json'

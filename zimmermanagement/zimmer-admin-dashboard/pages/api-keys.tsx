@@ -91,7 +91,7 @@ const APIKeysPage: React.FC = () => {
 
   const fetchKeys = async () => {
     try {
-      let url = `${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_BASE_URL || "https://api.zimmerai.com"}/api/admin/list`;
+      let url = `${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_BASE_URL || "https://193.162.129.243:8000"}/api/admin/list`;
       const params = new URLSearchParams();
       if (filterAutomation) params.append('automation_id', filterAutomation.toString());
       if (filterStatus) params.append('status', filterStatus);
@@ -123,7 +123,7 @@ const APIKeysPage: React.FC = () => {
 
   const fetchAutomations = async () => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_BASE_URL || "https://api.zimmerai.com"}/api/admin/automations`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_BASE_URL || "https://193.162.129.243:8000"}/api/admin/automations`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (response.ok) {
@@ -139,7 +139,7 @@ const APIKeysPage: React.FC = () => {
 
   const handleCreate = async () => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_BASE_URL || "https://api.zimmerai.com"}/api/admin/`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_BASE_URL || "https://193.162.129.243:8000"}/api/admin/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -166,7 +166,7 @@ const APIKeysPage: React.FC = () => {
     if (!selectedKey) return;
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_BASE_URL || "https://api.zimmerai.com"}/api/admin/keys/${selectedKey.id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_BASE_URL || "https://193.162.129.243:8000"}/api/admin/keys/${selectedKey.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -194,7 +194,7 @@ const APIKeysPage: React.FC = () => {
     if (!selectedKey) return;
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_BASE_URL || "https://api.zimmerai.com"}/api/admin/keys/${selectedKey.id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_BASE_URL || "https://193.162.129.243:8000"}/api/admin/keys/${selectedKey.id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -214,7 +214,7 @@ const APIKeysPage: React.FC = () => {
 
   const handleStatusUpdate = async (keyId: number, status: string) => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_BASE_URL || "https://api.zimmerai.com"}/api/admin/keys/${keyId}/status`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_BASE_URL || "https://193.162.129.243:8000"}/api/admin/keys/${keyId}/status`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -239,7 +239,7 @@ const APIKeysPage: React.FC = () => {
     setTestResult(null);
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_BASE_URL || "https://api.zimmerai.com"}/api/admin/keys/${keyId}/test`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_BASE_URL || "https://193.162.129.243:8000"}/api/admin/keys/${keyId}/test`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` }
       });

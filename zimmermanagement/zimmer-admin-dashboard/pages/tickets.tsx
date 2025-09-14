@@ -480,7 +480,7 @@ export default function Tickets() {
                   {selectedTicket.attachment_path && (
                     <div className="mb-4">
                       <a 
-                        href={`${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_BASE_URL || "https://api.zimmerai.com"}/api/tickets/${selectedTicket.id}/attachment`}
+                        href={`${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_BASE_URL || "https://193.162.129.243:8000"}/api/tickets/${selectedTicket.id}/attachment`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-2 text-sm text-blue-600 hover:text-blue-800"

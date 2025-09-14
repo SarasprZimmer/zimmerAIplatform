@@ -18,7 +18,7 @@ export default function SecurityPage() {
   }
 
   useEffect(() => {
-    fetchCsrf(process.env.NEXT_PUBLIC_API_BASE_URL || process.env.NEXT_PUBLIC_API_URL || "https://api.zimmerai.com");
+    fetchCsrf(process.env.NEXT_PUBLIC_API_BASE_URL || process.env.NEXT_PUBLIC_API_URL || "https://193.162.129.243:8000");
     loadStatus();
   }, []);
 

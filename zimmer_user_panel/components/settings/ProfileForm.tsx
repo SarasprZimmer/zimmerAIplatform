@@ -27,7 +27,7 @@ export default function ProfileForm(){
     if(!name?.trim()){ setMsg("نام را وارد کنید."); return; }
     setBusy(true); setMsg(null);
     try{
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_BASE_URL || "https://api.zimmerai.com"}/api/user/profile`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_BASE_URL || "https://193.162.129.243:8000"}/api/user/profile`, {
         method: "PUT",
         headers: { 
           "Content-Type": "application/json",

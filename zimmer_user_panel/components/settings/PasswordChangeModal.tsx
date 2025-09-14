@@ -44,7 +44,7 @@ export default function PasswordChangeModal({
     setBusy(true);
     setMsg(null);
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_BASE_URL || "https://api.zimmerai.com"}/api/auth/send-password-reset-code`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_BASE_URL || "https://193.162.129.243:8000"}/api/auth/send-password-reset-code`, {
         method: "POST",
         headers: { 
           "Content-Type": "application/json",
@@ -114,7 +114,7 @@ export default function PasswordChangeModal({
         };
       }
       
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_BASE_URL || "https://api.zimmerai.com"}/api/user/password`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_BASE_URL || "https://193.162.129.243:8000"}/api/user/password`, {
         method: "POST",
         headers: { 
           "Content-Type": "application/json",

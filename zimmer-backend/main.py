@@ -208,8 +208,8 @@ from routers.admin.kb_monitoring_simple import router as kb_monitoring_simple_ro
 app.include_router(kb_monitoring_simple_router, prefix="/api/admin", tags=["kb-monitoring-simple"])
 from routers.admin.kb_history import router as kb_history_router
 app.include_router(kb_history_router, prefix="/api/admin", tags=["kb-history"])
-from routers.admin.backups import router as backups_router
-app.include_router(backups_router, prefix="/api/admin", tags=["backups"])
+# from routers.admin.backups import router as backups_router
+# app.include_router(backups_router, prefix="/api/admin", tags=["backups"])
 from routers.admin.kb_templates import router as kb_templates_router
 app.include_router(kb_templates_router, prefix="/api/admin", tags=["kb-templates"])
 from routers.admin.automation_integrations import router as automation_integrations_router
