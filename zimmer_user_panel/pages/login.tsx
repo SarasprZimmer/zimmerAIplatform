@@ -10,7 +10,7 @@ import { Toast } from '@/components/Toast'
 
 // Google Login Button Component
 function GoogleLoginButton() {
-  const api = process.env.NEXT_PUBLIC_API_BASE_URL || process.env.NEXT_PUBLIC_API_URL || "https://193.162.129.243:8000";
+  const api = process.env.NEXT_PUBLIC_API_BASE_URL || process.env.NEXT_PUBLIC_API_URL || "http://193.162.129.243:8000";
   const href = `${api}/api/auth/google/login`;
   
   return (
@@ -45,7 +45,7 @@ export default function LoginPage() {
     if (isAuthenticated) {
       router.push('/dashboard')
     }
-    fetchCsrf(process.env.NEXT_PUBLIC_API_BASE_URL || process.env.NEXT_PUBLIC_API_URL || "https://193.162.129.243:8000");
+    fetchCsrf(process.env.NEXT_PUBLIC_API_BASE_URL || process.env.NEXT_PUBLIC_API_URL || "http://193.162.129.243:8000");
   }, [isAuthenticated, router])
 
 

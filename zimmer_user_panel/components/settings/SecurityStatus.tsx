@@ -35,7 +35,7 @@ export default function SecurityStatus(){
     setBusy(true); 
     setNote(null);
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_BASE_URL || "https://193.162.129.243:8000"}/api/auth/send-email-verification`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_BASE_URL || "http://193.162.129.243:8000"}/api/auth/send-email-verification`, {
         method: "POST",
         headers: { 
           "Content-Type": "application/json",
@@ -66,7 +66,7 @@ export default function SecurityStatus(){
     setBusy(true);
     setNote(null);
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_BASE_URL || "https://193.162.129.243:8000"}/api/auth/verify-email`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_BASE_URL || "http://193.162.129.243:8000"}/api/auth/verify-email`, {
         method: "POST",
         headers: { 
           "Content-Type": "application/json",

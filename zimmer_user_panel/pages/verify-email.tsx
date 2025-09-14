@@ -12,7 +12,7 @@ export default function VerifyEmailPage() {
     if (!token) { setState("error"); setMsg("توکن تأیید یافت نشد."); return; }
     (async () => {
       try {
-        const res = await fetch((process.env.NEXT_PUBLIC_API_BASE_URL || process.env.NEXT_PUBLIC_API_URL || "https://193.162.129.243:8000") + "/api/auth/verify-email", {
+        const res = await fetch((process.env.NEXT_PUBLIC_API_BASE_URL || process.env.NEXT_PUBLIC_API_URL || "http://193.162.129.243:8000") + "/api/auth/verify-email", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           credentials: "include",

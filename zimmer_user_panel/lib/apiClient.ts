@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { getAccessToken, setAccessToken } from "./authClient";
 import { getCsrfToken, fetchCsrf } from "./csrf";
 
-const API = process.env.NEXT_PUBLIC_API_BASE_URL || process.env.NEXT_PUBLIC_API_URL || "https://193.162.129.243:8000";
+const API = process.env.NEXT_PUBLIC_API_BASE_URL || process.env.NEXT_PUBLIC_API_URL || "http://193.162.129.243:8000";
 
 async function refreshAccessToken(): Promise<boolean> {
   const res = await fetch(`${API}/api/auth/refresh`, {
