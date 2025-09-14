@@ -57,3 +57,10 @@ email-validator
 
 # JWT
 PyJWT
+
+# 2FA (Two-Factor Authentication)
+pyotp==2.9.0
+
+# Email functionality
+fastapi-mail==1.4.1
+jinja2==3.1.2
