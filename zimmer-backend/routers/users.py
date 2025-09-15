@@ -595,7 +595,7 @@ async def get_user_automations(
         
         # Format response
         automations = []
-        for ua, name, description, pricing_type, price_per_token, status in user_automations:
+        for ua, name, description, pricing_type, price_per_token, automation_status in user_automations:
             automations.append({
                 "id": ua.id,
                 "automation_id": ua.automation_id,
