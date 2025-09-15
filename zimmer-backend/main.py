@@ -51,6 +51,8 @@ configure_cors(app, allowed_origins=[
     "http://127.0.0.1:4000", 
     "http://localhost:8000",  # Backend dev (localhost)
     "http://127.0.0.1:8000",  # Backend dev (127.0.0.1)
+    "http://193.162.129.243:3000",  # User panel production
+    "http://193.162.129.243:4000",  # Admin panel production
     "https://zimmerai.com",   # Production
     "https://admin.zimmerai.com",  # Production admin
 ])
