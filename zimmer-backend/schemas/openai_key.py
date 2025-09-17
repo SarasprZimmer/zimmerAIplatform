@@ -1,3 +1,4 @@
+from pydantic import BaseModel, ConfigDict
 from pydantic import BaseModel, Field
 from typing import Optional
 from datetime import datetime
@@ -36,8 +37,7 @@ class OpenAIKeyOut(BaseModel):
     updated_at: datetime
     masked_key: str = Field(..., description="Masked API key for display")
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class OpenAIKeyUsageOut(BaseModel):
     id: int
@@ -53,8 +53,7 @@ class OpenAIKeyUsageOut(BaseModel):
     error_message: Optional[str]
     created_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class OpenAIKeyTestResponse(BaseModel):
     success: bool

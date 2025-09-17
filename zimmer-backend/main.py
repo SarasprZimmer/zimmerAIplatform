@@ -427,32 +427,3 @@ async def list_api_keys(current_user: User = Depends(get_current_user_dependency
     }
 
 
-@app.get("/api/admin/backups")
-async def get_backups(current_user: User = Depends(get_current_user_dependency)):
-    """Get backup list for admin"""
-    if not current_user.is_admin:
-        raise HTTPException(status_code=403, detail="Admin access required")
-    
-    # Return a simple response for now
-    return {
-        "backups": [],
-        "total": 0
-    }
-
-@app.get("/api/admin/backups/stats")
-async def get_backup_stats(current_user: User = Depends(get_current_user_dependency)):
-    """Get backup statistics for admin"""
-    if not current_user.is_admin:
-        raise HTTPException(status_code=403, detail="Admin access required")
-    
-    # Return a simple response for now
-    return {
-        "total_backups": 0,
-        "last_backup": None,
-        "total_size": 0
-    }
-
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
-

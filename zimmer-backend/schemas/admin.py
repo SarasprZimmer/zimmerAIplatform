@@ -1,3 +1,4 @@
+from pydantic import BaseModel, ConfigDict
 from pydantic import BaseModel
 from typing import List, Optional
 from datetime import datetime
@@ -19,8 +20,7 @@ class UserAutomationAdminResponse(BaseModel):
     status: str
     created_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class PaymentResponse(BaseModel):
     id: int
@@ -33,8 +33,7 @@ class PaymentResponse(BaseModel):
     status: str
     created_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class PaymentListResponse(BaseModel):
     total_count: int
@@ -49,8 +48,7 @@ class TokenUsageResponse(BaseModel):
     description: Optional[str]
     created_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class UserTokenUsageResponse(BaseModel):
     user_id: int
@@ -77,5 +75,4 @@ class UsageStatsResponse(BaseModel):
     message: Optional[str] = None
     error: Optional[str] = None
 
-    class Config:
-        from_attributes = True 
+    model_config = ConfigDict(from_attributes=True) 

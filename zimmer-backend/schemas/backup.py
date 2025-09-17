@@ -1,3 +1,4 @@
+from pydantic import BaseModel, ConfigDict
 from pydantic import BaseModel
 from datetime import datetime
 from typing import Optional
@@ -12,8 +13,7 @@ class BackupLogOut(BaseModel):
     status: BackupStatus
     verified: bool
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class BackupTriggerResponse(BaseModel):
     success: bool

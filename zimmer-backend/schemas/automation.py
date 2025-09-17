@@ -1,4 +1,5 @@
 from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict
 from typing import Optional
 from datetime import datetime
 from models.automation import PricingType

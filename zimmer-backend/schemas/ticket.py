@@ -1,3 +1,4 @@
+from pydantic import BaseModel, ConfigDict
 from pydantic import BaseModel, validator
 from typing import Optional, List
 from datetime import datetime
@@ -50,8 +51,7 @@ class TicketOut(BaseModel):
     user_name: Optional[str] = None
     assigned_admin_name: Optional[str] = None
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class TicketListResponse(BaseModel):
     total_count: int

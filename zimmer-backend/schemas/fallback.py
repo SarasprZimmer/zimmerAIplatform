@@ -1,3 +1,4 @@
+from pydantic import BaseModel, ConfigDict
 from pydantic import BaseModel
 from typing import List, Optional
 from datetime import datetime
@@ -11,8 +12,7 @@ class FallbackLogResponse(BaseModel):
     timestamp: datetime
     user_automation_id: int
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class FallbacksResponse(BaseModel):
     total_count: int

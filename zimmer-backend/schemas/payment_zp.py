@@ -1,3 +1,4 @@
+from pydantic import ConfigDict
 """
 Payment schemas for Zarinpal integration
 """
@@ -57,4 +58,4 @@ class PaymentOut(BaseModel):
     status: str
     discount_code: Optional[str] = None
     discount_percent: Optional[int] = None
-    class Config: orm_mode = True
+    model_config = ConfigDict(from_attributes=True)

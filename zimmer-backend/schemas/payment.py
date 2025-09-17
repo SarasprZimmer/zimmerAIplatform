@@ -1,3 +1,4 @@
+from pydantic import BaseModel, ConfigDict
 """
 Payment schemas for Zimmer AI Platform
 """
@@ -53,8 +54,7 @@ class PaymentResponse(BaseModel):
     discount_code: Optional[str] = None
     discount_percent: Optional[int] = None
     
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class PaymentHistoryResponse(BaseModel):
     payments: list[PaymentResponse]

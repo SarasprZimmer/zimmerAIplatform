@@ -1,3 +1,4 @@
+from pydantic import BaseModel, ConfigDict
 from pydantic import BaseModel, Field
 from typing import Optional, List, Any
 from datetime import datetime
@@ -12,8 +13,7 @@ class NotificationOut(BaseModel):
     created_at: datetime
     read_at: Optional[datetime] = None
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class MarkReadIn(BaseModel):
     ids: List[int] = Field(default_factory=list)

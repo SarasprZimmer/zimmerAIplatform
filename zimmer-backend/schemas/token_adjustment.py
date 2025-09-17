@@ -1,3 +1,4 @@
+from pydantic import BaseModel, ConfigDict
 from pydantic import BaseModel, Field
 from typing import Optional
 from datetime import datetime
@@ -25,8 +26,7 @@ class TokenAdjustmentOut(BaseModel):
     related_payment_id: Optional[int]
     created_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class TokenAdjustmentListResponse(BaseModel):

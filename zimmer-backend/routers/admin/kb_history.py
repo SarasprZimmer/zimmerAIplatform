@@ -1,3 +1,4 @@
+from pydantic import BaseModel, ConfigDict
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
 from sqlalchemy import and_, desc
@@ -23,8 +24,7 @@ class KBHistoryResponse(BaseModel):
     error_logs: Optional[List[str]]
     timestamp: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class KBHistoryStats(BaseModel):
     total_records: int

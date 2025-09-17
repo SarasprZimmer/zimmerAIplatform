@@ -1,3 +1,4 @@
+from pydantic import BaseModel, ConfigDict
 from pydantic import BaseModel, EmailStr, validator
 from typing import Optional
 from datetime import datetime
@@ -85,8 +86,7 @@ class UserResponse(BaseModel):
     is_active: bool
     created_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class UserAutomationCreate(BaseModel):
     automation_id: int
@@ -127,8 +127,7 @@ class UserAutomationResponse(BaseModel):
     status: str
     created_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class UserDashboardResponse(BaseModel):
     user: UserResponse
@@ -217,8 +216,7 @@ class UserListResponse(BaseModel):
     is_active: bool
     created_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class UserSettingsResponse(BaseModel):
     """User settings response model"""
@@ -234,5 +232,4 @@ class UserSettingsResponse(BaseModel):
     last_login: Optional[datetime] = None
     preferences: Optional[dict] = None
 
-    class Config:
-        from_attributes = True 
+    model_config = ConfigDict(from_attributes=True) 

@@ -1,3 +1,4 @@
+from pydantic import ConfigDict
 from pydantic import BaseModel, Field, conint
 from typing import List, Optional
 from datetime import datetime
@@ -22,7 +23,7 @@ class DiscountCodeOut(BaseModel):
     max_redemptions: Optional[int]
     per_user_limit: Optional[int]
     automation_ids: List[int]
-    class Config: from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class DiscountValidateIn(BaseModel):
     code: str

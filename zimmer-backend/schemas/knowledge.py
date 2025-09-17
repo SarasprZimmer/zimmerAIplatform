@@ -1,3 +1,4 @@
+from pydantic import BaseModel, ConfigDict
 from pydantic import BaseModel, validator
 from typing import List, Optional
 from datetime import datetime
@@ -23,8 +24,7 @@ class KnowledgeOut(BaseModel):
     created_at: datetime
     client_name: str
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class KnowledgeListResponse(BaseModel):
     total_count: int
