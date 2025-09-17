@@ -61,7 +61,7 @@ export default function Backups() {
       if (filters.from_date) params.append('from_date', filters.from_date);
       if (filters.to_date) params.append('to_date', filters.to_date);
       
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_BASE_URL || "https://193.162.129.243:8000"}/api/admin/backups?${params}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://193.162.129.243:8000"}/api/admin/backups?${params}`, {
         headers: {
           'Authorization': `Bearer ${authClient.getAccessToken()}`,
           'Content-Type': 'application/json'
@@ -85,7 +85,7 @@ export default function Backups() {
 
   const fetchStats = async () => {
     try {
-      const res = await fetch('${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_BASE_URL || "https://193.162.129.243:8000"}/api/admin/backups/stats', {
+      const res = await fetch('${process.env.NEXT_PUBLIC_API_URL || "http://193.162.129.243:8000"}/api/admin/backups/stats', {
         headers: {
           'Authorization': `Bearer ${authClient.getAccessToken()}`,
           'Content-Type': 'application/json'
@@ -109,7 +109,7 @@ export default function Backups() {
     setTriggering(true);
     setError('');
     try {
-      const res = await fetch('${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_BASE_URL || "https://193.162.129.243:8000"}/api/admin/backups/trigger', {
+      const res = await fetch('${process.env.NEXT_PUBLIC_API_URL || "http://193.162.129.243:8000"}/api/admin/backups/trigger', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${authClient.getAccessToken()}`,
@@ -141,7 +141,7 @@ export default function Backups() {
 
   const verifyBackup = async (backupId: number) => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_BASE_URL || "https://193.162.129.243:8000"}/api/admin/backups/verify/${backupId}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://193.162.129.243:8000"}/api/admin/backups/verify/${backupId}`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${authClient.getAccessToken()}`,
@@ -173,7 +173,7 @@ export default function Backups() {
     setCleaning(true);
     setError('');
     try {
-      const res = await fetch('${process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_BASE_URL || "https://193.162.129.243:8000"}/api/admin/backups/cleanup?retention_days=7', {
+      const res = await fetch('${process.env.NEXT_PUBLIC_API_URL || "http://193.162.129.243:8000"}/api/admin/backups/cleanup?retention_days=7', {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${authClient.getAccessToken()}`,

@@ -20,7 +20,7 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
       try {
         // If we have an access token, assume it's valid for now
         // The backend will reject requests if the token is invalid
-        if (authClient.isAuthenticated()) {
+        if (isAuthenticated) {
           console.log('Token exists, assuming valid for now')
           setAuthChecking(false)
           return

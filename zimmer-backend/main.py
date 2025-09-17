@@ -53,6 +53,7 @@ configure_cors(app, allowed_origins=[
     "http://127.0.0.1:8000",  # Backend dev (127.0.0.1)
     "http://193.162.129.243:3000",  # User panel production
     "http://193.162.129.243:4000",  # Admin panel production
+    "http://173.234.25.122:4000",  # Admin panel external access
     "https://zimmerai.com",   # Production
     "https://admin.zimmerai.com",  # Production admin
 ])
@@ -401,3 +402,52 @@ async def test_gpt(request: TestGPTRequest):
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
+@app.get("/api/auth/me")
+async def get_current_user(current_user: User = Depends(get_current_user_dependency)):
+    """Get current user information"""
+    return {
+        "id": current_user.id,
+        "email": current_user.email,
+        "name": current_user.name,
+        "is_admin": current_user.is_admin
+    }
+
+
+@app.get("/api/admin/list")
+async def list_api_keys(current_user: User = Depends(get_current_user_dependency)):
+    """List API keys for admin"""
+    if not current_user.is_admin:
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    # Return a simple response for now
+    return {
+        "keys": [],
+        "total": 0
+    }
+
+
+@app.get("/api/admin/backups")
+async def get_backups(current_user: User = Depends(get_current_user_dependency)):
+    """Get backup list for admin"""
+    if not current_user.is_admin:
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    # Return a simple response for now
+    return {
+        "backups": [],
+        "total": 0
+    }
+
+@app.get("/api/admin/backups/stats")
+async def get_backup_stats(current_user: User = Depends(get_current_user_dependency)):
+    """Get backup statistics for admin"""
+    if not current_user.is_admin:
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    # Return a simple response for now
+    return {
+        "total_backups": 0,
+        "last_backup": None,
+        "total_size": 0
+    }
+

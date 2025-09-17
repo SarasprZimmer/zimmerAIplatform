@@ -55,6 +55,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       const data = await authAPI.signup(email, password, name)
       setUser(data.user)
+      authClient.setAccessToken(data.access_token)
       router.push('/')
     } catch (error) {
       console.error('Signup error:', error)
@@ -68,6 +69,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const data = await authAPI.login(email, password)
       console.log('Login successful, setting user:', data.user)
       setUser(data.user)
+      authClient.setAccessToken(data.access_token)
       router.push('/')
     } catch (error) {
       console.error('Login error:', error)
@@ -80,6 +82,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       const data = await authAPI.refreshToken()
       setUser(data.user)
+      authClient.setAccessToken(data.access_token)
     } catch (error) {
       console.error('Token refresh error:', error)
       // Clear auth state on refresh failure
@@ -109,14 +112,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     const initializeAuth = async () => {
       try {
-        // Check if we have an access token
-        if (authClient.isAuthenticated()) {
-          // Don't try to validate token on startup - just assume it's valid
-          // The user will be redirected to login if the token is invalid
-          console.log('Token exists, skipping validation on startup')
-          console.log('Current user state:', user)
+        // Check if we have an access token in localStorage
+        const token = authClient.getAccessToken()
+        if (token) {
+          console.log('Token found in localStorage, validating...')
+          // Try to refresh the token to validate it
+          await refreshToken()
         } else {
-          // No token exists, user needs to login
           console.log('No token found, user needs to login')
         }
       } catch (error) {
@@ -135,7 +137,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     return () => {
       stopKeepAlive()
     }
-  }, [isHydrated, user])
+  }, [isHydrated])
 
   // Auto-hide expired message after 5 seconds
   useEffect(() => {
@@ -160,14 +162,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   return (
     <AuthContext.Provider value={value}>
       {children}
-      
+
       {/* Expired session banner */}
       {showExpiredMessage && (
         <div className="fixed top-0 left-0 right-0 z-50 bg-red-600 text-white p-4 text-center">
           <div className="flex items-center justify-center gap-2">
             <span>⚠️</span>
             <span>نشست شما منقضی شده است. لطفاً دوباره وارد شوید.</span>
-            <button 
+            <button
               onClick={() => setShowExpiredMessage(false)}
               className="text-white hover:text-gray-200 ml-2"
             >
@@ -178,4 +180,4 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       )}
     </AuthContext.Provider>
   )
-} 
+}
