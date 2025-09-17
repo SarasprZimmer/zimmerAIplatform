@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import Layout from '../components/Layout';
+import React, { useEffect, useState } from `react`;
+import Layout from `../components/Layout`;
 // Removed deprecated authenticatedFetch import
-import { useAuth } from '../contexts/AuthContext';
-import { authClient } from '../lib/auth-client';
+import { useAuth } from `../contexts/AuthContext`;
+import { authClient } from `../lib/auth-client`;
 
 interface BackupLog {
   id: number;
   backup_date: string;
   file_name: string;
   file_size: number;
-  status: 'success' | 'failed';
+  status: `success` | `failed`;
   storage_location: string;
   verified: boolean;
   created_at: string;
@@ -25,8 +25,8 @@ interface BackupStats {
 }
 
 const statusConfig = {
-  success: { color: 'text-green-600', bg: 'bg-green-100', icon: '🟢', label: 'موفق' },
-  failed: { color: 'text-red-600', bg: 'bg-red-100', icon: '🔴', label: 'ناموفق' }
+  success: { color: `text-green-600`, bg: `bg-green-100`, icon: `🟢`, label: `موفق` },
+  failed: { color: `text-red-600`, bg: `bg-red-100`, icon: `🔴`, label: `ناموفق` }
 };
 
 export default function Backups() {
@@ -35,11 +35,11 @@ export default function Backups() {
   const [loading, setLoading] = useState(true);
   const [triggering, setTriggering] = useState(false);
   const [cleaning, setCleaning] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState(``);
   const [filters, setFilters] = useState({
-    status: '',
-    from_date: '',
-    to_date: ''
+    status: ``,
+    from_date: ``,
+    to_date: ``
   });
   const { user, isLoading } = useAuth();
 
@@ -54,17 +54,17 @@ export default function Backups() {
 
   const fetchBackups = async () => {
     setLoading(true);
-    setError('');
+    setError(``);
     try {
       const params = new URLSearchParams();
-      if (filters.status) params.append('status_filter', filters.status);
-      if (filters.from_date) params.append('from_date', filters.from_date);
-      if (filters.to_date) params.append('to_date', filters.to_date);
+      if (filters.status) params.append(`status_filter`, filters.status);
+      if (filters.from_date) params.append(`from_date`, filters.from_date);
+      if (filters.to_date) params.append(`to_date`, filters.to_date);
       
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://193.162.129.243:8000"}/api/admin/backups?${params}`, {
         headers: {
-          'Authorization': `Bearer ${authClient.getAccessToken()}`,
-          'Content-Type': 'application/json'
+          `Authorization`: `Bearer ${authClient.getAccessToken()}`,
+          `Content-Type`: `application/json`
         }
       });
       
@@ -76,8 +76,8 @@ export default function Backups() {
       const data = await res.json();
       setBackups(data || []);
     } catch (err) {
-      console.error('Error fetching backups:', err);
-      setError('خطا در بارگذاری بکاپ‌ها.');
+      console.error(`Error fetching backups:`, err);
+      setError(`خطا در بارگذاری بکاپ‌ها.`);
     } finally {
       setLoading(false);
     }
@@ -87,8 +87,8 @@ export default function Backups() {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://193.162.129.243:8000"}/api/admin/backups/stats`, {
         headers: {
-          'Authorization': `Bearer ${authClient.getAccessToken()}`,
-          'Content-Type': 'application/json'
+          `Authorization`: `Bearer ${authClient.getAccessToken()}`,
+          `Content-Type`: `application/json`
         }
       });
       
@@ -97,23 +97,23 @@ export default function Backups() {
         setStats(data);
       }
     } catch (err) {
-      console.error('Error fetching stats:', err);
+      console.error(`Error fetching stats:`, err);
     }
   };
 
   const triggerBackup = async () => {
-    if (!confirm('آیا مطمئن هستید که می‌خواهید بکاپ جدید ایجاد کنید؟')) {
+    if (!confirm(`آیا مطمئن هستید که می‌خواهید بکاپ جدید ایجاد کنید؟`)) {
       return;
     }
     
     setTriggering(true);
-    setError('');
+    setError(``);
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://193.162.129.243:8000"}/api/admin/backups/trigger`, {
-        method: 'POST',
+        method: `POST`,
         headers: {
-          'Authorization': `Bearer ${authClient.getAccessToken()}`,
-          'Content-Type': 'application/json'
+          `Authorization`: `Bearer ${authClient.getAccessToken()}`,
+          `Content-Type`: `application/json`
         }
       });
       
@@ -123,7 +123,7 @@ export default function Backups() {
       }
       
       const data = await res.json();
-      showToast(data.message, data.status === 'success' ? 'success' : 'error');
+      showToast(data.message, data.status === `success` ? `success` : `error`);
       
       // Refresh data
       setTimeout(() => {
@@ -131,9 +131,9 @@ export default function Backups() {
         fetchStats();
       }, 2000);
     } catch (err) {
-      console.error('Error triggering backup:', err);
-      setError('خطا در ایجاد بکاپ.');
-      showToast('خطا در ایجاد بکاپ', 'error');
+      console.error(`Error triggering backup:`, err);
+      setError(`خطا در ایجاد بکاپ.`);
+      showToast(`خطا در ایجاد بکاپ`, `error`);
     } finally {
       setTriggering(false);
     }
@@ -142,10 +142,10 @@ export default function Backups() {
   const verifyBackup = async (backupId: number) => {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://193.162.129.243:8000"}/api/admin/backups/verify/${backupId}`, {
-        method: 'POST',
+        method: `POST`,
         headers: {
-          'Authorization': `Bearer ${authClient.getAccessToken()}`,
-          'Content-Type': 'application/json'
+          `Authorization`: `Bearer ${authClient.getAccessToken()}`,
+          `Content-Type`: `application/json`
         }
       });
       
@@ -154,30 +154,30 @@ export default function Backups() {
         throw new Error(`خطا در تایید بکاپ: ${res.status} ${errorText}`);
       }
       
-      showToast('بکاپ با موفقیت تایید شد', 'success');
+      showToast(`بکاپ با موفقیت تایید شد`, `success`);
       
       // Refresh data
       fetchBackups();
       fetchStats();
     } catch (err) {
-      console.error('Error verifying backup:', err);
-      showToast('خطا در تایید بکاپ', 'error');
+      console.error(`Error verifying backup:`, err);
+      showToast(`خطا در تایید بکاپ`, `error`);
     }
   };
 
   const cleanupBackups = async () => {
-    if (!confirm('آیا مطمئن هستید که می‌خواهید بکاپ‌های قدیمی را پاک کنید؟')) {
+    if (!confirm(`آیا مطمئن هستید که می‌خواهید بکاپ‌های قدیمی را پاک کنید؟`)) {
       return;
     }
     
     setCleaning(true);
-    setError('');
+    setError(``);
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://193.162.129.243:8000"}/api/admin/backups/cleanup?retention_days=7`, {
-        method: 'DELETE',
+        method: `DELETE`,
         headers: {
-          'Authorization': `Bearer ${authClient.getAccessToken()}`,
-          'Content-Type': 'application/json'
+          `Authorization`: `Bearer ${authClient.getAccessToken()}`,
+          `Content-Type`: `application/json`
         }
       });
       
@@ -187,15 +187,15 @@ export default function Backups() {
       }
       
       const data = await res.json();
-      showToast(data.message, 'success');
+      showToast(data.message, `success`);
       
       // Refresh data
       fetchBackups();
       fetchStats();
     } catch (err) {
-      console.error('Error cleaning up backups:', err);
-      setError('خطا در پاکسازی بکاپ‌ها.');
-      showToast('خطا در پاکسازی', 'error');
+      console.error(`Error cleaning up backups:`, err);
+      setError(`خطا در پاکسازی بکاپ‌ها.`);
+      showToast(`خطا در پاکسازی`, `error`);
     } finally {
       setCleaning(false);
     }
@@ -209,10 +209,10 @@ export default function Backups() {
     fetchBackups();
   };
 
-  const showToast = (message: string, type: 'success' | 'error') => {
-    const toast = document.createElement('div');
+  const showToast = (message: string, type: `success` | `error`) => {
+    const toast = document.createElement(`div`);
     toast.className = `fixed top-4 right-4 z-50 px-6 py-3 rounded-lg text-white font-medium ${
-      type === 'success' ? 'bg-green-500' : 'bg-red-500'
+      type === `success` ? `bg-green-500` : `bg-red-500`
     }`;
     toast.textContent = message;
     document.body.appendChild(toast);
@@ -225,18 +225,18 @@ export default function Backups() {
   const formatDate = (dateString: string) => {
     try {
       const date = new Date(dateString);
-      return date.toLocaleString('fa-IR');
+      return date.toLocaleString(`fa-IR`);
     } catch {
-      return 'نامشخص';
+      return `نامشخص`;
     }
   };
 
   const formatFileSize = (bytes: number) => {
-    if (bytes === 0) return '0 بایت';
+    if (bytes === 0) return `0 بایت`;
     const k = 1024;
-    const sizes = ['بایت', 'کیلوبایت', 'مگابایت', 'گیگابایت'];
+    const sizes = [`بایت`, `کیلوبایت`, `مگابایت`, `گیگابایت`];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ` ` + sizes[i];
   };
 
   const getStatusDisplay = (status: string) => {
@@ -420,7 +420,7 @@ export default function Backups() {
               <label className="block text-xs font-medium text-gray-700 mb-1">وضعیت</label>
               <select
                 value={filters.status}
-                onChange={(e) => handleFilterChange('status', e.target.value)}
+                onChange={(e) => handleFilterChange(`status`, e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
               >
                 <option value="">همه</option>
@@ -433,7 +433,7 @@ export default function Backups() {
               <input
                 type="date"
                 value={filters.from_date}
-                onChange={(e) => handleFilterChange('from_date', e.target.value)}
+                onChange={(e) => handleFilterChange(`from_date`, e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
               />
             </div>
@@ -442,7 +442,7 @@ export default function Backups() {
               <input
                 type="date"
                 value={filters.to_date}
-                onChange={(e) => handleFilterChange('to_date', e.target.value)}
+                onChange={(e) => handleFilterChange(`to_date`, e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
               />
             </div>
@@ -519,7 +519,7 @@ export default function Backups() {
                         {formatFileSize(backup.file_size)}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {backup.storage_location === 'local' ? 'محلی' : backup.storage_location}
+                        {backup.storage_location === `local` ? `محلی` : backup.storage_location}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         {backup.verified ? (
@@ -535,7 +535,7 @@ export default function Backups() {
                         )}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        {!backup.verified && backup.status === 'success' && (
+                        {!backup.verified && backup.status === `success` && (
                           <button
                             onClick={() => verifyBackup(backup.id)}
                             className="text-blue-600 hover:text-blue-900 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded-md text-xs"
