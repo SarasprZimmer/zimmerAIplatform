@@ -18,11 +18,20 @@ NAMING_CONVENTION = {
 metadata = MetaData(naming_convention=NAMING_CONVENTION)
 Base = declarative_base(metadata=metadata)
 
-# Get DATABASE_URL from environment, fallback to SQLite for development
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./dev.db")
-if DATABASE_URL is None or DATABASE_URL.strip() == "":
-    DATABASE_URL = "sqlite:///./dev.db"
-    print("⚠️  No DATABASE_URL found in .env, using SQLite for development")
+# Get DATABASE_URL from environment
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+# Check if we're in production mode
+ENVIRONMENT = os.getenv("ENVIRONMENT", "development")
+
+if not DATABASE_URL:
+    if ENVIRONMENT == "production":
+        raise ValueError("DATABASE_URL is required for production environment")
+    else:
+        DATABASE_URL = "sqlite:///./dev.db"
+        print("⚠️  No DATABASE_URL found in .env, using SQLite for development")
+elif ENVIRONMENT == "production" and not DATABASE_URL.startswith("postgresql"):
+    raise ValueError("Production environment requires PostgreSQL database")
 
 # Configure engine with highly optimized connection pooling
 if DATABASE_URL.startswith("sqlite"):
@@ -46,19 +55,38 @@ if DATABASE_URL.startswith("sqlite"):
         pool_reset_on_return='commit'
     )
 else:
-    # PostgreSQL configuration - highly optimized for performance
-    engine = create_engine(
-        DATABASE_URL,
-        poolclass=QueuePool,
-        pool_size=3,  # Further reduced pool size
-        max_overflow=5,  # Further reduced overflow
-        pool_pre_ping=True,
-        pool_recycle=900,  # 15 minutes recycle (faster)
-        future=True,
-        echo=False,
-        pool_timeout=10,  # Faster timeout
-        pool_reset_on_return='commit'
-    )
+    # PostgreSQL configuration - optimized for production
+    if ENVIRONMENT == "production":
+        # Production PostgreSQL configuration
+        engine = create_engine(
+            DATABASE_URL,
+            poolclass=QueuePool,
+            pool_size=10,  # Production pool size
+            max_overflow=20,  # Production overflow
+            pool_pre_ping=True,
+            pool_recycle=3600,  # 1 hour recycle
+            future=True,
+            echo=False,
+            pool_timeout=30,  # Production timeout
+            pool_reset_on_return='commit',
+            connect_args={
+                "options": "-c default_transaction_isolation=read_committed"
+            }
+        )
+    else:
+        # Development PostgreSQL configuration
+        engine = create_engine(
+            DATABASE_URL,
+            poolclass=QueuePool,
+            pool_size=3,  # Smaller pool for development
+            max_overflow=5,  # Smaller overflow for development
+            pool_pre_ping=True,
+            pool_recycle=900,  # 15 minutes recycle
+            future=True,
+            echo=False,
+            pool_timeout=10,  # Faster timeout for development
+            pool_reset_on_return='commit'
+        )
 
 SessionLocal = sessionmaker(
     bind=engine, 

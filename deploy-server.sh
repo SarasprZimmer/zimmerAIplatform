@@ -171,6 +171,46 @@ else
     print_status ".env file already exists"
 fi
 
+# 8.3. Setup database
+print_status "Setting up PostgreSQL database..."
+
+# Install additional PostgreSQL tools
+sudo apt-get install -y postgresql-client
+
+# Make database setup script executable
+chmod +x zimmer-backend/setup_database.py
+
+# Run database setup
+cd zimmer-backend
+if python3 setup_database.py; then
+    print_success "Database setup completed"
+else
+    print_error "Database setup failed"
+    print_status "Trying manual database setup..."
+    
+    # Manual database setup as fallback
+    sudo -u postgres psql -c "CREATE DATABASE zimmer;" 2>/dev/null || print_warning "Database 'zimmer' may already exist"
+    sudo -u postgres psql -c "CREATE USER zimmer WITH PASSWORD 'zimmer';" 2>/dev/null || print_warning "User 'zimmer' may already exist"
+    sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE zimmer TO zimmer;"
+    
+    # Run migrations
+    if alembic upgrade head; then
+        print_success "Database migrations completed"
+    else
+        print_error "Database migrations failed"
+    fi
+fi
+
+# Run additional database migration check
+print_status "Running database migration verification..."
+if python3 migrate_database.py; then
+    print_success "Database migration verification completed"
+else
+    print_warning "Database migration verification failed, but continuing"
+fi
+
+cd ..
+
 # 9. Setup frontend applications
 print_status "Setting up frontend applications..."
 
