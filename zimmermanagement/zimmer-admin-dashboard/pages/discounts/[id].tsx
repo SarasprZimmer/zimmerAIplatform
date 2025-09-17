@@ -43,7 +43,7 @@ export default function EditDiscount() {
   async function handleSubmit(data: DiscountPayload) {
     setSubmitting(true);
     try {
-      await adminAPI.updateDiscount(parseInt(id as string), data);
+      await adminAPI.updateDiscount(id as string, data);
       router.push("/discounts");
     } catch (error) {
       console.error('Error updating discount:', error);

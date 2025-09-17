@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 import { useAuth } from '../contexts/AuthContext';
 
 export default function Signup() {
@@ -107,12 +108,12 @@ export default function Signup() {
           </div>
 
           <div className="text-center">
-            <a
+            <Link
               href="/login"
               className="font-medium text-blue-600 hover:text-blue-500"
             >
               قبلاً حساب کاربری دارید؟ وارد شوید
-            </a>
+            </Link>
           </div>
         </form>
       </div>

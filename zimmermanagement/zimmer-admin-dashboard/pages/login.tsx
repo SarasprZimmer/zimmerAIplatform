@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
+import Link from 'next/link'
 import { useAuth } from '../contexts/AuthContext'
 
 export default function Login() {
@@ -115,12 +116,12 @@ export default function Login() {
           </div>
 
           <div className="text-center space-y-2">
-            <a
+            <Link
               href="/forgot-password"
               className="font-medium text-blue-600 hover:text-blue-500 block"
             >
               فراموشی رمز عبور
-            </a>
+            </Link>
             <p className="text-gray-600 text-sm">
               برای ایجاد حساب کاربری با مدیر سیستم تماس بگیرید
             </p>

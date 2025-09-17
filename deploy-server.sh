@@ -207,6 +207,14 @@ else
             print_error "Database migrations failed"
         fi
     fi
+    
+    # Fix database permissions
+    print_status "Fixing database permissions..."
+    if python3 fix_database_permissions.py; then
+        print_success "Database permissions fixed"
+    else
+        print_warning "Database permission fix failed, but continuing"
+    fi
 fi
 
 # Run additional database migration check
