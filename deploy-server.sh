@@ -88,15 +88,14 @@ sudo chown $USER:$USER /opt/zimmer
 # 7. Clone repository (if not already present)
 if [ ! -d "/home/zimmer/zimmerAIplatform" ]; then
     print_status "Cloning repository..."
-    cd /opt/zimmer
-    # git clone https://github.com/SarasprZimmer/zimmer-platform-final.git
+    cd /home/zimmer
+    git clone https://github.com/SarasprZimmer/zimmerAIplatform.git
+    cd zimmerAIplatform
 else
     print_status "Repository already exists, updating..."
     cd /home/zimmer/zimmerAIplatform
     git pull origin main
 fi
-
-cd /home/zimmer/zimmerAIplatform
 
 print_success "Repository ready"
 
@@ -108,6 +107,69 @@ pip install --upgrade pip
 pip install -r zimmer-backend/requirements.txt
 
 print_success "Python environment configured"
+
+# 8.1. Fix backend startup issues
+print_status "Applying backend fixes..."
+
+# Ensure main.py has uvicorn startup code
+if ! grep -q "if __name__ == \"__main__\":" zimmer-backend/main.py; then
+    print_status "Adding uvicorn startup code to main.py..."
+    echo "" >> zimmer-backend/main.py
+    echo "if __name__ == \"__main__\":" >> zimmer-backend/main.py
+    echo "    import uvicorn" >> zimmer-backend/main.py
+    echo "    uvicorn.run(app, host=\"0.0.0.0\", port=8000)" >> zimmer-backend/main.py
+fi
+
+# Test backend import
+print_status "Testing backend import..."
+if python3 -c "from zimmer-backend.main import app; print('Backend import successful')" 2>/dev/null; then
+    print_success "Backend import test passed"
+else
+    print_warning "Backend import test failed, but continuing with deployment"
+fi
+
+print_success "Backend fixes applied"
+
+# 8.2. Setup environment variables
+print_status "Setting up environment variables..."
+
+# Create .env file for backend if it doesn't exist
+if [ ! -f "zimmer-backend/.env" ]; then
+    print_status "Creating .env file for backend..."
+    cat > zimmer-backend/.env << EOF
+# JWT Configuration
+JWT_SECRET_KEY=your-super-secret-jwt-key-here-change-this-in-production
+JWT_ALGORITHM=HS256
+JWT_ACCESS_TOKEN_EXPIRE_MINUTES=30
+
+# Database Configuration
+DATABASE_URL=postgresql+psycopg2://zimmer:zimmer@localhost:5432/zimmer
+
+# Redis Configuration
+REDIS_URL=redis://localhost:6379
+
+# Application Configuration
+DEBUG=false
+ENVIRONMENT=production
+REQUIRE_VERIFIED_EMAIL_FOR_LOGIN=false
+
+# CORS Configuration
+ALLOWED_ORIGINS=http://193.162.129.243:3000,http://193.162.129.243:4000,http://localhost:3000,http://localhost:4000
+
+# External Services
+OPENAI_API_KEY=your-openai-api-key-here
+ZIMMER_SERVICE_TOKEN=your-service-token-here
+
+# Email Configuration (optional)
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USERNAME=your-email@gmail.com
+SMTP_PASSWORD=your-app-password
+EOF
+    print_success ".env file created"
+else
+    print_status ".env file already exists"
+fi
 
 # 9. Setup frontend applications
 print_status "Setting up frontend applications..."
@@ -137,11 +199,16 @@ print_status "Setting file permissions..."
 chmod +x ecosystem.config.js
 chmod +x deploy-server.sh
 
-# 12. Start services with PM2
+# 12. Stop any existing PM2 processes
+print_status "Stopping any existing PM2 processes..."
+pm2 stop all 2>/dev/null || true
+pm2 delete all 2>/dev/null || true
+
+# 13. Start services with PM2
 print_status "Starting services with PM2..."
 pm2 start ecosystem.config.js
 
-# 13. Save PM2 configuration
+# 14. Save PM2 configuration
 print_status "Saving PM2 configuration..."
 pm2 save
 pm2 startup
@@ -161,11 +228,20 @@ pm2 status
 # Test endpoints
 print_status "Testing service endpoints..."
 
-# Test backend
+# Test backend health
 if curl -s http://localhost:8000/health > /dev/null; then
     print_success "Backend API is responding"
+    
+    # Test backup endpoints (should return authentication required, which is expected)
+    if curl -s http://localhost:8000/api/admin/backups | grep -q "Authentication required"; then
+        print_success "Backup endpoints are working (authentication required)"
+    else
+        print_warning "Backup endpoints may not be working properly"
+    fi
 else
     print_error "Backend API is not responding"
+    print_status "Checking backend logs..."
+    pm2 logs zimmer-backend --lines 10
 fi
 
 # Test user panel
@@ -173,6 +249,8 @@ if curl -s http://localhost:3000 > /dev/null; then
     print_success "User Panel is responding"
 else
     print_error "User Panel is not responding"
+    print_status "Checking user panel logs..."
+    pm2 logs zimmer-user-panel --lines 10
 fi
 
 # Test admin dashboard
@@ -180,6 +258,8 @@ if curl -s http://localhost:4000 > /dev/null; then
     print_success "Admin Dashboard is responding"
 else
     print_error "Admin Dashboard is not responding"
+    print_status "Checking admin dashboard logs..."
+    pm2 logs zimmer-admin-dashboard --lines 10
 fi
 
 # Test database connection
@@ -203,5 +283,21 @@ echo "  pm2 logs            - View all logs"
 echo "  pm2 logs [app-name] - View specific app logs"
 echo "  pm2 restart all     - Restart all services"
 echo "  pm2 stop all        - Stop all services"
+echo ""
+echo "🔧 Troubleshooting:"
+echo "  If backend fails to start:"
+echo "    - Check logs: pm2 logs zimmer-backend"
+echo "    - Test import: cd zimmer-backend && python3 -c 'from main import app'"
+echo "    - Restart: pm2 restart zimmer-backend"
+echo ""
+echo "  If frontend fails to build:"
+echo "    - Check Node.js version: node --version"
+echo "    - Reinstall dependencies: npm install"
+echo "    - Rebuild: npm run build"
+echo ""
+echo "  If services are not responding:"
+echo "    - Check PM2 status: pm2 status"
+echo "    - Check system resources: htop"
+echo "    - Check port usage: netstat -tlnp | grep :8000"
 echo ""
 print_success "Zimmer Platform is ready for production! 🚀"
