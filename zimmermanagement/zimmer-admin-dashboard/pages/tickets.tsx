@@ -68,7 +68,7 @@ export default function Tickets() {
   const handleAssignTicket = async (ticketId: number, adminId: number) => {
     setUpdating(true);
     try {
-      await adminAPI.updateTicket(parseInt(ticketId.toString()), { assigned_to: adminId });
+      await adminAPI.updateTicket(ticketId.toString(), { assigned_to: adminId });
       fetchTickets(); // Refresh the list
     } catch (err) {
       console.error('Error assigning ticket:', err);
@@ -82,7 +82,7 @@ export default function Tickets() {
     
     setUpdating(true);
     try {
-      await adminAPI.updateTicket(parseInt(ticketId.toString()), { message: replyMessage });
+      await adminAPI.updateTicket(ticketId.toString(), { message: replyMessage });
       setReplyMessage('');
       fetchTickets(); // Refresh the list
     } catch (err) {
@@ -97,7 +97,7 @@ export default function Tickets() {
     
     setUpdating(true);
     try {
-      await adminAPI.deleteTicket(parseInt(ticketId.toString()));
+      await adminAPI.deleteTicket(ticketId.toString());
       fetchTickets(); // Refresh the list
     } catch (err) {
       console.error('Error deleting ticket:', err);

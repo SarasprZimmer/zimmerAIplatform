@@ -68,7 +68,7 @@ export default function Users() {
 
   const handleUpdateUser = async (userId: number, updateData: Partial<User>) => {
     try {
-      await adminAPI.updateUser(parseInt(userId.toString()), updateData);
+      await adminAPI.updateUser(userId.toString(), updateData);
       setEditingUser(null);
       fetchUsers();
     } catch (error) {
@@ -80,7 +80,7 @@ export default function Users() {
     if (!confirm('Are you sure you want to delete this user?')) return;
     
     try {
-      await adminAPI.deleteUser(parseInt(userId.toString()));
+      await adminAPI.deleteUser(userId.toString());
       fetchUsers();
     } catch (error) {
       console.error('Error deleting user:', error);
