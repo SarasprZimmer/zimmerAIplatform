@@ -215,6 +215,14 @@ else
     else
         print_warning "Database permission fix failed, but continuing"
     fi
+    
+    # Fix table ownership
+    print_status "Fixing table ownership..."
+    if python3 fix_table_ownership.py; then
+        print_success "Table ownership fixed"
+    else
+        print_warning "Table ownership fix failed, but continuing"
+    fi
 fi
 
 # Run additional database migration check
