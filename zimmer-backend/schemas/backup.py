@@ -16,9 +16,9 @@ class BackupLogOut(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 class BackupTriggerResponse(BaseModel):
-    success: bool
     message: str
     backup_id: Optional[int] = None
+    status: str
 
 class BackupCleanupResponse(BaseModel):
     deleted_count: int
