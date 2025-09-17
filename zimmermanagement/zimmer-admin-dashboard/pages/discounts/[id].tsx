@@ -29,7 +29,7 @@ export default function EditDiscount() {
 
   async function fetchDiscount() {
     try {
-      const data = await adminAPI.getDiscounts({ id: id as string });
+      const data = await adminAPI.getDiscount(id as string);
       if (data.discounts && data.discounts.length > 0) {
         setDiscount(data.discounts[0]);
       }
@@ -43,7 +43,7 @@ export default function EditDiscount() {
   async function handleSubmit(data: DiscountPayload) {
     setSubmitting(true);
     try {
-      await adminAPI.updateDiscount(id as string, data);
+      await adminAPI.updateDiscount(parseInt(id as string), data);
       router.push("/discounts");
     } catch (error) {
       console.error('Error updating discount:', error);

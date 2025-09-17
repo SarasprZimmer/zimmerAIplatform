@@ -44,7 +44,7 @@ export default function UserAutomations() {
     try {
       setLoading(true);
       // Get all user automations - we'll filter by user if needed
-      const data = await adminAPI.getUserAutomations('all', {});
+      const data = await adminAPI.getUserAutomations({});
       setUserAutomations(data.user_automations || []);
     } catch (error) {
       console.error('Error fetching user automations:', error);
@@ -67,9 +67,9 @@ export default function UserAutomations() {
 
     setAdjustingTokens(true);
     try {
-      await tokenAdjustmentAPI.adjustTokens({
+      await tokenAdjustmentAPI.postTokenAdjust({
         user_automation_id: selectedUserAutomation.id,
-        amount: parseInt(adjustmentAmount),
+        delta_tokens: parseInt(adjustmentAmount),
         reason: adjustmentReason
       });
       
