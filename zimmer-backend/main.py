@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from database import Base, engine
@@ -17,6 +17,10 @@ load_dotenv()
 from utils.security_headers import SecurityHeadersMiddleware, configure_cors
 from utils.csrf import CSRFMiddleware
 from utils.rate_limit import RateLimitMiddleware
+
+# Import auth dependencies
+from models.user import User
+from utils.auth_dependency import get_current_user as get_current_user_dependency
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -399,9 +403,6 @@ async def test_gpt(request: TestGPTRequest):
     except Exception as e:
         return {"error": f"GPT test failed: {str(e)}"} 
 
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
 @app.get("/api/auth/me")
 async def get_current_user(current_user: User = Depends(get_current_user_dependency)):
     """Get current user information"""
@@ -450,4 +451,8 @@ async def get_backup_stats(current_user: User = Depends(get_current_user_depende
         "last_backup": None,
         "total_size": 0
     }
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
 
