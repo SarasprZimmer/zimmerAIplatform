@@ -56,7 +56,7 @@ export default function Tickets() {
   const handleStatusChange = async (ticketId: number, newStatus: string) => {
     setUpdating(true);
     try {
-      await adminAPI.updateTicket(parseInt(ticketId.toString()), { status: newStatus });
+      await adminAPI.updateTicket(ticketId.toString(), { status: newStatus });
       fetchTickets(); // Refresh the list
     } catch (err) {
       console.error('Error updating ticket status:', err);
