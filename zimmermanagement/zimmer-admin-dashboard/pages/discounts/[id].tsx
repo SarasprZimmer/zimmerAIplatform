@@ -29,7 +29,7 @@ export default function EditDiscount() {
 
   async function fetchDiscount() {
     try {
-      const data = await adminAPI.getDiscount(id as string);
+      const data = await adminAPI.getDiscounts();
       if (data.discounts && data.discounts.length > 0) {
         setDiscount(data.discounts[0]);
       }

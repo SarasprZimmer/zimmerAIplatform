@@ -193,11 +193,19 @@ else
     sudo -u postgres psql -c "CREATE USER zimmer WITH PASSWORD 'zimmer';" 2>/dev/null || print_warning "User 'zimmer' may already exist"
     sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE zimmer TO zimmer;"
     
-    # Run migrations
-    if alembic upgrade head; then
-        print_success "Database migrations completed"
+    # Fix migration issues if tables already exist
+    print_status "Fixing database migration issues..."
+    if python3 fix_database_migration.py; then
+        print_success "Database migration issues fixed"
     else
-        print_error "Database migrations failed"
+        print_warning "Database migration fix failed, trying direct migration..."
+        
+        # Try to run migrations directly
+        if alembic upgrade head; then
+            print_success "Database migrations completed"
+        else
+            print_error "Database migrations failed"
+        fi
     fi
 fi
 
