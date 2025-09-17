@@ -427,3 +427,8 @@ async def list_api_keys(current_user: User = Depends(get_current_user_dependency
     }
 
 
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
+
+

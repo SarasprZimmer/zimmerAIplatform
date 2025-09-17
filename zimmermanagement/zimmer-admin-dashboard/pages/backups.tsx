@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from `react`;
-import Layout from `../components/Layout`;
+import React, { useEffect, useState } from 'react';
+import Layout from '../components/Layout';
 // Removed deprecated authenticatedFetch import
-import { useAuth } from `../contexts/AuthContext`;
-import { authClient } from `../lib/auth-client`;
+import { useAuth } from '../contexts/AuthContext';
+import { authClient } from '../lib/auth-client';
 
 interface BackupLog {
   id: number;
@@ -63,8 +63,8 @@ export default function Backups() {
       
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://193.162.129.243:8000"}/api/admin/backups?${params}`, {
         headers: {
-          `Authorization`: `Bearer ${authClient.getAccessToken()}`,
-          `Content-Type`: `application/json`
+          'Authorization': `Bearer ${authClient.getAccessToken()}`,
+          'Content-Type': 'application/json'
         }
       });
       
@@ -87,8 +87,8 @@ export default function Backups() {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://193.162.129.243:8000"}/api/admin/backups/stats`, {
         headers: {
-          `Authorization`: `Bearer ${authClient.getAccessToken()}`,
-          `Content-Type`: `application/json`
+          'Authorization': `Bearer ${authClient.getAccessToken()}`,
+          'Content-Type': 'application/json'
         }
       });
       
@@ -112,8 +112,8 @@ export default function Backups() {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://193.162.129.243:8000"}/api/admin/backups/trigger`, {
         method: `POST`,
         headers: {
-          `Authorization`: `Bearer ${authClient.getAccessToken()}`,
-          `Content-Type`: `application/json`
+          'Authorization': `Bearer ${authClient.getAccessToken()}`,
+          'Content-Type': 'application/json'
         }
       });
       
@@ -144,8 +144,8 @@ export default function Backups() {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://193.162.129.243:8000"}/api/admin/backups/verify/${backupId}`, {
         method: `POST`,
         headers: {
-          `Authorization`: `Bearer ${authClient.getAccessToken()}`,
-          `Content-Type`: `application/json`
+          'Authorization': `Bearer ${authClient.getAccessToken()}`,
+          'Content-Type': 'application/json'
         }
       });
       
@@ -176,8 +176,8 @@ export default function Backups() {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://193.162.129.243:8000"}/api/admin/backups/cleanup?retention_days=7`, {
         method: `DELETE`,
         headers: {
-          `Authorization`: `Bearer ${authClient.getAccessToken()}`,
-          `Content-Type`: `application/json`
+          'Authorization': `Bearer ${authClient.getAccessToken()}`,
+          'Content-Type': 'application/json'
         }
       });
       
