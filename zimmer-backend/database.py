@@ -70,7 +70,7 @@ else:
             pool_timeout=30,  # Production timeout
             pool_reset_on_return='commit',
             connect_args={
-                "options": "-c default_transaction_isolation=read_committed"
+                "options": "-c default_transaction_isolation='read committed'"
             }
         )
     else:
