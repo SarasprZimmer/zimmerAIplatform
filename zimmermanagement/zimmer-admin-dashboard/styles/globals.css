@@ -77,12 +77,12 @@
 
 @layer base {
   html {
-    font-family: 'Farhang2', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: 'Farhang2', 'Vazirmatn', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     scroll-behavior: smooth;
   }
   
   body {
-    font-family: 'Farhang2', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: 'Farhang2', 'Vazirmatn', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     background-color: #fafafa;
     color: #1a1a1a;
     line-height: 1.7;
@@ -93,7 +93,7 @@
 
   /* Typography Scale */
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Farhang2', serif;
+    font-family: 'Farhang2', 'Vazirmatn', serif;
     font-weight: 600;
     line-height: 1.3;
     color: #1a1a1a;
