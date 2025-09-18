@@ -38,11 +38,6 @@ if DATABASE_URL.startswith("sqlite"):
     # SQLite configuration - highly optimized for performance
     engine = create_engine(
         DATABASE_URL,
-        connect_args={
-            "check_same_thread": False,
-            "timeout": 10,  # Reduced timeout for faster failure detection
-            "isolation_level": None  # Autocommit mode for better performance
-        },
         poolclass=QueuePool,
         pool_size=3,  # Further reduced pool size for SQLite
         max_overflow=5,  # Further reduced overflow
@@ -69,9 +64,6 @@ else:
             echo=False,
             pool_timeout=30,  # Production timeout
             pool_reset_on_return='commit',
-            connect_args={
-                "options": "-c default_transaction_isolation=read_committed"
-            }
         )
     else:
         # Development PostgreSQL configuration
