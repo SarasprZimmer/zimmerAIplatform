@@ -27,7 +27,7 @@ export default function Dashboard() {
     console.log('Dashboard useEffect - user:', user);
     console.log('Dashboard useEffect - isAuthenticated:', isAuthenticated);
     console.log('Dashboard useEffect - authClient token:', authClient.getAccessToken());
-    
+
     if (user && isAuthenticated) {
       fetchDashboardData();
     } else if (!isAuthenticated) {
@@ -54,18 +54,53 @@ export default function Dashboard() {
         return;
       }
 
-      // Fetch dashboard data here
-      // For now, just set some mock data
+      // Fetch real dashboard data from API
+      const [dashboardRes, usageRes, paymentsRes] = await Promise.all([
+        fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://api.zimmerai.com'}/api/admin/dashboard`, {
+          headers: { Authorization: `Bearer ${token}` }
+        }),
+        fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://api.zimmerai.com'}/api/admin/usage/stats`, {
+          headers: { Authorization: `Bearer ${token}` }
+        }),
+        fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://api.zimmerai.com'}/api/admin/payments`, {
+          headers: { Authorization: `Bearer ${token}` }
+        })
+      ]);
+
+      const dashboardData = await dashboardRes.json();
+      const usageData = await usageRes.json();
+      const paymentsData = await paymentsRes.json();
+
+      console.log('Dashboard API Response:', dashboardData);
+      console.log('Usage API Response:', usageData);
+      console.log('Payments API Response:', paymentsData);
+
+      // Calculate monthly revenue from payments
+      const monthlyRevenue = paymentsData.payments?.reduce((sum: number, payment: any) => {
+        const paymentDate = new Date(payment.created_at || payment.date);
+        const currentDate = new Date();
+        const isThisMonth = paymentDate.getMonth() === currentDate.getMonth() && 
+                           paymentDate.getFullYear() === currentDate.getFullYear();
+        return isThisMonth ? sum + (payment.amount || 0) : sum;
+      }, 0) || 0;
+
       setStats({
-        total_users: 10,
-        active_tickets: 5,
-        tokens_used: 1000,
-        monthly_revenue: 5000
+        total_users: dashboardData.data?.total_users || 0,
+        active_tickets: dashboardData.data?.total_tickets || 0,
+        tokens_used: usageData.total_tokens_used || 0,
+        monthly_revenue: monthlyRevenue
       });
-      
+
       setLoading(false);
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
+      // Set fallback data on error
+      setStats({
+        total_users: 0,
+        active_tickets: 0,
+        tokens_used: 0,
+        monthly_revenue: 0
+      });
       setLoading(false);
     }
   };
@@ -84,7 +119,7 @@ export default function Dashboard() {
     <Layout title="Dashboard">
       <div className="space-y-6">
         <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-        
+
         {stats && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div className="bg-white overflow-hidden shadow rounded-lg">
@@ -104,7 +139,7 @@ export default function Dashboard() {
                 </div>
               </div>
             </div>
-            
+
             <div className="bg-white overflow-hidden shadow rounded-lg">
               <div className="p-5">
                 <div className="flex items-center">
@@ -122,7 +157,7 @@ export default function Dashboard() {
                 </div>
               </div>
             </div>
-            
+
             <div className="bg-white overflow-hidden shadow rounded-lg">
               <div className="p-5">
                 <div className="flex items-center">
@@ -140,7 +175,7 @@ export default function Dashboard() {
                 </div>
               </div>
             </div>
-            
+
             <div className="bg-white overflow-hidden shadow rounded-lg">
               <div className="p-5">
                 <div className="flex items-center">

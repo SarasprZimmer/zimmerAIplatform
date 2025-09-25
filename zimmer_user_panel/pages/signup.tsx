@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/router";
@@ -23,7 +23,7 @@ export default function SignupPage() {
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('🔐 Signup: Starting signup process...');
+    console.log('�� Signup: Starting signup process...');
     setLoading(true);
     setError("");
 
@@ -35,10 +35,10 @@ export default function SignupPage() {
 
     try {
       console.log('🔐 Signup: Calling signup API...');
-      await signup(email, password, name);
-      console.log('🔐 Signup: Signup successful!');
+      await signup(email, password, name, confirmPassword);
+      console.log('�� Signup: Signup successful!');
     } catch (err: any) {
-      console.error('🔐 Signup: Signup failed:', err);
+      console.error('�� Signup: Signup failed:', err);
       setError(err.message || "خطا در ثبت نام. لطفاً دوباره تلاش کنید");
     } finally {
       console.log('🔐 Signup: Setting loading to false');

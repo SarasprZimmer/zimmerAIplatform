@@ -67,7 +67,7 @@ export default function TokenAdjustments() {
 
   const fetchUserAutomations = async () => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://193.162.129.243:8000"}/api/admin/user-automations`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://api.zimmerai.com"}/api/admin/user-automations`, {
         headers: {
           'Authorization': `Bearer ${authClient.getAccessToken()}`,
           'Content-Type': 'application/json'

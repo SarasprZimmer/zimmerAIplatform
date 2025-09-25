@@ -16,7 +16,7 @@ export default function ForgotPassword() {
     setSuccess('');
 
     try {
-      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL || "http://193.162.129.243:8000"}/api/forgot-password', {
+      const response = await fetch('${process.env.NEXT_PUBLIC_API_URL || "https://api.zimmerai.com"}/api/forgot-password', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -59,7 +59,9 @@ configure_cors(app, allowed_origins=[
     "http://193.162.129.243:4000",  # Admin panel production
     "http://173.234.25.122:4000",  # Admin panel external access
     "https://zimmerai.com",   # Production
-    "https://admin.zimmerai.com",  # Production admin
+    "https://admin.zimmerai.com",  # Production admin (legacy)
+    "https://panel.zimmerai.com",  # Production user panel
+    "https://manager.zimmerai.com",  # Production admin panel
 ])
 
 @app.get("/test-cors")

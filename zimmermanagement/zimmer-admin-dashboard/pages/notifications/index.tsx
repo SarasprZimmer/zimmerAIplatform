@@ -5,7 +5,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import { authClient } from "../../lib/auth-client";
 import { adminAPI } from "../../lib/api";
 
-const API_BASE = '${process.env.NEXT_PUBLIC_API_URL || "http://193.162.129.243:8000"}';
+const API_BASE = '${process.env.NEXT_PUBLIC_API_URL || "https://api.zimmerai.com"}';
 
 interface User {
   id: number;

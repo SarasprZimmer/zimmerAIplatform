@@ -1,4 +1,4 @@
-﻿"use client"
+"use client"
 
 import React, { createContext, useContext, useEffect, useState, useCallback } from "react"
 import { useRouter } from "next/router"
@@ -17,7 +17,7 @@ interface AuthContextType {
   loading: boolean
   api: ApiClient
   login: (email: string, password: string) => Promise<void>
-  signup: (email: string, password: string, name: string) => Promise<void>
+  signup: (email: string, password: string, name: string, confirmPassword: string) => Promise<void>
   verifyOtp: (challenge_token: string, otp_code: string) => Promise<void>
   logout: () => Promise<void>
 }
@@ -68,9 +68,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [api, router])
 
   // Signup function
-  const signup = useCallback(async (email: string, password: string, name: string) => {
+  const signup = useCallback(async (email: string, password: string, name: string, confirmPassword: string) => {
     try {
-      const data = await api.signup(email, password, name)
+      const data = await api.signup(email, password, name, confirmPassword)
       setUser(data.user)
       setIsAuthenticated(true)
       router.push("/dashboard")

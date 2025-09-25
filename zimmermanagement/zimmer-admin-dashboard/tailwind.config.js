@@ -8,8 +8,8 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        'farhang': ['Farhang2', 'Vazirmatn', 'Tahoma', 'Arial', 'sans-serif'],
-        'sans': ['Farhang2', 'Vazirmatn', 'Tahoma', 'Arial', 'sans-serif'],
+        'farhang': ['Farhang2', 'Farhang2', 'Vazirmatn', 'Tahoma', 'Arial', 'sans-serif'],
+        'sans': ['Farhang2', 'Farhang2', 'Vazirmatn', 'Tahoma', 'Arial', 'sans-serif'],
       },
       colors: {
         primary: {

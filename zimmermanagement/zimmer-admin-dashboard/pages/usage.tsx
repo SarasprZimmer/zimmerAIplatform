@@ -30,7 +30,7 @@ export default function Usage() {
     setError(null);
     try {
       if (!user) return;
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://193.162.129.243:8000"}/api/admin/usage/stats`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://api.zimmerai.com"}/api/admin/usage/stats`, {
         headers: {
           'Authorization': `Bearer ${authClient.getAccessToken()}`,
           'Content-Type': 'application/json'

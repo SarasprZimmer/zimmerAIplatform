@@ -3,77 +3,77 @@
 @tailwind utilities;
 
 /* Farhang2 Font Face Declarations */
-/* @font-face {
+@font-face {
   font-family: 'Farhang2';
   src: url('/fonts/Farhang2-Thin.woff') format('woff');
   font-weight: 100;
   font-style: normal;
   font-display: swap;
-} */
+}
 
-/* @font-face {
+@font-face {
   font-family: 'Farhang2';
   src: url('/fonts/Farhang2-ExtraLight.woff') format('woff');
   font-weight: 200;
   font-style: normal;
   font-display: swap;
-} */
+}
 
-/* @font-face {
+@font-face {
   font-family: 'Farhang2';
   src: url('/fonts/Farhang2-Light.woff') format('woff');
   font-weight: 300;
   font-style: normal;
   font-display: swap;
-} */
+}
 
-/* @font-face {
+@font-face {
   font-family: 'Farhang2';
   src: url('/fonts/Farhang2-Regular.woff') format('woff');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
-} */
+}
 
-/* @font-face {
+@font-face {
   font-family: 'Farhang2';
   src: url('/fonts/Farhang2-Medium.woff') format('woff');
   font-weight: 500;
   font-style: normal;
   font-display: swap;
-} */
+}
 
-/* @font-face {
+@font-face {
   font-family: 'Farhang2';
   src: url('/fonts/Farhang2-DemiBold.woff') format('woff');
   font-weight: 600;
   font-style: normal;
   font-display: swap;
-} */
+}
 
-/* @font-face {
+@font-face {
   font-family: 'Farhang2';
   src: url('/fonts/Farhang2-Bold.woff') format('woff');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
-} */
+}
 
-/* @font-face {
+@font-face {
   font-family: 'Farhang2';
   src: url('/fonts/Farhang2-ExtraBold.woff') format('woff');
   font-weight: 800;
   font-style: normal;
   font-display: swap;
-} */
+}
 
-/* @font-face {
+@font-face {
   font-family: 'Farhang2';
   src: url('/fonts/Farhang2-Black.woff') format('woff');
   font-weight: 900;
   font-style: normal;
   font-display: swap;
-} */
+}
 
 
 
@@ -81,95 +81,95 @@
 
 /* Custom global styles */
 body {
-  font-family: 'Vazirmatn', 'Tahoma', 'Arial', sans-serif;
+  font-family: 'Farhang2', 'Vazirmatn', 'Tahoma', 'Arial', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-} */
+}
 
 * {
   box-sizing: border-box;
-} */
+}
 
 /* Dashboard component styles */
 @layer components {
   .card {
     @apply bg-white rounded-2xl shadow-xl p-6;
-  } */
+  }
   
   .btn-primary {
     @apply bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200;
-  } */
+  }
   
   .btn-secondary {
     @apply bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg transition-colors duration-200;
-  } */
+  }
   
   .page-container {
     @apply p-8;
-  } */
+  }
   
   /* Sidebar styles */
   .sidebar-item {
     @apply flex items-center gap-3 p-3 rounded-xl text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200 cursor-pointer;
-  } */
+  }
   
   .sidebar-item.active {
     @apply bg-purple-50 text-purple-700 border-r-2 border-purple-600;
-  } */
+  }
   
   .sidebar-scrollable {
     scrollbar-width: thin;
     scrollbar-color: #e5e7eb transparent;
-  } */
+  }
   
   .sidebar-scrollable::-webkit-scrollbar {
     width: 4px;
-  } */
+  }
   
   .sidebar-scrollable::-webkit-scrollbar-track {
     background: transparent;
-  } */
+  }
   
   .sidebar-scrollable::-webkit-scrollbar-thumb {
     background-color: #e5e7eb;
     border-radius: 2px;
-  } */
+  }
   
   /* Primary color palette */
   .text-primary-600 {
     @apply text-blue-600;
-  } */
+  }
   
   .text-primary-700 {
     @apply text-blue-700;
-  } */
+  }
   
   .bg-primary-600 {
     @apply bg-blue-600;
-  } */
+  }
   
   .bg-primary-700 {
     @apply bg-blue-700;
-  } */
+  }
   
   .border-primary-300 {
     @apply border-blue-300;
-  } */
+  }
   
   .text-primary-600 {
     @apply text-blue-600;
-  } */
+  }
   
   .hover\:text-primary-700:hover {
     @apply text-blue-700;
-  } */
+  }
   
   .hover\:bg-primary-700:hover {
     @apply bg-blue-700;
-  } */
+  }
   
   /* Farhang2 Font Utility */
   .font-farhang {
-    font-family: 'Vazirmatn', 'Tahoma', 'Arial', sans-serif;
-  } */
-} */
+    font-family: 'Farhang2', 'Vazirmatn', 'Tahoma', 'Arial', sans-serif;
+  }
+}

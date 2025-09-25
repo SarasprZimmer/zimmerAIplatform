@@ -68,7 +68,7 @@ export default function Users() {
 
   const handleUpdateUser = async (userId: number, updateData: Partial<User>) => {
     try {
-      await adminAPI.updateUser(userId, updateData);
+      await adminAPI.updateUser(userId.toString(), updateData);
       setEditingUser(null);
       fetchUsers();
     } catch (error) {
@@ -80,7 +80,7 @@ export default function Users() {
     if (!confirm('Are you sure you want to deactivate this user? They will no longer be able to login.')) return;
     
     try {
-      await adminAPI.deleteUser(userId);
+      await adminAPI.deleteUser(userId.toString());
       fetchUsers(); // Refresh the list to hide the deactivated user
     } catch (error) {
       console.error('Error deactivating user:', error);

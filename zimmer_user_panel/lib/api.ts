@@ -1,10 +1,10 @@
-﻿const BASE_URL = process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000"
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000"
 
 class ApiClient {
   // Simple authentication methods without CSRF complexity
   async login(email: string, password: string) {
     console.log(" API: Login attempt for:", email)
-    
+
     try {
       const response = await fetch(`${BASE_URL}/api/auth/login`, {
         method: "POST",
@@ -20,7 +20,7 @@ class ApiClient {
       if (!response.ok) {
         const errorText = await response.text()
         console.log(" API: Login error response:", errorText)
-        
+
         // Handle 2FA challenge
         if (response.status === 401) {
           try {
@@ -32,7 +32,7 @@ class ApiClient {
             // If parsing fails, continue with normal error handling
           }
         }
-        
+
         let errorMessage = "Login failed"
         try {
           const errorData = JSON.parse(errorText)
@@ -54,12 +54,12 @@ class ApiClient {
 
       const data = await response.json()
       console.log(" API: Login successful")
-      
+
       // Store the token in localStorage for now
       if (data.access_token) {
         localStorage.setItem("access_token", data.access_token)
       }
-      
+
       return data
     } catch (error) {
       console.error(" API: Login error:", error)
@@ -67,16 +67,16 @@ class ApiClient {
     }
   }
 
-  async signup(email: string, password: string, name: string) {
+  async signup(email: string, password: string, name: string, confirmPassword: string) {
     console.log(" API: Signup attempt for:", email)
-    
+
     try {
       const response = await fetch(`${BASE_URL}/api/auth/signup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ email, password, name }),
+        body: JSON.stringify({ email, password, name, confirm_password: confirmPassword }),
         credentials: "include"
       })
 
@@ -85,7 +85,7 @@ class ApiClient {
       if (!response.ok) {
         const errorText = await response.text()
         console.log(" API: Signup error response:", errorText)
-        
+
         let errorMessage = "Signup failed"
         try {
           const errorData = JSON.parse(errorText)
@@ -107,12 +107,12 @@ class ApiClient {
 
       const data = await response.json()
       console.log(" API: Signup successful")
-      
+
       // Store the token in localStorage for now
       if (data.access_token) {
         localStorage.setItem("access_token", data.access_token)
       }
-      
+
       return data
     } catch (error) {
       console.error(" API: Signup error:", error)
@@ -135,7 +135,7 @@ class ApiClient {
 
   async verifyOtp(challenge_token: string, otp_code: string) {
     console.log(" API: OTP verification attempt")
-    
+
     try {
       const response = await fetch(`${BASE_URL}/api/auth/2fa/verify`, {
         method: "POST",
@@ -156,12 +156,12 @@ class ApiClient {
 
       const data = await response.json()
       console.log(" API: OTP verification successful")
-      
+
       // Store the token in localStorage
       if (data.access_token) {
         localStorage.setItem("access_token", data.access_token)
       }
-      
+
       return data
     } catch (error) {
       console.error(" API: OTP verification error:", error)

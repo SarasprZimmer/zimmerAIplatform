@@ -119,7 +119,7 @@ export default function KBMonitoring() {
     setLoading(true);
     setError('');
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://193.162.129.243:8000"}/api/admin/automations`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://api.zimmerai.com"}/api/admin/automations`, {
         headers: {
           'Authorization': `Bearer ${authClient.getAccessToken()}`,
           'Content-Type': 'application/json'
@@ -148,7 +148,7 @@ export default function KBMonitoring() {
     setRefreshing(true);
     setError('');
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://193.162.129.243:8000"}/api/admin/kb-status?automation_id=${automationId}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://api.zimmerai.com"}/api/admin/kb-status?automation_id=${automationId}`, {
         headers: {
           'Authorization': `Bearer ${authClient.getAccessToken()}`,
           'Content-Type': 'application/json'
@@ -177,7 +177,7 @@ export default function KBMonitoring() {
     }
     
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://193.162.129.243:8000"}/api/admin/kb-reset/${userAutomationId}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://api.zimmerai.com"}/api/admin/kb-reset/${userAutomationId}`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${authClient.getAccessToken()}`,
@@ -226,7 +226,7 @@ export default function KBMonitoring() {
       if (filters.from_date) params.append('from_date', filters.from_date);
       if (filters.to_date) params.append('to_date', filters.to_date);
       
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://193.162.129.243:8000"}/api/admin/kb-history?${params}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://api.zimmerai.com"}/api/admin/kb-history?${params}`, {
         headers: {
           'Authorization': `Bearer ${authClient.getAccessToken()}`,
           'Content-Type': 'application/json'
@@ -264,7 +264,7 @@ export default function KBMonitoring() {
       if (filters.from_date) params.append('from_date', filters.from_date);
       if (filters.to_date) params.append('to_date', filters.to_date);
       
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://193.162.129.243:8000"}/api/admin/kb-history/stats?${params}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://api.zimmerai.com"}/api/admin/kb-history/stats?${params}`, {
         headers: {
           'Authorization': `Bearer ${authClient.getAccessToken()}`,
           'Content-Type': 'application/json'
@@ -289,7 +289,7 @@ export default function KBMonitoring() {
         days: '7'
       });
       
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://193.162.129.243:8000"}/api/admin/kb-history/chart-data?${params}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://api.zimmerai.com"}/api/admin/kb-history/chart-data?${params}`, {
         headers: {
           'Authorization': `Bearer ${authClient.getAccessToken()}`,
           'Content-Type': 'application/json'

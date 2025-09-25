@@ -21,7 +21,7 @@ const TicketForm: React.FC<TicketFormProps> = ({ onSuccess, userId }) => {
     setError('');
     
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://193.162.129.243:8000"}/api/tickets`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://api.zimmerai.com"}/api/tickets`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${authClient.getAccessToken()}`,
