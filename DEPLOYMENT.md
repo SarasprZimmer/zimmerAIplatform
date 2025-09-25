@@ -1,4 +1,4 @@
-# Zimmer Platform - Direct Deployment Guide
+ # Zimmer Platform - Direct Deployment Guide
 
 This guide covers deploying the Zimmer Platform directly on a server without Docker.
 

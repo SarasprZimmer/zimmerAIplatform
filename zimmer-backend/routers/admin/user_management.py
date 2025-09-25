@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status, Path, Query
 from sqlalchemy.orm import Session
 from sqlalchemy import or_, and_
 from typing import List, Optional
+from datetime import datetime
 from database import SessionLocal
 from models.user import User, UserRole
 from schemas.user import UserCreateRequest, UserUpdateRoleRequest, UserUpdateRequest, UserListResponse
@@ -77,7 +78,8 @@ async def create_user(
         phone_number=user_data.phone_number,
         password_hash=hashed_password,
         role=user_data.role,
-        is_active=True
+        is_active=True,
+        email_verified_at=datetime.utcnow()  # Auto-verify staff emails since they're created by managers
     )
     
     db.add(new_user)

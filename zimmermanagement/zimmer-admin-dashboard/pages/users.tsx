@@ -38,7 +38,7 @@ export default function Users() {
   const fetchUsers = async () => {
     try {
       setLoading(true);
-      const data = await adminAPI.getUsers();
+      const data = await adminAPI.getUsers({ is_active: true }); // Only show active users
       setUsers(data.users || []);
     } catch (error) {
       console.error('Error fetching users:', error);
@@ -77,13 +77,13 @@ export default function Users() {
   };
 
   const handleDeleteUser = async (userId: number) => {
-    if (!confirm('Are you sure you want to delete this user?')) return;
+    if (!confirm('Are you sure you want to deactivate this user? They will no longer be able to login.')) return;
     
     try {
       await adminAPI.deleteUser(userId);
-      fetchUsers();
+      fetchUsers(); // Refresh the list to hide the deactivated user
     } catch (error) {
-      console.error('Error deleting user:', error);
+      console.error('Error deactivating user:', error);
     }
   };
 
@@ -184,7 +184,7 @@ export default function Users() {
                             onClick={() => handleDeleteUser(user.id)}
                             className="text-red-600 hover:text-red-900"
                           >
-                            Delete
+                            Deactivate
                           </button>
                         </td>
                       </tr>
