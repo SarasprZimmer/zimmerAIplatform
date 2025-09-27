@@ -296,7 +296,7 @@ def is_admin_from_access_token(token: str) -> bool:
         if user and "role" in user:
             role = user["role"]
             # Admin roles are manager and technical_team
-            return role in ["manager", "technical_team"]
+            return role in ["manager", "technical_team", "support_staff"]
     except (jwt.InvalidTokenError, ValueError, TypeError):
         pass
     

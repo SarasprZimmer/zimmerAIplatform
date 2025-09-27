@@ -111,7 +111,7 @@ def get_current_technical_user(
     Raises:
         HTTPException: If user is not technical team or manager
     """
-    if current_user.role not in [UserRole.manager, UserRole.technical_team]:
+    if current_user.role not in [UserRole.manager, UserRole.technical_team, UserRole.support_staff]:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Technical team access required"
@@ -134,7 +134,7 @@ def get_current_admin_user(
     Raises:
         HTTPException: If user is not manager or technical team
     """
-    if current_user.role not in [UserRole.manager, UserRole.technical_team]:
+    if current_user.role not in [UserRole.manager, UserRole.technical_team, UserRole.support_staff]:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Admin access required"

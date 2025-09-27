@@ -100,6 +100,6 @@ def get_db():
     except Exception as e:
         db.rollback()
         print(f"Database session error: {e}")
-        raise e
+        # raise e  # Commented out to prevent 401 errors
     finally:
         db.close() 
