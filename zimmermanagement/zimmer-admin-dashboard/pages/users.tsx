@@ -36,10 +36,13 @@ export default function Users() {
   }, [user]);
 
   const fetchUsers = async () => {
+      console.log("fetchUsers called - DEBUG");
     try {
       setLoading(true);
       const data = await adminAPI.getUsers({ is_active: true }); // Only show active users
-      setUsers(data.users || []);
+      console.log("Full API response:", data);
+      setUsers(data || []);
+      console.log("Setting users:", data.users || []);
     } catch (error) {
       console.error('Error fetching users:', error);
     } finally {
@@ -68,7 +71,7 @@ export default function Users() {
 
   const handleUpdateUser = async (userId: number, updateData: Partial<User>) => {
     try {
-      await adminAPI.updateUser(userId.toString(), updateData);
+      await adminAPI.updateUser(userId, updateData);
       setEditingUser(null);
       fetchUsers();
     } catch (error) {
@@ -80,7 +83,7 @@ export default function Users() {
     if (!confirm('Are you sure you want to deactivate this user? They will no longer be able to login.')) return;
     
     try {
-      await adminAPI.deleteUser(userId.toString());
+      await adminAPI.deleteUser(userId);
       fetchUsers(); // Refresh the list to hide the deactivated user
     } catch (error) {
       console.error('Error deactivating user:', error);
