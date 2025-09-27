@@ -41,8 +41,9 @@ export default function Users() {
       setLoading(true);
       const data = await adminAPI.getUsers({ is_active: true }); // Only show active users
       console.log("Full API response:", data);
+      // The API returns the users array directly, not wrapped in an object
       setUsers(data || []);
-      console.log("Setting users:", data.users || []);
+      console.log("Setting users:", data || []);
     } catch (error) {
       console.error('Error fetching users:', error);
     } finally {

@@ -49,7 +49,22 @@ async def list_users(
     # Apply pagination
     users = query.order_by(User.created_at.desc()).offset(offset).limit(limit).all()
     
-    return users
+    # Convert to response format with is_admin field
+    user_responses = []
+    for user in users:
+        user_dict = {
+            "id": user.id,
+            "name": user.name,
+            "email": user.email,
+            "phone_number": user.phone_number,
+            "role": user.role,
+            "is_active": user.is_active,
+            "is_admin": user.is_admin,  # Include the computed property
+            "created_at": user.created_at
+        }
+        user_responses.append(user_dict)
+    
+    return user_responses
 
 @router.post("/users/managers", response_model=UserListResponse)
 async def create_user(
@@ -88,7 +103,17 @@ async def create_user(
     
     logger.info(f"Manager {current_manager.email} created user {new_user.email} with role {new_user.role}")
     
-    return new_user
+    # Return user with is_admin field
+    return {
+        "id": new_user.id,
+        "name": new_user.name,
+        "email": new_user.email,
+        "phone_number": new_user.phone_number,
+        "role": new_user.role,
+        "is_active": new_user.is_active,
+        "is_admin": new_user.is_admin,
+        "created_at": new_user.created_at
+    }
 
 @router.put("/users/managers/{user_id}/role", response_model=UserListResponse)
 async def update_user_role(
@@ -127,7 +152,17 @@ async def update_user_role(
     
     logger.info(f"Manager {current_manager.email} updated user {user.email} role to {user.role}")
     
-    return user
+    # Return user with is_admin field
+    return {
+        "id": user.id,
+        "name": user.name,
+        "email": user.email,
+        "phone_number": user.phone_number,
+        "role": user.role,
+        "is_active": user.is_active,
+        "is_admin": user.is_admin,
+        "created_at": user.created_at
+    }
 
 @router.get("/users/managers/stats")
 async def get_user_stats(
@@ -172,7 +207,17 @@ async def get_user(
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     
-    return user
+    # Return user with is_admin field
+    return {
+        "id": user.id,
+        "name": user.name,
+        "email": user.email,
+        "phone_number": user.phone_number,
+        "role": user.role,
+        "is_active": user.is_active,
+        "is_admin": user.is_admin,
+        "created_at": user.created_at
+    }
 
 @router.put("/users/managers/{user_id}", response_model=UserListResponse)
 async def update_user(
@@ -244,7 +289,17 @@ async def update_user(
     
     logger.info(f"Manager {current_manager.email} updated user {user.email}")
     
-    return user
+    # Return user with is_admin field
+    return {
+        "id": user.id,
+        "name": user.name,
+        "email": user.email,
+        "phone_number": user.phone_number,
+        "role": user.role,
+        "is_active": user.is_active,
+        "is_admin": user.is_admin,
+        "created_at": user.created_at
+    }
 
 @router.delete("/users/managers/{user_id}")
 async def deactivate_user(
