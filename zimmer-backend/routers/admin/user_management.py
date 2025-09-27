@@ -77,7 +77,7 @@ async def create_user(
     Create a new user (manager only)
     """
     # Check if user already exists
-    existing_user = db.query(User).filter(User.email == user_data.email).first()
+    existing_user = db.query(User).filter(User.email == user_data.email, User.is_active == True).first()
     if existing_user:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -93,7 +93,7 @@ async def create_user(
         email=user_data.email,
         phone_number=user_data.phone_number,
         password_hash=hashed_password,
-        role=user_data.role,
+        role=UserRole.manager if user_data.is_admin else user_data.role,
         is_active=True,
         email_verified_at=datetime.utcnow()  # Auto-verify staff emails since they're created by managers
     )
@@ -249,7 +249,7 @@ async def update_user(
     
     # Check if email is being changed and if it already exists
     if user_data.email is not None and user_data.email != user.email:
-        existing_user = db.query(User).filter(User.email == user_data.email).first()
+        existing_user = db.query(User).filter(User.email == user_data.email, User.is_active == True).first()
         if existing_user:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,

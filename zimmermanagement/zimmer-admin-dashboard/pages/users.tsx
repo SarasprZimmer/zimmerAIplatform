@@ -66,6 +66,11 @@ export default function Users() {
 
   const handleCreateUser = async (e: React.FormEvent) => {
     e.preventDefault();
+    // Validate password length
+    if (formData.password.length < 8) {
+      alert("Password must be at least 8 characters long");
+      return;
+    }
     try {
       // Convert is_admin to role for backend
       const userData = {
@@ -258,6 +263,8 @@ export default function Users() {
                     </label>
                     <input
                       type="password"
+                      minLength={8}
+                      title="Password must be at least 8 characters long"
                       value={formData.password}
                       onChange={(e) => setFormData({...formData, password: e.target.value})}
                       required
@@ -322,6 +329,11 @@ export default function Users() {
                 
                 <form onSubmit={(e) => {
                   e.preventDefault();
+    // Validate password length
+    if (formData.password.length < 8) {
+      alert("Password must be at least 8 characters long");
+      return;
+    }
                   const formData = new FormData(e.target as HTMLFormElement);
                   const updateData = {
                     name: formData.get('name') as string,

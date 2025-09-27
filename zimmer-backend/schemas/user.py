@@ -144,6 +144,7 @@ class UserCreateRequest(BaseModel):
     phone_number: Optional[str] = None
     password: str
     role: UserRole = UserRole.support_staff
+    is_admin: Optional[bool] = False
 
     @validator('name')
     def validate_name(cls, v):
