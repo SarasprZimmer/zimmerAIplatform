@@ -1,0 +1,41 @@
+[1mdiff --git a/zimmermanagement/zimmer-admin-dashboard/pages/users.tsx b/zimmermanagement/zimmer-admin-dashboard/pages/users.tsx[m
+[1mindex 6c3d58c..bdfeeef 100644[m
+[1m--- a/zimmermanagement/zimmer-admin-dashboard/pages/users.tsx[m
+[1m+++ b/zimmermanagement/zimmer-admin-dashboard/pages/users.tsx[m
+[36m@@ -2,6 +2,7 @@[m [mimport React, { useState, useEffect } from 'react';[m
+ import Layout from '../components/Layout';[m
+ import { adminAPI } from '../lib/api';[m
+ import { useAuth } from '../contexts/AuthContext';[m
+[32m+[m[32mimport { authClient } from '../lib/auth-client';[m
+ [m
+ interface User {[m
+   id: number;[m
+[36m@@ -30,15 +31,28 @@[m [mexport default function Users() {[m
+   const { user } = useAuth();[m
+ [m
+   useEffect(() => {[m
+[32m+[m[32m    console.log('Users page useEffect - user:', user);[m
+[32m+[m[32m    console.log('Users page useEffect - authClient token:', authClient.getAccessToken());[m
+     if (user) {[m
+[32m+[m[32m      console.log('User exists, calling fetchUsers');[m
+       fetchUsers();[m
+[32m+[m[32m    } else {[m
+[32m+[m[32m      console.log('No user found, not calling fetchUsers');[m
+[32m+[m[32m      // Try to fetch users anyway if we have a token[m
+[32m+[m[32m      const token = authClient.getAccessToken();[m
+[32m+[m[32m      if (token) {[m
+[32m+[m[32m        console.log('Token exists, trying to fetch users anyway');[m
+[32m+[m[32m        fetchUsers();[m
+[32m+[m[32m      }[m
+     }[m
+   }, [user]);[m
+ [m
+   const fetchUsers = async () => {[m
+     try {[m
+[32m+[m[32m      console.log('fetchUsers called');[m
+       setLoading(true);[m
+       const data = await adminAPI.getUsers({ is_active: true }); // Only show active users[m
+[32m+[m[32m      console.log('API response:', data);[m
+       setUsers(data.users || []);[m
+     } catch (error) {[m
+       console.error('Error fetching users:', error);[m

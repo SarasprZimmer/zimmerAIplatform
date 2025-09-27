@@ -228,6 +228,14 @@ async def update_user(
         user.role = user_data.role
     if user_data.is_active is not None:
         user.is_active = user_data.is_active
+    if user_data.is_admin is not None:
+        # Update role based on is_admin status
+        if user_data.is_admin:
+            # If making admin, set to manager role
+            user.role = UserRole.manager
+        else:
+            # If removing admin, set to support_staff role
+            user.role = UserRole.support_staff
     if user_data.password is not None:
         user.password_hash = hash_password(user_data.password)
     

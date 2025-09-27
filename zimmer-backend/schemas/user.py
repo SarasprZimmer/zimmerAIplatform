@@ -177,6 +177,7 @@ class UserUpdateRequest(BaseModel):
     phone_number: Optional[str] = None
     role: Optional[UserRole] = None
     is_active: Optional[bool] = None
+    is_admin: Optional[bool] = None
     password: Optional[str] = None
 
     @validator('name')

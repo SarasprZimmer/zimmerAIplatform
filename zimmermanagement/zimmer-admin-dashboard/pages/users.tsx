@@ -53,7 +53,12 @@ export default function Users() {
   const handleCreateUser = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await adminAPI.createUser(formData);
+      // Convert is_admin to role for backend
+      const userData = {
+        ...formData,
+        role: formData.is_admin ? 'manager' : formData.role
+      };
+      await adminAPI.createUser(userData);
       setShowCreateForm(false);
       setFormData({
         email: '',
@@ -307,8 +312,8 @@ export default function Users() {
                   const updateData = {
                     name: formData.get('name') as string,
                     role: formData.get('role') as string,
-                    is_admin: formData.get('is_admin') === 'on',
-                    is_active: formData.get('is_active') === 'on'
+                    is_admin: formData.has('is_admin'),
+                    is_active: formData.has('is_active')
                   };
                   handleUpdateUser(editingUser.id, updateData);
                 }} className="space-y-4">
