@@ -108,10 +108,10 @@ export default function UserAutomations() {
   }
 
   return (
-    <Layout title="User Automations">
+    <Layout title="اتوماسیون‌های کاربران">
       <div className="space-y-6">
         <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-gray-900">User Automations</h1>
+          <h1 className="text-2xl font-bold text-gray-900">اتوماسیون‌های کاربران</h1>
           <button
             onClick={() => {
               setSelectedUserAutomation({} as UserAutomation);

@@ -127,24 +127,24 @@ export default function Tickets() {
 
   if (loading) {
     return (
-      <Layout title="Tickets">
+      <Layout title="تیکت‌های پشتیبانی">
         <div className="flex items-center justify-center h-64">
-          <div className="text-lg">Loading tickets...</div>
+          <div className="text-lg">در حال بارگذاری تیکت‌ها...</div>
         </div>
       </Layout>
     );
   }
 
   return (
-    <Layout title="Tickets">
+    <Layout title="تیکت‌های پشتیبانی">
       <div className="space-y-6">
         <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-gray-900">Support Tickets</h1>
+          <h1 className="text-2xl font-bold text-gray-900">تیکت‌های پشتیبانی</h1>
           <button
             onClick={fetchTickets}
             className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
           >
-            Refresh
+            به‌روزرسانی
           </button>
         </div>
 
@@ -152,7 +152,7 @@ export default function Tickets() {
           <div className="px-4 py-5 sm:p-6">
             {tickets.length === 0 ? (
               <div className="text-center py-8">
-                <div className="text-gray-500 text-lg">No tickets found</div>
+                <div className="text-gray-500 text-lg">هیچ تیکتی یافت نشد</div>
               </div>
             ) : (
               <div className="overflow-x-auto">
@@ -160,25 +160,25 @@ export default function Tickets() {
                   <thead className="bg-gray-50">
                     <tr>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        ID
+                        شناسه
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        User
+                        کاربر
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Subject
+                        موضوع
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Status
+                        وضعیت
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Priority
+                        اولویت
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Created
+                        تاریخ ایجاد
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Actions
+                        عملیات
                       </th>
                     </tr>
                   </thead>

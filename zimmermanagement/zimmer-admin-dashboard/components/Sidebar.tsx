@@ -27,10 +27,10 @@ const Sidebar = () => {
 
   return (
     <div className="w-64 bg-gray-50 border-r border-gray-200 min-h-screen">
-      <div className="p-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-6">پنل مدیریت</h2>
+      <div className="p-4 sm:p-6">
+        <h2 className="text-lg font-semibold text-gray-900 mb-4 sm:mb-6">پنل مدیریت</h2>
         
-        <nav className="space-y-2">
+        <nav className="space-y-1 sm:space-y-2">
           {navigation.map((item) => {
             // Hide manager-only items for non-managers
             if (item.managerOnly && !user?.is_admin) {
@@ -49,7 +49,7 @@ const Sidebar = () => {
                 }`}
               >
                 <span className="text-lg">{item.icon}</span>
-                <span>{item.name}</span>
+                <span className="truncate">{item.name}</span>
               </Link>
             );
           })}

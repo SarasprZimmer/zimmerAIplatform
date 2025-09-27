@@ -104,7 +104,7 @@ export default function Users() {
   };
 
   const handleDeleteUser = async (userId: number) => {
-    if (!confirm('Are you sure you want to deactivate this user? They will no longer be able to login.')) return;
+    if (!confirm('آیا مطمئن هستید که می‌خواهید این کاربر را غیرفعال کنید؟ آنها دیگر نمی‌توانند وارد شوند.')) return;
     
     try {
       await adminAPI.deleteUser(userId);
@@ -126,24 +126,24 @@ export default function Users() {
 
   if (loading) {
     return (
-      <Layout title="Users">
+      <Layout title="کاربران">
         <div className="flex items-center justify-center h-64">
-          <div className="text-lg">Loading users...</div>
+          <div className="text-lg">در حال بارگذاری کاربران...</div>
         </div>
       </Layout>
     );
   }
 
   return (
-    <Layout title="Users">
+    <Layout title="کاربران">
       <div className="space-y-6">
         <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-gray-900">Users</h1>
+          <h1 className="text-2xl font-bold text-gray-900">کاربران</h1>
           <button
             onClick={() => setShowCreateForm(true)}
             className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
           >
-            Create User
+            ایجاد کاربر
           </button>
         </div>
 
@@ -151,7 +151,7 @@ export default function Users() {
           <div className="px-4 py-5 sm:p-6">
             {users.length === 0 ? (
               <div className="text-center py-8">
-                <div className="text-gray-500 text-lg">No users found</div>
+                <div className="text-gray-500 text-lg">هیچ کاربری یافت نشد</div>
               </div>
             ) : (
               <div className="overflow-x-auto">
@@ -159,22 +159,22 @@ export default function Users() {
                   <thead className="bg-gray-50">
                     <tr>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Name
+                        نام
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Email
+                        ایمیل
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Role
+                        نقش
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Status
+                        وضعیت
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Created
+                        تاریخ ایجاد
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Actions
+                        عملیات
                       </th>
                     </tr>
                   </thead>
@@ -194,7 +194,7 @@ export default function Users() {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${user.is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-                            {user.is_active ? 'Active' : 'Inactive'}
+                            {user.is_active ? 'فعال' : 'غیرفعال'}
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -205,13 +205,13 @@ export default function Users() {
                             onClick={() => setEditingUser(user)}
                             className="text-blue-600 hover:text-blue-900"
                           >
-                            Edit
+                            ویرایش
                           </button>
                           <button
                             onClick={() => handleDeleteUser(user.id)}
                             className="text-red-600 hover:text-red-900"
                           >
-                            Deactivate
+                            غیرفعال کردن
                           </button>
                         </td>
                       </tr>
@@ -228,12 +228,12 @@ export default function Users() {
           <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
             <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
               <div className="mt-3">
-                <h3 className="text-lg font-medium text-gray-900 mb-4">Create User</h3>
+                <h3 className="text-lg font-medium text-gray-900 mb-4">ایجاد کاربر</h3>
                 
                 <form onSubmit={handleCreateUser} className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Email
+                      ایمیل
                     </label>
                     <input
                       type="email"
@@ -246,7 +246,7 @@ export default function Users() {
                   
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Name
+                      نام
                     </label>
                     <input
                       type="text"
@@ -259,7 +259,7 @@ export default function Users() {
                   
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Password
+                      رمز عبور
                     </label>
                     <input
                       type="password"
@@ -274,16 +274,16 @@ export default function Users() {
                   
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Role
+                      نقش
                     </label>
                     <select
                       value={formData.role}
                       onChange={(e) => setFormData({...formData, role: e.target.value})}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
-                      <option value="customer">Customer</option>
-                      <option value="support_staff">Support Staff</option>
-                      <option value="manager">Manager</option>
+                      <option value="customer">مشتری</option>
+                      <option value="support_staff">پشتیبان</option>
+                      <option value="manager">مدیر</option>
                     </select>
                   </div>
                   
@@ -295,7 +295,7 @@ export default function Users() {
                       className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                     />
                     <label className="ml-2 block text-sm text-gray-700">
-                      Admin
+                      ادمین
                     </label>
                   </div>
 
@@ -305,13 +305,13 @@ export default function Users() {
                       onClick={() => setShowCreateForm(false)}
                       className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
                     >
-                      Cancel
+                      لغو
                     </button>
                     <button
                       type="submit"
                       className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
                     >
-                      Create User
+                      ایجاد کاربر
                     </button>
                   </div>
                 </form>
@@ -325,15 +325,10 @@ export default function Users() {
           <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
             <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
               <div className="mt-3">
-                <h3 className="text-lg font-medium text-gray-900 mb-4">Edit User</h3>
+                <h3 className="text-lg font-medium text-gray-900 mb-4">ویرایش کاربر</h3>
                 
                 <form onSubmit={(e) => {
                   e.preventDefault();
-    // Validate password length
-    if (formData.password.length < 8) {
-      alert("Password must be at least 8 characters long");
-      return;
-    }
                   const formData = new FormData(e.target as HTMLFormElement);
                   const updateData = {
                     name: formData.get('name') as string,
@@ -345,7 +340,7 @@ export default function Users() {
                 }} className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Name
+                      نام
                     </label>
                     <input
                       type="text"
@@ -358,16 +353,16 @@ export default function Users() {
                   
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Role
+                      نقش
                     </label>
                     <select
                       name="role"
                       defaultValue={editingUser.role}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
-                      <option value="customer">Customer</option>
-                      <option value="support_staff">Support Staff</option>
-                      <option value="manager">Manager</option>
+                      <option value="customer">مشتری</option>
+                      <option value="support_staff">پشتیبان</option>
+                      <option value="manager">مدیر</option>
                     </select>
                   </div>
                   
@@ -379,7 +374,7 @@ export default function Users() {
                       className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                     />
                     <label className="ml-2 block text-sm text-gray-700">
-                      Admin
+                      ادمین
                     </label>
                   </div>
 
@@ -391,7 +386,7 @@ export default function Users() {
                       className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                     />
                     <label className="ml-2 block text-sm text-gray-700">
-                      Active
+                      فعال
                     </label>
                   </div>
 
@@ -401,13 +396,13 @@ export default function Users() {
                       onClick={() => setEditingUser(null)}
                       className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
                     >
-                      Cancel
+                      لغو
                     </button>
                     <button
                       type="submit"
                       className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
                     >
-                      Update User
+                      به‌روزرسانی کاربر
                     </button>
                   </div>
                 </form>

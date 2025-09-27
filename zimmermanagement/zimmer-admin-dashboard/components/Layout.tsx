@@ -13,6 +13,11 @@ const Layout: React.FC<LayoutProps> = ({ children, title }) => {
   return (
     <ProtectedRoute>
       <div className="rtl flex h-screen bg-gray-100">
+        {/* Sidebar - Hidden on mobile, shown on desktop */}
+        <div className="hidden md:block">
+          <Sidebar />
+        </div>
+        
         <div className="flex-1 flex flex-col overflow-hidden">
           <Topbar title={title} />
           <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-4 sm:p-6 pb-20 md:pb-6">
@@ -21,7 +26,8 @@ const Layout: React.FC<LayoutProps> = ({ children, title }) => {
             </div>
           </main>
         </div>
-        <Sidebar />
+        
+        {/* Mobile Bottom Navigation */}
         <MobileBottomNav />
       </div>
     </ProtectedRoute>

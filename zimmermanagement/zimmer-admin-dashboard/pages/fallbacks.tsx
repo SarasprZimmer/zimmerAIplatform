@@ -102,10 +102,10 @@ export default function Fallbacks() {
   }, [filterClient]);
 
   return (
-    <Layout title="Fallbacks">
+    <Layout title="لاگ‌های خطا">
       <div className="space-y-6">
         <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-gray-900">Fallbacks</h1>
+          <h1 className="text-2xl font-bold text-gray-900">لاگ‌های خطا</h1>
         </div>
 
         {/* Filters */}

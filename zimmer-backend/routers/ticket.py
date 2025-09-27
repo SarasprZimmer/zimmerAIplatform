@@ -2,13 +2,14 @@ from fastapi import APIRouter, Depends, HTTPException, status, Query, Path, Uplo
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy import or_
 from typing import Optional
 import os
 import shutil
 from pathlib import Path as PathLib
 
 from database import SessionLocal
-from models.user import User
+from models.user import User, UserRole
 from models.ticket import Ticket, TicketStatus
 from schemas.ticket import TicketCreate, TicketUpdate, TicketOut, TicketListResponse
 from utils.auth import get_current_user, require_admin
@@ -200,8 +201,19 @@ async def get_tickets(
             query = query.filter(Ticket.user_id == user_id)
         
         # Permission check: non-admins can only see their own tickets
+        # Support staff can see their own tickets and tickets assigned to them
         if not current_user.is_admin:
-            query = query.filter(Ticket.user_id == current_user.id)
+            if current_user.role == UserRole.support_staff:
+                # Support staff can see their own tickets and tickets assigned to them
+                query = query.filter(
+                    or_(
+                        Ticket.user_id == current_user.id,
+                        Ticket.assigned_to == current_user.id
+                    )
+                )
+            else:
+                # Regular users can only see their own tickets
+                query = query.filter(Ticket.user_id == current_user.id)
         
         # Get total count
         total_count = query.count()

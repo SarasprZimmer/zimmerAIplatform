@@ -183,54 +183,54 @@ export default function AdminNotificationsPage() {
   return (
     <Layout title="اعلان‌های داخلی">
       <div className="space-y-6">
-        <h1 className="text-2xl font-semibold">Internal Notifications</h1>
+        <h1 className="text-2xl font-semibold">اعلان‌های داخلی</h1>
 
         <div className="bg-white rounded-2xl shadow-sm p-5 space-y-4">
         <div className="flex gap-3">
-          <button className={`px-3 py-1 rounded-full ${mode==="direct"?"bg-purple-600 text-white":"bg-gray-100"}`} onClick={()=>setMode("direct")}>User IDs</button>
-          <button className={`px-3 py-1 rounded-full ${mode==="targeted"?"bg-purple-600 text-white":"bg-gray-100"}`} onClick={()=>setMode("targeted")}>Targeted</button>
-          <button className={`px-3 py-1 rounded-full ${mode==="broadcast"?"bg-purple-600 text-white":"bg-gray-100"}`} onClick={()=>setMode("broadcast")}>Broadcast</button>
+          <button className={`px-3 py-1 rounded-full ${mode==="direct"?"bg-purple-600 text-white":"bg-gray-100"}`} onClick={()=>setMode("direct")}>شناسه کاربران</button>
+          <button className={`px-3 py-1 rounded-full ${mode==="targeted"?"bg-purple-600 text-white":"bg-gray-100"}`} onClick={()=>setMode("targeted")}>هدفمند</button>
+          <button className={`px-3 py-1 rounded-full ${mode==="broadcast"?"bg-purple-600 text-white":"bg-gray-100"}`} onClick={()=>setMode("broadcast")}>همگانی</button>
         </div>
 
         <div className="border-t pt-4">
-          <h3 className="text-sm font-medium text-gray-700 mb-3">Quick Templates</h3>
+          <h3 className="text-sm font-medium text-gray-700 mb-3">قالب‌های سریع</h3>
           <div className="flex flex-wrap gap-2">
-            <button onClick={() => loadTemplate("maintenance")} className="px-3 py-1 text-xs bg-blue-100 text-blue-700 rounded-full hover:bg-blue-200">Maintenance</button>
-            <button onClick={() => loadTemplate("update")} className="px-3 py-1 text-xs bg-green-100 text-green-700 rounded-full hover:bg-green-200">System Update</button>
-            <button onClick={() => loadTemplate("support")} className="px-3 py-1 text-xs bg-orange-100 text-orange-700 rounded-full hover:bg-orange-200">Support Ticket</button>
-            <button onClick={() => loadTemplate("payment")} className="px-3 py-1 text-xs bg-purple-100 text-purple-700 rounded-full hover:bg-purple-200">Payment Success</button>
+            <button onClick={() => loadTemplate("maintenance")} className="px-3 py-1 text-xs bg-blue-100 text-blue-700 rounded-full hover:bg-blue-200">نگهداری</button>
+            <button onClick={() => loadTemplate("update")} className="px-3 py-1 text-xs bg-green-100 text-green-700 rounded-full hover:bg-green-200">به‌روزرسانی سیستم</button>
+            <button onClick={() => loadTemplate("support")} className="px-3 py-1 text-xs bg-orange-100 text-orange-700 rounded-full hover:bg-orange-200">تیکت پشتیبانی</button>
+            <button onClick={() => loadTemplate("payment")} className="px-3 py-1 text-xs bg-purple-100 text-purple-700 rounded-full hover:bg-purple-200">پرداخت موفق</button>
           </div>
         </div>
 
         <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-4">
           {mode==="direct" && (
             <div>
-              <label className="text-sm text-gray-700">User IDs (comma-separated)</label>
-              <input className="mt-1 w-full border rounded-xl p-2" value={userIds} onChange={e=>setUserIds(e.target.value)} placeholder="e.g. 12, 45, 98" />
-              <p className="text-xs text-gray-500 mt-1">Enter user IDs separated by commas</p>
+              <label className="text-sm text-gray-700">شناسه کاربران (جدا شده با کاما)</label>
+              <input className="mt-1 w-full border rounded-xl p-2" value={userIds} onChange={e=>setUserIds(e.target.value)} placeholder="مثال: 12, 45, 98" />
+              <p className="text-xs text-gray-500 mt-1">شناسه کاربران را با کاما جدا کنید</p>
             </div>
           )}
           
           {mode==="targeted" && (
             <div className="space-y-4">
               <div>
-                <label className="text-sm text-gray-700">Targeting Method</label>
+                <label className="text-sm text-gray-700">روش هدف‌گیری</label>
                 <select 
                   className="mt-1 w-full border rounded-xl p-2" 
                   value={targetMode} 
                   onChange={e=>setTargetMode(e.target.value as any)}
                 >
-                  <option value="all">All Users (Non-Admin)</option>
-                  <option value="username">By Username</option>
-                  <option value="email">By Email</option>
-                  <option value="active_automations">Users with Active Automations</option>
+                  <option value="all">همه کاربران (غیر ادمین)</option>
+                  <option value="username">بر اساس نام کاربری</option>
+                  <option value="email">بر اساس ایمیل</option>
+                  <option value="active_automations">کاربران با اتوماسیون فعال</option>
                 </select>
               </div>
               
               {(targetMode === "username" || targetMode === "email") && (
                 <div>
                   <label className="text-sm text-gray-700">
-                    Search {targetMode === "username" ? "Username" : "Email"}
+                    جستجوی {targetMode === "username" ? "نام کاربری" : "ایمیل"}
                   </label>
                   <input 
                     className="mt-1 w-full border rounded-xl p-2" 
@@ -239,12 +239,12 @@ export default function AdminNotificationsPage() {
                       setTargetValue(e.target.value);
                       searchUsers(e.target.value);
                     }}
-                    placeholder={`Enter ${targetMode === "username" ? "username" : "email"} to search`}
+                    placeholder={`${targetMode === "username" ? "نام کاربری" : "ایمیل"} را وارد کنید`}
                   />
                   
                   {selectedUsers.length > 0 && (
                     <div className="mt-2 max-h-40 overflow-y-auto border rounded-lg p-2 bg-gray-50">
-                      <p className="text-xs text-gray-600 mb-2">Found {selectedUsers.length} users:</p>
+                      <p className="text-xs text-gray-600 mb-2">{selectedUsers.length} کاربر یافت شد:</p>
                       {selectedUsers.map(u => (
                         <div key={u.id} className="text-sm py-1 px-2 hover:bg-gray-100 rounded">
                           <span className="font-medium">{u.name}</span> - {u.email}
@@ -258,8 +258,8 @@ export default function AdminNotificationsPage() {
               {targetMode === "active_automations" && (
                 <div className="p-3 bg-blue-50 rounded-lg">
                   <p className="text-sm text-blue-800">
-                    This will target all users who have active automations. 
-                    {loadingUsers ? " Loading user data..." : ` Found ${users.filter(u => !u.is_admin).length} non-admin users.`}
+                    این گزینه همه کاربرانی که اتوماسیون فعال دارند را هدف قرار می‌دهد. 
+                    {loadingUsers ? " در حال بارگذاری داده‌های کاربران..." : ` ${users.filter(u => !u.is_admin).length} کاربر غیر ادمین یافت شد.`}
                   </p>
                 </div>
               )}
@@ -267,8 +267,8 @@ export default function AdminNotificationsPage() {
               {targetMode === "all" && (
                 <div className="p-3 bg-green-50 rounded-lg">
                   <p className="text-sm text-green-800">
-                    This will send to all non-admin users.
-                    {loadingUsers ? " Loading user data..." : ` Found ${users.filter(u => !u.is_admin).length} non-admin users.`}
+                    این گزینه به همه کاربران غیر ادمین ارسال می‌شود.
+                    {loadingUsers ? " در حال بارگذاری داده‌های کاربران..." : ` ${users.filter(u => !u.is_admin).length} کاربر غیر ادمین یافت شد.`}
                   </p>
                 </div>
               )}
@@ -277,38 +277,38 @@ export default function AdminNotificationsPage() {
           
           {mode==="broadcast" && (
             <div>
-              <label className="text-sm text-gray-700">Role (optional)</label>
+              <label className="text-sm text-gray-700">نقش (اختیاری)</label>
               <input className="mt-1 w-full border rounded-xl p-2" value={role} onChange={e=>setRole(e.target.value)} placeholder="manager | technical_team | support_staff" />
             </div>
           )}
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-sm text-gray-700">Type</label>
+              <label className="text-sm text-gray-700">نوع</label>
               <input className="mt-1 w-full border rounded-xl p-2" value={type} onChange={e=>setType(e.target.value)} placeholder="system | payment | ticket | automation" />
             </div>
             <div>
-              <label className="text-sm text-gray-700">Title</label>
+              <label className="text-sm text-gray-700">عنوان</label>
               <input className="mt-1 w-full border rounded-xl p-2" value={title} onChange={e=>setTitle(e.target.value)} required />
             </div>
           </div>
 
           <div>
-            <label className="text-sm text-gray-700">Body</label>
+            <label className="text-sm text-gray-700">متن</label>
             <textarea className="mt-1 w-full border rounded-xl p-2 h-28" value={body} onChange={e=>setBody(e.target.value)} />
           </div>
 
           <div>
-            <label className="text-sm text-gray-700">Data (JSON, optional)</label>
+            <label className="text-sm text-gray-700">داده (JSON، اختیاری)</label>
             <textarea className="mt-1 w-full border rounded-xl p-2 h-24" placeholder='{"deep_link":"/support/123"}' value={data} onChange={e=>setData(e.target.value)} />
           </div>
 
           <div className="flex items-center gap-3">
             <button disabled={submitting} className="px-4 py-2 rounded-xl bg-purple-600 text-white hover:bg-purple-700 disabled:opacity-50">
-              {submitting ? "Sending..." : "Send"}
+              {submitting ? "در حال ارسال..." : "ارسال"}
               {mode === "targeted" && !submitting && (
                 <span className="ml-2 text-xs bg-purple-500 px-2 py-1 rounded">
-                  {getTargetedUserIds().length} users
+                  {getTargetedUserIds().length} کاربر
                 </span>
               )}
             </button>

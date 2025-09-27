@@ -63,7 +63,7 @@ export default function Sidebar() {
   }
 
   return (
-    <div className="w-72 bg-white shadow-lg h-screen fixed right-0 top-0 z-50 border-l border-gray-100 flex flex-col font-farhang">
+    <div className="hidden lg:flex w-72 bg-white shadow-lg h-screen fixed right-0 top-0 z-50 border-l border-gray-100 flex-col font-farhang">
       {/* Logo Section - Fixed */}
       <div className="p-8 border-b border-gray-100 flex-shrink-0">
         <div className="flex items-center gap-4">

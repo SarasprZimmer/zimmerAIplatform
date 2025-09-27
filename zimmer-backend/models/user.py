@@ -41,4 +41,9 @@ class User(Base):
     @property
     def is_admin(self) -> bool:
         """Check if user has admin privileges based on role"""
+        return self.role in [UserRole.manager, UserRole.technical_team]
+    
+    @property
+    def is_staff(self) -> bool:
+        """Check if user has staff privileges (can access admin features)"""
         return self.role in [UserRole.manager, UserRole.technical_team, UserRole.support_staff] 

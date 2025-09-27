@@ -51,22 +51,22 @@ export default function KBMonitoringDebug() {
 
   if (loading) {
     return (
-      <Layout title="Debug - KB Monitoring">
+      <Layout title="اشکال‌زدایی - مانیتورینگ پایگاه دانش">
         <div className="flex items-center justify-center h-64">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-          <span className="mr-4">Loading debug info...</span>
+          <span className="mr-4">در حال بارگذاری اطلاعات اشکال‌زدایی...</span>
         </div>
       </Layout>
     );
   }
 
   return (
-    <Layout title="Debug - KB Monitoring">
+    <Layout title="اشکال‌زدایی - مانیتورینگ پایگاه دانش">
       <div className="space-y-6">
-        <h1 className="text-2xl font-bold text-gray-900">Debug - KB Monitoring</h1>
+        <h1 className="text-2xl font-bold text-gray-900">اشکال‌زدایی - مانیتورینگ پایگاه دانش</h1>
         
         <div className="bg-white p-6 rounded-lg shadow">
-          <h2 className="text-lg font-semibold mb-4">Debug Information</h2>
+          <h2 className="text-lg font-semibold mb-4">اطلاعات اشکال‌زدایی</h2>
           
           <div className="space-y-4">
             <div>

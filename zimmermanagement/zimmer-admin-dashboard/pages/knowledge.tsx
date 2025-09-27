@@ -92,11 +92,11 @@ export default function Knowledge() {
   }, [filterClient, filterCategory]);
 
   return (
-    <Layout title="Knowledge Base">
+    <Layout title="پایگاه دانش">
       <div className="space-y-6">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Knowledge Base</h2>
-          <p className="text-gray-600 mt-2">Manage client-specific knowledge entries</p>
+          <h2 className="text-2xl font-bold text-gray-900">پایگاه دانش</h2>
+          <p className="text-gray-600 mt-2">مدیریت ورودی‌های دانش مخصوص مشتریان</p>
         </div>
         <KnowledgeForm onAdd={handleAdd} />
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">

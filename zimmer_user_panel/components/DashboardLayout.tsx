@@ -3,6 +3,7 @@
 import { ReactNode } from 'react'
 import Sidebar from './Sidebar'
 import Topbar from './Topbar'
+import MobileBottomNav from './MobileBottomNav'
 
 interface DashboardLayoutProps {
   children: ReactNode
@@ -12,7 +13,7 @@ interface DashboardLayoutProps {
 export default function DashboardLayout({ children, user }: DashboardLayoutProps) {
   return (
     <div className="min-h-screen bg-gray-50 font-farhang">
-      {/* Sidebar */}
+      {/* Sidebar - Hidden on mobile, shown on desktop */}
       <Sidebar />
       
       {/* Main Content */}
@@ -21,12 +22,15 @@ export default function DashboardLayout({ children, user }: DashboardLayoutProps
         <Topbar />
         
         {/* Page Content */}
-        <main className="min-h-screen">
+        <main className="min-h-screen pb-16 lg:pb-0">
           <div className="page-container">
             {children}
           </div>
         </main>
       </div>
+      
+      {/* Mobile Bottom Navigation */}
+      <MobileBottomNav />
     </div>
   )
 }

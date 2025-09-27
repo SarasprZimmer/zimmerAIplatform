@@ -90,14 +90,328 @@ body {
   box-sizing: border-box;
 }
 
+/* Responsive container styles */
+.page-container {
+  @apply px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto;
+}
+
 /* Dashboard component styles */
 @layer components {
   .card {
-    @apply bg-white rounded-2xl shadow-xl p-6;
+    @apply bg-white rounded-2xl shadow-xl p-4 sm:p-6;
   }
   
   .btn-primary {
     @apply bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200;
+  }
+  
+  /* Responsive sidebar styles */
+  .sidebar-item {
+    @apply flex items-center gap-3 p-3 rounded-xl text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200 cursor-pointer;
+  }
+  
+  .sidebar-item.active {
+    @apply bg-primary-50 text-primary-700 border-r-2 border-primary-600;
+  }
+  
+  /* Mobile-first responsive utilities */
+  .mobile-hidden {
+    @apply hidden sm:block;
+  }
+  
+  .desktop-hidden {
+    @apply block sm:hidden;
+  }
+  
+  /* Responsive grid layouts */
+  .responsive-grid {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6;
+  }
+  
+  .responsive-grid-2 {
+    @apply grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6;
+  }
+  
+  /* Responsive text sizes */
+  .text-responsive-xl {
+    @apply text-lg sm:text-xl lg:text-2xl;
+  }
+  
+  .text-responsive-lg {
+    @apply text-base sm:text-lg lg:text-xl;
+  }
+  
+  .text-responsive-base {
+    @apply text-sm sm:text-base;
+  }
+  
+  /* Responsive spacing */
+  .space-responsive {
+    @apply space-y-4 sm:space-y-6;
+  }
+  
+  .p-responsive {
+    @apply p-4 sm:p-6 lg:p-8;
+  }
+  
+  .px-responsive {
+    @apply px-4 sm:px-6 lg:px-8;
+  }
+  
+  .py-responsive {
+    @apply py-4 sm:py-6 lg:py-8;
+  }
+  
+  /* Responsive tables */
+  .table-responsive {
+    @apply overflow-x-auto -mx-4 sm:mx-0;
+  }
+  
+  .table-responsive table {
+    @apply min-w-full;
+  }
+  
+  /* Mobile navigation styles */
+  .mobile-nav {
+    @apply fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 md:hidden;
+  }
+  
+  .mobile-nav-item {
+    @apply flex flex-col items-center justify-center min-w-0 flex-1 h-16 px-2 py-1 rounded-lg transition-colors;
+  }
+  
+  .mobile-nav-item.active {
+    @apply text-primary-600 bg-primary-50;
+  }
+  
+  .mobile-nav-item:not(.active) {
+    @apply text-gray-500 hover:text-gray-700 hover:bg-gray-50;
+  }
+  
+  /* Responsive modal styles */
+  .modal-responsive {
+    @apply fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 p-4 sm:p-0;
+  }
+  
+  .modal-content-responsive {
+    @apply relative top-4 sm:top-20 mx-auto p-4 sm:p-6 border w-full max-w-md sm:max-w-lg shadow-lg rounded-md bg-white;
+  }
+  
+  /* Responsive form styles */
+  .form-group-responsive {
+    @apply space-y-2 sm:space-y-3;
+  }
+  
+  .form-input-responsive {
+    @apply w-full px-3 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-base;
+  }
+  
+  .form-label-responsive {
+    @apply block text-sm sm:text-base font-medium text-gray-700 mb-1 sm:mb-2;
+  }
+  
+  /* Responsive button styles */
+  .btn-responsive {
+    @apply w-full sm:w-auto px-4 py-2 sm:py-3 text-sm sm:text-base font-medium rounded-lg transition-colors duration-200;
+  }
+  
+  .btn-responsive-sm {
+    @apply px-3 py-2 text-sm font-medium rounded-lg transition-colors duration-200;
+  }
+  
+  /* Responsive card styles */
+  .card-responsive {
+    @apply bg-white rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl p-4 sm:p-6;
+  }
+  
+  /* Responsive status badges */
+  .badge-responsive {
+    @apply inline-flex px-2 py-1 text-xs font-semibold rounded-full;
+  }
+  
+  /* Responsive icon sizes */
+  .icon-responsive {
+    @apply w-5 h-5 sm:w-6 sm:h-6;
+  }
+  
+  .icon-responsive-lg {
+    @apply w-6 h-6 sm:w-8 sm:h-8;
+  }
+  
+  /* Responsive flex utilities */
+  .flex-responsive {
+    @apply flex flex-col sm:flex-row;
+  }
+  
+  .flex-responsive-reverse {
+    @apply flex flex-col-reverse sm:flex-row;
+  }
+  
+  /* Responsive gap utilities */
+  .gap-responsive {
+    @apply gap-2 sm:gap-4;
+  }
+  
+  .gap-responsive-lg {
+    @apply gap-4 sm:gap-6;
+  }
+  
+  /* Responsive margin utilities */
+  .mb-responsive {
+    @apply mb-4 sm:mb-6;
+  }
+  
+  .mt-responsive {
+    @apply mt-4 sm:mt-6;
+  }
+  
+  /* Responsive padding utilities */
+  .pb-responsive {
+    @apply pb-16 sm:pb-6;
+  }
+  
+  /* Responsive overflow utilities */
+  .overflow-responsive {
+    @apply overflow-x-auto overflow-y-visible;
+  }
+  
+  /* Responsive text alignment */
+  .text-responsive-center {
+    @apply text-center sm:text-right;
+  }
+  
+  /* Responsive border utilities */
+  .border-responsive {
+    @apply border-0 sm:border border-gray-200;
+  }
+  
+  /* Responsive shadow utilities */
+  .shadow-responsive {
+    @apply shadow-sm sm:shadow-lg;
+  }
+  
+  /* Responsive width utilities */
+  .w-responsive-full {
+    @apply w-full sm:w-auto;
+  }
+  
+  /* Responsive height utilities */
+  .h-responsive-screen {
+    @apply h-screen sm:h-auto;
+  }
+  
+  /* Responsive position utilities */
+  .fixed-responsive {
+    @apply fixed sm:relative;
+  }
+  
+  /* Responsive z-index utilities */
+  .z-responsive-50 {
+    @apply z-50 sm:z-auto;
+  }
+  
+  /* Responsive display utilities */
+  .block-responsive {
+    @apply block sm:hidden;
+  }
+  
+  .hidden-responsive {
+    @apply hidden sm:block;
+  }
+  
+  /* Responsive max-width utilities */
+  .max-w-responsive {
+    @apply max-w-full sm:max-w-md lg:max-w-lg xl:max-w-xl;
+  }
+  
+  /* Responsive min-width utilities */
+  .min-w-responsive {
+    @apply min-w-0 sm:min-w-32;
+  }
+  
+  /* Responsive transform utilities */
+  .transform-responsive {
+    @apply transform sm:transform-none;
+  }
+  
+  /* Responsive transition utilities */
+  .transition-responsive {
+    @apply transition-all duration-300 ease-in-out;
+  }
+  
+  /* Responsive focus utilities */
+  .focus-responsive {
+    @apply focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+  }
+  
+  /* Responsive hover utilities */
+  .hover-responsive {
+    @apply hover:bg-gray-50 hover:text-gray-900 transition-colors duration-200;
+  }
+  
+  /* Responsive active utilities */
+  .active-responsive {
+    @apply active:bg-gray-100 active:scale-95 transition-all duration-150;
+  }
+  
+  /* Responsive disabled utilities */
+  .disabled-responsive {
+    @apply disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none;
+  }
+  
+  /* Responsive loading utilities */
+  .loading-responsive {
+    @apply animate-pulse bg-gray-200 rounded;
+  }
+  
+  /* Responsive error utilities */
+  .error-responsive {
+    @apply border-red-300 text-red-900 placeholder-red-300 focus:ring-red-500 focus:border-red-500;
+  }
+  
+  /* Responsive success utilities */
+  .success-responsive {
+    @apply border-green-300 text-green-900 placeholder-green-300 focus:ring-green-500 focus:border-green-500;
+  }
+  
+  /* Responsive warning utilities */
+  .warning-responsive {
+    @apply border-yellow-300 text-yellow-900 placeholder-yellow-300 focus:ring-yellow-500 focus:border-yellow-500;
+  }
+  
+  /* Responsive info utilities */
+  .info-responsive {
+    @apply border-blue-300 text-blue-900 placeholder-blue-300 focus:ring-blue-500 focus:border-blue-500;
+  }
+  
+  /* Responsive dark mode utilities */
+  .dark-responsive {
+    @apply dark:bg-gray-800 dark:text-white;
+  }
+  
+  /* Responsive print utilities */
+  .print-responsive {
+    @apply print:block print:bg-white print:text-black;
+  }
+  
+  /* Responsive screen reader utilities */
+  .sr-responsive {
+    @apply sr-only sm:not-sr-only;
+  }
+  
+  /* Responsive high contrast utilities */
+  .high-contrast-responsive {
+    @apply contrast-125 sm:contrast-100;
+  }
+  
+  /* Responsive reduced motion utilities */
+  .motion-reduce-responsive {
+    @apply motion-reduce:transition-none motion-reduce:transform-none;
+  }
+  
+  /* Responsive forced color utilities */
+  .forced-colors-responsive {
+    @apply forced-colors:border-[ButtonText] forced-colors:bg-[ButtonFace];
   }
   
   .btn-secondary {

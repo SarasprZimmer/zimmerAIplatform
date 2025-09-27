@@ -2,6 +2,7 @@ import type { AppProps } from 'next/app'
 import { AuthProvider } from '@/contexts/AuthContext'
 import HeaderAuth from '@/components/HeaderAuth'
 import '../styles/globals.css'
+import '../styles/responsive.css'
 
 export default function App({ Component, pageProps }: AppProps) {
   return (

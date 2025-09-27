@@ -116,9 +116,9 @@ export default function Dashboard() {
   }
 
   return (
-    <Layout title="Dashboard">
+    <Layout title="داشبورد">
       <div className="space-y-6">
-        <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
+        <h1 className="text-2xl font-bold text-gray-900">داشبورد</h1>
 
         {stats && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -127,12 +127,12 @@ export default function Dashboard() {
                 <div className="flex items-center">
                   <div className="flex-shrink-0">
                     <div className="w-8 h-8 bg-blue-500 rounded-md flex items-center justify-center">
-                      <span className="text-white text-sm font-medium">U</span>
+                      <span className="text-white text-sm font-medium">ک</span>
                     </div>
                   </div>
                   <div className="ml-5 w-0 flex-1">
                     <dl>
-                      <dt className="text-sm font-medium text-gray-500 truncate">Total Users</dt>
+                      <dt className="text-sm font-medium text-gray-500 truncate">کل کاربران</dt>
                       <dd className="text-lg font-medium text-gray-900">{stats.total_users}</dd>
                     </dl>
                   </div>
@@ -145,12 +145,12 @@ export default function Dashboard() {
                 <div className="flex items-center">
                   <div className="flex-shrink-0">
                     <div className="w-8 h-8 bg-green-500 rounded-md flex items-center justify-center">
-                      <span className="text-white text-sm font-medium">T</span>
+                      <span className="text-white text-sm font-medium">ت</span>
                     </div>
                   </div>
                   <div className="ml-5 w-0 flex-1">
                     <dl>
-                      <dt className="text-sm font-medium text-gray-500 truncate">Active Tickets</dt>
+                      <dt className="text-sm font-medium text-gray-500 truncate">تیکت‌های فعال</dt>
                       <dd className="text-lg font-medium text-gray-900">{stats.active_tickets}</dd>
                     </dl>
                   </div>
@@ -163,12 +163,12 @@ export default function Dashboard() {
                 <div className="flex items-center">
                   <div className="flex-shrink-0">
                     <div className="w-8 h-8 bg-yellow-500 rounded-md flex items-center justify-center">
-                      <span className="text-white text-sm font-medium">K</span>
+                      <span className="text-white text-sm font-medium">ت</span>
                     </div>
                   </div>
                   <div className="ml-5 w-0 flex-1">
                     <dl>
-                      <dt className="text-sm font-medium text-gray-500 truncate">Tokens Used</dt>
+                      <dt className="text-sm font-medium text-gray-500 truncate">توکن‌های استفاده شده</dt>
                       <dd className="text-lg font-medium text-gray-900">{stats.tokens_used}</dd>
                     </dl>
                   </div>
@@ -181,12 +181,12 @@ export default function Dashboard() {
                 <div className="flex items-center">
                   <div className="flex-shrink-0">
                     <div className="w-8 h-8 bg-purple-500 rounded-md flex items-center justify-center">
-                      <span className="text-white text-sm font-medium">$</span>
+                      <span className="text-white text-sm font-medium">ت</span>
                     </div>
                   </div>
                   <div className="ml-5 w-0 flex-1">
                     <dl>
-                      <dt className="text-sm font-medium text-gray-500 truncate">Monthly Revenue</dt>
+                      <dt className="text-sm font-medium text-gray-500 truncate">درآمد ماهانه</dt>
                       <dd className="text-lg font-medium text-gray-900">${stats.monthly_revenue}</dd>
                     </dl>
                   </div>

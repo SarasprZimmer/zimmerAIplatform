@@ -59,21 +59,21 @@ export default function Usage() {
   };
 
   return (
-    <Layout title="Token Usage">
+    <Layout title="استفاده از توکن">
       <div className="space-y-6">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">System Usage Statistics</h2>
-          <p className="text-gray-600 mt-2">Monitor overall AI token consumption and system usage patterns</p>
+          <h2 className="text-2xl font-bold text-gray-900">آمار استفاده از سیستم</h2>
+          <p className="text-gray-600 mt-2">نظارت بر مصرف کلی توکن‌های هوش مصنوعی و الگوهای استفاده از سیستم</p>
         </div>
         <div className="bg-white rounded-lg shadow-sm border border-gray-200">
           <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-            <h3 className="text-lg font-medium text-gray-900">Usage Statistics</h3>
-            <span className="text-sm text-gray-500">Total Tokens Used: <span className="font-semibold text-blue-600">{totalUsage}</span></span>
+            <h3 className="text-lg font-medium text-gray-900">آمار استفاده</h3>
+            <span className="text-sm text-gray-500">کل توکن‌های استفاده شده: <span className="font-semibold text-blue-600">{totalUsage}</span></span>
             <button
               onClick={fetchUsage}
               className="inline-flex items-center px-3 py-1.5 border border-gray-300 text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
-              Refresh
+              به‌روزرسانی
             </button>
           </div>
           <div className="p-6">

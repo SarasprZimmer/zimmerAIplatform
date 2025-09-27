@@ -1,7 +1,8 @@
 /* Mobile-specific improvements for admin dashboard */
 
-/* Increase touch targets for mobile devices */
+/* Responsive breakpoints */
 @media (max-width: 480px) {
+  /* Extra small devices */
   /* Minimum touch target size of 44px */
   button, 
   input[type="button"], 
@@ -210,6 +211,364 @@
   .text-gray-900 {
     color: #111827;
   }
+}
+
+/* Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) and (max-width: 767px) {
+  .sm-optimized {
+    padding: 1.5rem;
+  }
+  
+  .sm-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .sm-text {
+    font-size: 1rem;
+  }
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) and (max-width: 991px) {
+  .md-optimized {
+    padding: 2rem;
+  }
+  
+  .md-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .md-sidebar {
+    width: 200px;
+  }
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) and (max-width: 1199px) {
+  .lg-optimized {
+    padding: 2.5rem;
+  }
+  
+  .lg-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  
+  .lg-sidebar {
+    width: 250px;
+  }
+}
+
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+  .xl-optimized {
+    padding: 3rem;
+  }
+  
+  .xl-grid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+  
+  .xl-sidebar {
+    width: 300px;
+  }
+}
+
+/* Responsive utilities for admin dashboard */
+.responsive-admin-container {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+@media (min-width: 640px) {
+  .responsive-admin-container {
+    padding: 0 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .responsive-admin-container {
+    padding: 0 2rem;
+  }
+}
+
+/* Responsive admin tables */
+.responsive-admin-table {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.responsive-admin-table table {
+  min-width: 800px;
+}
+
+@media (min-width: 768px) {
+  .responsive-admin-table table {
+    min-width: 100%;
+  }
+}
+
+/* Responsive admin cards */
+.responsive-admin-card {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+@media (min-width: 640px) {
+  .responsive-admin-card {
+    width: calc(50% - 0.5rem);
+    margin-right: 1rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .responsive-admin-card {
+    width: calc(33.333% - 0.667rem);
+  }
+}
+
+/* Responsive admin forms */
+.responsive-admin-form {
+  width: 100%;
+}
+
+.responsive-admin-form .form-group {
+  margin-bottom: 1rem;
+}
+
+@media (min-width: 640px) {
+  .responsive-admin-form .form-group {
+    margin-bottom: 1.5rem;
+  }
+}
+
+/* Responsive admin navigation */
+.responsive-admin-nav {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 768px) {
+  .responsive-admin-nav {
+    flex-direction: row;
+  }
+}
+
+/* Responsive admin modals */
+.responsive-admin-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.responsive-admin-modal-content {
+  background: white;
+  border-radius: 0.5rem;
+  width: 100%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+@media (min-width: 640px) {
+  .responsive-admin-modal-content {
+    max-width: 600px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .responsive-admin-modal-content {
+    max-width: 800px;
+  }
+}
+
+/* Responsive admin buttons */
+.responsive-admin-button {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+@media (min-width: 640px) {
+  .responsive-admin-button {
+    width: auto;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+}
+
+/* Responsive admin text */
+.responsive-admin-text {
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+@media (min-width: 640px) {
+  .responsive-admin-text {
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+}
+
+/* Responsive admin flexbox */
+.responsive-admin-flex {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .responsive-admin-flex {
+    flex-direction: row;
+    gap: 1.5rem;
+  }
+}
+
+/* Responsive admin grid */
+.responsive-admin-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .responsive-admin-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .responsive-admin-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+}
+
+/* Responsive admin visibility */
+.mobile-admin-only {
+  display: block;
+}
+
+@media (min-width: 768px) {
+  .mobile-admin-only {
+    display: none;
+  }
+}
+
+.desktop-admin-only {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .desktop-admin-only {
+    display: block;
+  }
+}
+
+/* Responsive admin overflow */
+.responsive-admin-overflow {
+  overflow-x: auto;
+  overflow-y: visible;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Responsive admin shadows */
+.responsive-admin-shadow {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+@media (min-width: 640px) {
+  .responsive-admin-shadow {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+}
+
+/* Responsive admin borders */
+.responsive-admin-border {
+  border: 1px solid #e5e7eb;
+}
+
+@media (min-width: 640px) {
+  .responsive-admin-border {
+    border: 1px solid #d1d5db;
+  }
+}
+
+/* Responsive admin animations */
+.responsive-admin-transition {
+  transition: all 0.2s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .responsive-admin-transition {
+    transition: none;
+  }
+}
+
+/* Responsive admin focus states */
+.responsive-admin-focus:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Responsive admin hover states */
+.responsive-admin-hover:hover {
+  background-color: #f9fafb;
+}
+
+/* Responsive admin active states */
+.responsive-admin-active:active {
+  transform: scale(0.98);
+}
+
+/* Responsive admin disabled states */
+.responsive-admin-disabled:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Responsive admin loading states */
+.responsive-admin-loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Responsive admin error states */
+.responsive-admin-error {
+  border-color: #ef4444;
+  background-color: #fef2f2;
+}
+
+/* Responsive admin success states */
+.responsive-admin-success {
+  border-color: #10b981;
+  background-color: #f0fdf4;
+}
+
+/* Responsive admin warning states */
+.responsive-admin-warning {
+  border-color: #f59e0b;
+  background-color: #fffbeb;
+}
+
+/* Responsive admin info states */
+.responsive-admin-info {
+  border-color: #3b82f6;
+  background-color: #eff6ff;
 }
 
 /* Persian text specific improvements */
