@@ -64,6 +64,7 @@ async def list_users(
         }
         user_responses.append(user_dict)
     
+    logger.info(f"Returning {len(user_responses)} users with is_admin fields")
     return user_responses
 
 @router.post("/users/managers", response_model=UserListResponse)

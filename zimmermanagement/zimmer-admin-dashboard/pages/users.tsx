@@ -41,9 +41,22 @@ export default function Users() {
       setLoading(true);
       const data = await adminAPI.getUsers({ is_active: true }); // Only show active users
       console.log("Full API response:", data);
-      // The API returns the users array directly, not wrapped in an object
-      setUsers(data || []);
-      console.log("Setting users:", data || []);
+      console.log("API response type:", typeof data);
+      console.log("API response is array:", Array.isArray(data));
+      console.log("API response length:", data?.length);
+      
+      // Handle different possible response formats
+      let usersArray = [];
+      if (Array.isArray(data)) {
+        usersArray = data;
+      } else if (data && Array.isArray(data.users)) {
+        usersArray = data.users;
+      } else if (data && Array.isArray(data.data)) {
+        usersArray = data.data;
+      }
+      
+      console.log("Final users array:", usersArray);
+      setUsers(usersArray);
     } catch (error) {
       console.error('Error fetching users:', error);
     } finally {
