@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, Query, HTTPException, Path
 from sqlalchemy.orm import Session
 from typing import Optional
-from utils.auth import get_current_user
+from utils.auth_dependency import get_current_user
 from database import get_db
 from schemas.billing_user import ActiveAutomationOut, PaymentListOut, MonthlyExpensesOut, PaymentReceiptOut
 from services.billing_user import get_active_automations, get_user_payments, get_monthly_expenses, get_payment_receipt

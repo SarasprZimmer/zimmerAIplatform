@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from database import get_db
-from utils.auth import get_current_user
+from utils.auth_dependency import get_current_user
 from models.user import User
 from schemas.discounts import DiscountValidateIn, DiscountValidateOut
 from services.discounts import validate_code
@@ -11,7 +11,7 @@ router = APIRouter(prefix="/discounts", tags=["discounts"])
 async def get_current_user_optional(db: Session = Depends(get_db)):
     """Get current user if authenticated, otherwise return None"""
     try:
-        from utils.auth import get_current_user
+        from utils.auth_dependency import get_current_user
         return await get_current_user()
     except:
         return None

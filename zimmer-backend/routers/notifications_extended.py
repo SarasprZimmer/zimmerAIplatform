@@ -14,7 +14,7 @@ import asyncio
 from database import get_db
 from models.user import User
 from models.notification import Notification
-from utils.auth import get_current_user
+from utils.auth_dependency import get_current_user
 
 router = APIRouter(prefix="/api/notifications", tags=["notifications-extended"])
 
@@ -24,6 +24,7 @@ async def get_unread_count(
     db: Session = Depends(get_db)
 ):
     """Get unread notifications count for current user"""
+    print(f"DEBUG: get_unread_count called for user_id={current_user.id}, email={current_user.email}")
     try:
         unread_count = db.query(Notification).filter(
             Notification.user_id == current_user.id,
@@ -48,6 +49,7 @@ async def stream_notifications(
     db: Session = Depends(get_db)
 ):
     """Stream notifications using Server-Sent Events (SSE)"""
+    print(f"DEBUG: stream_notifications called for user_id={current_user.id}, email={current_user.email}")
     
     async def event_generator():
         """Generate SSE events for notifications"""

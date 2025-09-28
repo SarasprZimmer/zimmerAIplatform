@@ -119,15 +119,18 @@ async def create_user(
 @router.put("/users/managers/{user_id}/role", response_model=UserListResponse)
 async def update_user_role(
     user_id: int = Path(...),
-    role_data: UserUpdateRoleRequest = None,
+    role_data: UserUpdateRoleRequest,
     db: Session = Depends(get_db),
     current_manager: User = Depends(get_current_manager_user)
 ):
     """
     Update user role (manager only)
     """
+    print(f"DEBUG: update_user_role called - user_id={user_id}, role_data={role_data}")
+    
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
+        print(f"DEBUG: User not found for user_id={user_id}")
         raise HTTPException(status_code=404, detail="User not found")
     
     # Prevent manager from changing their own role
@@ -144,13 +147,16 @@ async def update_user_role(
             detail="Only managers can create other managers"
         )
     
+    print(f"DEBUG: Updating user {user.email} role from {user.role} to {role_data.role}")
     user.role = role_data.role
     if role_data.is_active is not None:
+        print(f"DEBUG: Updating user {user.email} is_active from {user.is_active} to {role_data.is_active}")
         user.is_active = role_data.is_active
     
     db.commit()
     db.refresh(user)
     
+    print(f"DEBUG: Successfully updated user {user.email} - role={user.role}, is_active={user.is_active}")
     logger.info(f"Manager {current_manager.email} updated user {user.email} role to {user.role}")
     
     # Return user with is_admin field
@@ -335,6 +341,48 @@ async def deactivate_user(
     logger.info(f"Manager {current_manager.email} deactivated user {user.email}")
     
     return {"message": "User deactivated successfully"}
+
+@router.delete("/users/managers/{user_id}/permanent")
+async def permanently_delete_user(
+    user_id: int = Path(...),
+    db: Session = Depends(get_db),
+    current_manager: User = Depends(get_current_manager_user)
+):
+    """
+    Permanently delete user from database (manager only)
+    WARNING: This action cannot be undone!
+    """
+    print(f"DEBUG: permanently_delete_user called - user_id={user_id}")
+    
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        print(f"DEBUG: User not found for user_id={user_id}")
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Prevent manager from deleting themselves
+    if user.id == current_manager.id:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Cannot delete your own account"
+        )
+    
+    # Prevent manager from deleting other managers (only super admins can delete managers)
+    if user.role == UserRole.manager and current_manager.role != UserRole.manager:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Cannot delete manager accounts"
+        )
+    
+    print(f"DEBUG: Permanently deleting user {user.email} (ID: {user.id})")
+    
+    # Delete the user from database
+    db.delete(user)
+    db.commit()
+    
+    print(f"DEBUG: Successfully deleted user {user.email}")
+    logger.info(f"Manager {current_manager.email} permanently deleted user {user.email}")
+    
+    return {"message": "User permanently deleted successfully"}
 
 @router.put("/users/managers/{user_id}/activate")
 async def activate_user(

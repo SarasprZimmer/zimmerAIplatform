@@ -14,7 +14,7 @@ from database import get_db
 from models.user import User
 from models.payment import Payment
 from models.automation import Automation
-from utils.auth import get_current_user
+from utils.auth_dependency import get_current_user
 from schemas.payment import CreatePaymentRequest, VerifyPaymentRequest, PaymentResponse
 
 router = APIRouter(prefix="/api/payments", tags=["payments"])

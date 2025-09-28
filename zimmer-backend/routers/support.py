@@ -13,7 +13,7 @@ from database import get_db
 from models.user import User
 from models.ticket import Ticket
 from models.ticket_message import TicketMessage
-from utils.auth import get_current_user
+from utils.auth_dependency import get_current_user
 
 router = APIRouter(prefix="/api/support", tags=["support"])
 

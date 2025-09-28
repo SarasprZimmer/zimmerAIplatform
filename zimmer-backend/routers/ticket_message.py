@@ -12,7 +12,8 @@ from models.user import User
 from models.ticket import Ticket
 from models.ticket_message import TicketMessage
 from schemas.ticket_message import TicketMessageCreate, TicketMessageUpdate, TicketMessageOut, TicketMessageListResponse
-from utils.auth import get_current_user, require_admin
+from utils.auth_dependency import get_current_user
+from utils.auth import require_admin
 
 router = APIRouter()
 

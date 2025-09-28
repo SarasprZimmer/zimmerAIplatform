@@ -8,7 +8,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status, Request
 from sqlalchemy.orm import Session
 from sqlalchemy import select
 from database import get_db
-from utils.auth import get_current_user
+from utils.auth_dependency import get_current_user
 from models.user import User
 from models.payment import Payment
 from models.automation import Automation

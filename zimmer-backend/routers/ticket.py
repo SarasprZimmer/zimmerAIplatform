@@ -12,7 +12,8 @@ from database import SessionLocal
 from models.user import User, UserRole
 from models.ticket import Ticket, TicketStatus
 from schemas.ticket import TicketCreate, TicketUpdate, TicketOut, TicketListResponse
-from utils.auth import get_current_user, require_admin
+from utils.auth_dependency import get_current_user
+from utils.auth import require_admin
 
 router = APIRouter()
 
@@ -190,6 +191,9 @@ async def get_tickets(
     Get all tickets (admin only) or user's own tickets
     """
     try:
+        # Debug logging to track authentication
+        print(f"DEBUG: get_tickets called by user_id={current_user.id}, role={current_user.role}, is_admin={current_user.is_admin}")
+        
         # Build base query
         query = db.query(Ticket)
         
@@ -197,26 +201,25 @@ async def get_tickets(
         if ticket_status is not None:
             query = query.filter(Ticket.status == ticket_status)
         
-        if user_id is not None:
+        # SECURITY: Only allow user_id filter for admin users to prevent bypassing isolation
+        if user_id is not None and current_user.is_admin:
             query = query.filter(Ticket.user_id == user_id)
+            print(f"DEBUG: Admin applied user_id filter: {user_id}")
+        elif user_id is not None and not current_user.is_admin:
+            print(f"DEBUG: Non-admin user attempted to use user_id filter - ignoring for security")
         
-        # Permission check: non-admins can only see their own tickets
-        # Support staff can see their own tickets and tickets assigned to them
+        # CRITICAL: Always enforce user isolation for non-admin users
+        # This is the core security fix - users can ONLY see their own tickets
         if not current_user.is_admin:
-            if current_user.role == UserRole.support_staff:
-                # Support staff can see their own tickets and tickets assigned to them
-                query = query.filter(
-                    or_(
-                        Ticket.user_id == current_user.id,
-                        Ticket.assigned_to == current_user.id
-                    )
-                )
-            else:
-                # Regular users can only see their own tickets
-                query = query.filter(Ticket.user_id == current_user.id)
+            # Force filter to only show current user's tickets
+            query = query.filter(Ticket.user_id == current_user.id)
+            print(f"DEBUG: Applied user isolation filter for user_id={current_user.id}")
+        else:
+            print(f"DEBUG: Admin user - showing all tickets")
         
         # Get total count
         total_count = query.count()
+        print(f"DEBUG: Found {total_count} tickets for user_id={current_user.id}")
         
         # Get tickets ordered by newest first
         tickets = query.order_by(Ticket.created_at.desc()).all()

@@ -4,7 +4,7 @@ from database import get_db
 from models.user import User
 from models.automation import Automation
 from models.ticket import Ticket
-from utils.auth import get_current_user
+from utils.auth_dependency import get_current_user
 
 router = APIRouter(prefix="/admin", tags=["admin-dashboard"])
 

@@ -36,10 +36,11 @@ export default function Users() {
   }, [user]);
 
   const fetchUsers = async () => {
-      console.log("fetchUsers called - DEBUG");
+    console.log("fetchUsers called - DEBUG");
     try {
       setLoading(true);
-      const data = await adminAPI.getUsers({ is_active: true }); // Only show active users
+      // Show both active and inactive users
+      const data = await adminAPI.getUsers(); // Show all users
       console.log("Full API response:", data);
       console.log("API response type:", typeof data);
       console.log("API response is array:", Array.isArray(data));
@@ -95,7 +96,20 @@ export default function Users() {
 
   const handleUpdateUser = async (userId: number, updateData: Partial<User>) => {
     try {
-      await adminAPI.updateUser(userId, updateData);
+      console.log('DEBUG: handleUpdateUser called with:', { userId, updateData });
+      
+      // Use the specific role update endpoint for role changes
+      if (updateData.role || updateData.is_admin !== undefined || updateData.is_active !== undefined) {
+        console.log('DEBUG: Using updateUserRole endpoint');
+        await adminAPI.updateUserRole(userId, {
+          role: updateData.role || 'customer',
+          is_active: updateData.is_active
+        });
+      } else {
+        console.log('DEBUG: Using general updateUser endpoint');
+        // Use general update for other fields like name
+        await adminAPI.updateUser(userId, updateData);
+      }
       setEditingUser(null);
       fetchUsers();
     } catch (error) {
@@ -108,9 +122,20 @@ export default function Users() {
     
     try {
       await adminAPI.deleteUser(userId);
-      fetchUsers(); // Refresh the list to hide the deactivated user
+      fetchUsers(); // Refresh the list
     } catch (error) {
       console.error('Error deactivating user:', error);
+    }
+  };
+
+  const handlePermanentlyDeleteUser = async (userId: number) => {
+    if (!confirm('⚠️ هشدار: آیا مطمئن هستید که می‌خواهید این کاربر را برای همیشه حذف کنید؟\n\nاین عمل قابل بازگشت نیست و تمام اطلاعات کاربر پاک خواهد شد.')) return;
+    
+    try {
+      await adminAPI.permanentlyDeleteUser(userId);
+      fetchUsers(); // Refresh the list
+    } catch (error) {
+      console.error('Error permanently deleting user:', error);
     }
   };
 
@@ -122,6 +147,14 @@ export default function Users() {
       case 'customer': return 'bg-gray-100 text-gray-800';
       default: return 'bg-gray-100 text-gray-800';
     }
+  };
+
+  const getStatusColor = (isActive: boolean) => {
+    return isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800';
+  };
+
+  const getStatusText = (isActive: boolean) => {
+    return isActive ? 'فعال' : 'غیرفعال';
   };
 
   if (loading) {
@@ -193,8 +226,8 @@ export default function Users() {
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${user.is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-                            {user.is_active ? 'فعال' : 'غیرفعال'}
+                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(user.is_active)}`}>
+                            {getStatusText(user.is_active)}
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -207,12 +240,21 @@ export default function Users() {
                           >
                             ویرایش
                           </button>
-                          <button
-                            onClick={() => handleDeleteUser(user.id)}
-                            className="text-red-600 hover:text-red-900"
-                          >
-                            غیرفعال کردن
-                          </button>
+                          {user.is_active ? (
+                            <button
+                              onClick={() => handleDeleteUser(user.id)}
+                              className="text-orange-600 hover:text-orange-900"
+                            >
+                              غیرفعال کردن
+                            </button>
+                          ) : (
+                            <button
+                              onClick={() => handlePermanentlyDeleteUser(user.id)}
+                              className="text-red-600 hover:text-red-900"
+                            >
+                              حذف دائمی
+                            </button>
+                          )}
                         </td>
                       </tr>
                     ))}

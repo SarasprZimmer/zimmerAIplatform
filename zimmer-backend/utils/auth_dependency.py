@@ -46,7 +46,10 @@ def get_current_user(
         
         # Extract user ID from token using new session-based validation
         user_id = get_user_id_from_access_token(credentials.credentials)
+        print(f"DEBUG: get_current_user - extracted user_id={user_id} from token")
+        
         if user_id is None:
+            print("DEBUG: get_current_user - token validation failed, user_id is None")
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Invalid or expired access token",
@@ -56,12 +59,14 @@ def get_current_user(
         # Get user from database
         user = db.query(User).filter(User.id == user_id).first()
         if not user:
+            print(f"DEBUG: get_current_user - user not found in database for user_id={user_id}")
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="User not found",
                 headers={"WWW-Authenticate": "Bearer"},
             )
         
+        print(f"DEBUG: get_current_user - authenticated user: id={user.id}, role={user.role}, is_admin={user.is_admin}")
         return user
         
     except HTTPException:

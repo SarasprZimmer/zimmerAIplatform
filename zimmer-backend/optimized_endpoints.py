@@ -16,7 +16,8 @@ from models.user_automation import UserAutomation
 from models.token_usage import TokenUsage
 from models.payment import Payment
 from models.ticket import Ticket
-from utils.auth import get_current_user, get_current_admin_user
+from utils.auth_dependency import get_current_user
+from utils.auth import get_current_admin_user
 from cache_manager import (
     cached, cache_user_data, get_cached_user_data, invalidate_user_cache,
     cache_dashboard_data, get_cached_dashboard_data,

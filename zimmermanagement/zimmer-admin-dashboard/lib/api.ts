@@ -253,10 +253,30 @@ export const adminAPI = {
     }
   },
 
+  updateUserRole: async (userId: number, roleData: { role: string, is_active?: boolean }) => {
+    try {
+      const response = await api.put(`/api/admin/users/managers/${userId}/role`, roleData)
+      toast.success('نقش کاربر با موفقیت بروزرسانی شد')
+      return response.data
+    } catch (error) {
+      throw error
+    }
+  },
+
   deleteUser: async (userId: number) => {
     try {
       const response = await api.delete(`/api/admin/users/managers/${userId}`)
       toast.success('کاربر با موفقیت غیرفعال شد')
+      return response.data
+    } catch (error) {
+      throw error
+    }
+  },
+
+  permanentlyDeleteUser: async (userId: number) => {
+    try {
+      const response = await api.delete(`/api/admin/users/managers/${userId}/permanent`)
+      toast.success('کاربر با موفقیت حذف شد')
       return response.data
     } catch (error) {
       throw error

@@ -12,7 +12,7 @@ interface DashboardLayoutProps {
 
 export default function DashboardLayout({ children, user }: DashboardLayoutProps) {
   return (
-    <div className="min-h-screen bg-gray-50 font-farhang">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 font-farhang transition-colors duration-200">
       {/* Sidebar - Hidden on mobile, shown on desktop */}
       <Sidebar />
       
@@ -22,7 +22,7 @@ export default function DashboardLayout({ children, user }: DashboardLayoutProps
         <Topbar />
         
         {/* Page Content */}
-        <main className="min-h-screen pb-16 lg:pb-0">
+        <main className="min-h-screen pb-16 lg:pb-0 bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
           <div className="page-container">
             {children}
           </div>

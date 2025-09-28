@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, Query, HTTPException
 from sqlalchemy.orm import Session
 from typing import Optional
-from utils.auth import get_current_user
+from utils.auth_dependency import get_current_user
 from database import get_db
 from schemas.usage import UsageWeeklyOut, UsageMonthlyOut, UsageDistributionOut
 from services.usage import get_weekly_usage, get_six_months_usage, get_distribution

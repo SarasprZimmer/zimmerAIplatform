@@ -4,7 +4,7 @@ from typing import List
 from database import get_db
 from schemas.discounts import DiscountCodeCreateIn, DiscountCodeOut
 from models.discount import DiscountCode, DiscountCodeAutomation
-from utils.auth import get_current_user
+from utils.auth_dependency import get_current_user
 from models.user import User, UserRole
 
 router = APIRouter(prefix="/discounts", tags=["admin"])

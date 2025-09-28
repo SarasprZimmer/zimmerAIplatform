@@ -18,7 +18,10 @@ export default function SecurityPage() {
   }
 
   useEffect(() => {
-    fetchCsrf(process.env.NEXT_PUBLIC_API_BASE_URL || process.env.NEXT_PUBLIC_API_URL || "https://api.zimmerai.com");
+    // Fetch CSRF token asynchronously without blocking the UI
+    fetchCsrf(process.env.NEXT_PUBLIC_API_BASE_URL || process.env.NEXT_PUBLIC_API_URL || "https://api.zimmerai.com").catch(err => {
+      console.warn('CSRF fetch failed, continuing without CSRF protection:', err);
+    });
     loadStatus();
   }, []);
 
