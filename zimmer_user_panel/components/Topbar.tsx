@@ -39,8 +39,9 @@ export default function Topbar() {
             <MagnifyingGlassIcon className="w-5 h-5" />
           </button>
 
-          {/* Theme Toggle - Mobile */}
-          <div className="lg:hidden">
+          {/* Theme Toggle - Always Visible */}
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-gray-500 dark:text-gray-400 hidden sm:block">تم:</span>
             <ThemeToggleCompact />
           </div>
 

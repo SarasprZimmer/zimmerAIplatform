@@ -67,18 +67,21 @@ export default function Sidebar() {
     <div className="hidden lg:flex w-72 bg-white dark:bg-gray-800 shadow-lg h-screen fixed right-0 top-0 z-50 border-l border-gray-100 dark:border-gray-700 flex-col font-farhang transition-colors duration-200">
       {/* Logo Section - Fixed */}
       <div className="p-8 border-b border-gray-100 dark:border-gray-700 flex-shrink-0">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-purple-600 to-purple-700 rounded-2xl flex items-center justify-center shadow-lg">
-              <span className="text-white font-bold text-xl">Z</span>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-purple-600 to-purple-700 rounded-2xl flex items-center justify-center shadow-lg">
+                <span className="text-white font-bold text-xl">Z</span>
+              </div>
+              <div>
+                <h1 className="text-xl font-bold text-gray-900 dark:text-white">Zimmer AI</h1>
+                <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">اتوماسیون هوشمند</p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-xl font-bold text-gray-900 dark:text-white">Zimmer AI</h1>
-              <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">اتوماسیون هوشمند</p>
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-gray-500 dark:text-gray-400">تم:</span>
+              <ThemeToggle />
             </div>
           </div>
-          <ThemeToggle />
-        </div>
       </div>
 
       {/* User Profile Section - Fixed */}
