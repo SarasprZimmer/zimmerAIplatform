@@ -139,7 +139,7 @@ async def get_users_legacy(
 @router.get("/payments", response_model=PaymentListResponse)
 async def get_payments(
     user_id: Optional[int] = Query(None, description="Filter by user ID"),
-    status: Optional[str] = Query(None, description="Filter by payment status"),
+    payment_status: Optional[str] = Query(None, description="Filter by payment status"),
     db: Session = Depends(get_db),
     current_admin: User = Depends(get_current_admin_user)
 ):
@@ -159,8 +159,8 @@ async def get_payments(
         if user_id is not None:
             query = query.filter(Payment.user_id == user_id)
         
-        if status is not None:
-            query = query.filter(Payment.status == status)
+        if payment_status is not None:
+            query = query.filter(Payment.status == payment_status)
         
         # Get total count
         total_count = query.count()
@@ -322,7 +322,7 @@ async def get_user_automations_admin(
 
 @router.get("/tickets")
 async def get_tickets(
-    status: Optional[str] = Query(None, description="Filter by ticket status"),
+    ticket_status: Optional[str] = Query(None, description="Filter by ticket status"),
     priority: Optional[str] = Query(None, description="Filter by priority"),
     db: Session = Depends(get_db),
     current_admin: User = Depends(get_current_admin_user)
@@ -340,8 +340,8 @@ async def get_tickets(
         )
         
         # Apply filters if provided
-        if status is not None:
-            query = query.filter(Ticket.status == status)
+        if ticket_status is not None:
+            query = query.filter(Ticket.status == ticket_status)
         
         if priority is not None:
             query = query.filter(Ticket.importance == priority)
@@ -598,7 +598,7 @@ async def get_dashboard_activity(
 async def get_kb_monitoring(
     automation_id: Optional[int] = Query(None, description="Filter by automation ID"),
     user_id: Optional[int] = Query(None, description="Filter by user ID"),
-    health_status: Optional[str] = Query(None, description="Filter by health status"),
+    kb_health_status: Optional[str] = Query(None, description="Filter by health status"),
     db: Session = Depends(get_db),
     current_admin: User = Depends(get_current_admin_user)
 ):

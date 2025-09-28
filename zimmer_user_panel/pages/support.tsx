@@ -16,7 +16,7 @@ type Ticket = {
   created_at: string;
   updated_at: string;
   messages: Array<{
-    id: number;
+    id: string;
     content: string;
     is_from_user: boolean;
     created_at: string;
@@ -57,6 +57,40 @@ const staticFaqs: FAQ[] = [
     category: 'حساب کاربری'
   }
 ];
+
+
+// Parse concatenated ticket messages into individual messages
+const parseTicketMessages = (messageString: string, ticketId: number, createdAt: string) => {
+  const messages = [];
+  
+  // Split by the separator pattern "--- Reply from [Name] ---"
+  const parts = messageString.split(/\n\n--- Reply from .+ ---\n/);
+  
+  // First part is the original user message
+  if (parts[0].trim()) {
+    messages.push({
+      id: `${ticketId}-0`,
+      content: parts[0].trim(),
+      is_from_user: true,
+      created_at: createdAt
+    });
+  }
+  
+  // Parse subsequent parts (admin replies)
+  for (let i = 1; i < parts.length; i++) {
+    if (parts[i].trim()) {
+      messages.push({
+        id: `${ticketId}-${i}`,
+        content: parts[i].trim(),
+        is_from_user: false, // Admin replies
+        created_at: createdAt
+      });
+    }
+  }
+  
+  return messages;
+};
+
 
 export default function SupportPage() {
   const { isAuthenticated, loading, user } = useAuth();
@@ -121,12 +155,7 @@ export default function SupportPage() {
           priority: ticket.importance,
           created_at: ticket.created_at,
           updated_at: ticket.updated_at,
-          messages: [{
-            id: Date.now(),
-            content: ticket.message,
-            is_from_user: true,
-            created_at: ticket.created_at
-          }]
+          messages: parseTicketMessages(ticket.message, ticket.id, ticket.created_at)
         }));
         setTickets(formattedTickets);
       } else {
@@ -177,12 +206,7 @@ export default function SupportPage() {
         priority: createdTicket.importance,
         created_at: createdTicket.created_at,
         updated_at: createdTicket.updated_at,
-        messages: [{
-          id: Date.now(),
-          content: createdTicket.message,
-          is_from_user: true,
-          created_at: createdTicket.created_at
-        }]
+        messages: parseTicketMessages(createdTicket.message, createdTicket.id, createdTicket.created_at)
       };
       
       setTickets(prev => [newTicketData, ...prev]);

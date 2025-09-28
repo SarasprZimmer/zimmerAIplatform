@@ -123,7 +123,7 @@ async def signup(
             email=request.email,
             password_hash=hash_password(request.password),
             is_active=True,
-            role=UserRole.support_staff  # Default role for new users
+            role=UserRole.customer  # Default role for new users
         )
         
         db.add(new_user)

@@ -98,7 +98,7 @@ async def stream_notifications(
         headers={
             "Cache-Control": "no-cache",
             "Connection": "keep-alive",
-            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Origin": "https://panel.zimmerai.com",
             "Access-Control-Allow-Headers": "Cache-Control"
         }
     )
