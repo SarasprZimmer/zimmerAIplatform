@@ -2,7 +2,7 @@ import axios, { AxiosInstance, AxiosResponse, AxiosError } from 'axios'
 import { authClient, redirectToLogin } from './auth-client'
 import { toast } from '../components/Toast'
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000"
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_BASE_URL || "https://api.zimmerai.com"
 
 
 
@@ -59,7 +59,7 @@ const api: AxiosInstance = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  withCredentials: false, // Disabled to avoid CORS issues
+  withCredentials: true, // Enable credentials for CORS
   timeout: 30000, // 30 second timeout to prevent hanging requests
 })
 
