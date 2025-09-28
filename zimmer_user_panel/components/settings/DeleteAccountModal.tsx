@@ -101,7 +101,7 @@ export default function DeleteAccountModal({ isOpen, onClose }: DeleteAccountMod
           </div>
 
           <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">
-            برای تأیید حذف حساب کاربری، لطفاً عبارت <strong className="text-red-600 dark:text-red-400">"حذف حساب"</strong> را در کادر زیر وارد کنید:
+            برای تأیید حذف حساب کاربری، لطفاً عبارت <strong className="text-red-600 dark:text-red-400">&quot;حذف حساب&quot;</strong> را در کادر زیر وارد کنید:
           </p>
 
           <input

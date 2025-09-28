@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { apiFetch } from "@/lib/apiClient";
 import { fetchCsrf } from "@/lib/csrf";
+import Image from 'next/image';
 
 type Status = { enabled: boolean };
 
@@ -113,5 +114,13 @@ export default function SecurityPage() {
 function QRCode({ uri }: { uri: string }) {
   // lightweight QR using Google Chart API (no deps). Replace with a local lib if you prefer.
   const url = `https://chart.googleapis.com/chart?cht=qr&chs=220x220&chl=${encodeURIComponent(uri)}`;
-  return <img src={url} alt="QR" className="w-[220px] h-[220px] rounded-xl border" />;
+  return (
+    <Image 
+      src={url} 
+      alt="QR Code" 
+      width={220} 
+      height={220} 
+      className="rounded-xl border" 
+    />
+  );
 }
