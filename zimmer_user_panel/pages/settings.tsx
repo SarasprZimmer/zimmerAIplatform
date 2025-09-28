@@ -4,8 +4,10 @@ import { useAuth } from '@/contexts/AuthContext'
 import DashboardLayout from '@/components/DashboardLayout'
 import dynamic from "next/dynamic";
 import ProfileForm from "@/components/settings/ProfileForm";
+import ThemeToggle from "@/components/ThemeToggle";
 const PasswordChangeButton = dynamic(()=>import("@/components/settings/PasswordChangeButton"), { ssr:false });
 const SecurityStatus = dynamic(()=>import("@/components/settings/SecurityStatus"), { ssr:false });
+const DeleteAccountButton = dynamic(()=>import("@/components/settings/DeleteAccountButton"), { ssr:false });
 
 export default function SettingsPage() {
   const { user, isAuthenticated, loading } = useAuth()
@@ -45,27 +47,35 @@ export default function SettingsPage() {
       <div className="p-8">
         <div className="max-w-4xl mx-auto">
           {/* Page Header */}
-          <div className="bg-white rounded-2xl shadow-xl p-8 mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-4">تنظیمات حساب کاربری</h1>
-            <p className="text-gray-600">مدیریت اطلاعات شخصی و تنظیمات حساب کاربری</p>
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 mb-8">
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">تنظیمات حساب کاربری</h1>
+                <p className="text-gray-600 dark:text-gray-400">مدیریت اطلاعات شخصی و تنظیمات حساب کاربری</p>
+              </div>
+              <div className="flex items-center gap-4">
+                <span className="text-sm text-gray-600 dark:text-gray-400">تم:</span>
+                <ThemeToggle />
+              </div>
+            </div>
           </div>
 
           {/* Profile Information - New API-based form */}
-          <div className="bg-white rounded-2xl shadow-xl p-8 mb-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">اطلاعات پروفایل</h2>
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 mb-8">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">اطلاعات پروفایل</h2>
             <div className="w-full">
               <ProfileForm />
             </div>
           </div>
 
           {/* Notification Settings */}
-          <div className="bg-white rounded-2xl shadow-xl p-8 mb-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">تنظیمات اعلان‌ها</h2>
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 mb-8">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">تنظیمات اعلان‌ها</h2>
             <div className="space-y-4">
-              <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+              <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-600 rounded-lg">
                 <div>
-                  <h3 className="font-medium text-gray-900">اعلان‌های ایمیل</h3>
-                  <p className="text-sm text-gray-500">دریافت اعلان‌ها از طریق ایمیل</p>
+                  <h3 className="font-medium text-gray-900 dark:text-white">اعلان‌های ایمیل</h3>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">دریافت اعلان‌ها از طریق ایمیل</p>
                 </div>
                 <label className="relative inline-flex items-center cursor-pointer">
                   <input
@@ -81,10 +91,10 @@ export default function SettingsPage() {
                 </label>
               </div>
 
-              <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+              <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-600 rounded-lg">
                 <div>
-                  <h3 className="font-medium text-gray-900">اعلان‌های پیامک</h3>
-                  <p className="text-sm text-gray-500">دریافت اعلان‌ها از طریق پیامک</p>
+                  <h3 className="font-medium text-gray-900 dark:text-white">اعلان‌های پیامک</h3>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">دریافت اعلان‌ها از طریق پیامک</p>
                 </div>
                 <label className="relative inline-flex items-center cursor-pointer">
                   <input
@@ -100,10 +110,10 @@ export default function SettingsPage() {
                 </label>
               </div>
 
-              <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+              <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-600 rounded-lg">
                 <div>
-                  <h3 className="font-medium text-gray-900">اعلان‌های مرورگر</h3>
-                  <p className="text-sm text-gray-500">دریافت اعلان‌ها در مرورگر</p>
+                  <h3 className="font-medium text-gray-900 dark:text-white">اعلان‌های مرورگر</h3>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">دریافت اعلان‌ها در مرورگر</p>
                 </div>
                 <label className="relative inline-flex items-center cursor-pointer">
                   <input
@@ -122,14 +132,17 @@ export default function SettingsPage() {
           </div>
 
           {/* Security Status */}
-          <div className="bg-white rounded-2xl shadow-xl p-8 mb-8">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 mb-8">
             <SecurityStatus />
           </div>
 
           {/* Change Password */}
-          <div className="bg-white rounded-2xl shadow-xl p-8 mb-8">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 mb-8">
             <PasswordChangeButton />
           </div>
+
+          {/* Delete Account */}
+          <DeleteAccountButton />
         </div>
       </div>
     </DashboardLayout>

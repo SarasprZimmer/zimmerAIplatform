@@ -546,3 +546,67 @@ async def logout_all_sessions(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="خطای داخلی در خروج از تمام جلسه‌ها"
         )
+
+
+@router.delete("/delete-account")
+async def delete_user_account(
+    credentials: Optional[HTTPBearer] = Depends(security),
+    db: Session = Depends(get_db)
+):
+    """
+    Permanently delete user's own account
+    WARNING: This action cannot be undone!
+    """
+    try:
+        if not credentials:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="توکن دسترسی مورد نیاز است"
+            )
+        
+        # Verify access token and get user ID
+        from utils.jwt import get_user_id_from_access_token
+        user_id = get_user_id_from_access_token(credentials.credentials)
+        
+        if not user_id:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="توکن دسترسی نامعتبر است"
+            )
+        
+        # Get the user
+        user = db.query(User).filter(User.id == user_id).first()
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="کاربر یافت نشد"
+            )
+        
+        # Prevent deletion of admin accounts
+        if user.role in [UserRole.manager, UserRole.technical_team]:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="حساب‌های مدیریتی قابل حذف نیستند"
+            )
+        
+        logger.info(f"User {user.email} (ID: {user.id}) is deleting their account")
+        
+        # Delete the user from database
+        db.delete(user)
+        db.commit()
+        
+        logger.info(f"Successfully deleted user account {user.email}")
+        
+        return {
+            "message": "حساب کاربری با موفقیت حذف شد",
+            "deleted": True
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Delete account error: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="خطای داخلی در حذف حساب کاربری"
+        )
