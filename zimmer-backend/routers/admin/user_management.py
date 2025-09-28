@@ -118,8 +118,8 @@ async def create_user(
 
 @router.put("/users/managers/{user_id}/role", response_model=UserListResponse)
 async def update_user_role(
-    user_id: int = Path(...),
     role_data: UserUpdateRoleRequest,
+    user_id: int = Path(...),
     db: Session = Depends(get_db),
     current_manager: User = Depends(get_current_manager_user)
 ):
