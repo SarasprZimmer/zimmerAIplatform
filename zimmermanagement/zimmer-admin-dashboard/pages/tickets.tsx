@@ -27,6 +27,38 @@ interface TicketMessage {
   admin_name?: string;
 }
 
+// Function to parse concatenated messages
+const parseTicketMessages = (messageString: string) => {
+  if (!messageString) return [];
+  
+  const messages = [];
+  const parts = messageString.split('---');
+  
+  for (let i = 0; i < parts.length; i++) {
+    const part = parts[i].trim();
+    if (part) {
+      // Check if it's a reply from admin
+      if (part.includes('Reply from UniAI Manager') || part.includes('Reply from')) {
+        messages.push({
+          id: i,
+          message: part.replace(/^Reply from [^-]+ --- /, ''),
+          is_admin: true,
+          created_at: new Date().toISOString()
+        });
+      } else {
+        messages.push({
+          id: i,
+          message: part,
+          is_admin: false,
+          created_at: new Date().toISOString()
+        });
+      }
+    }
+  }
+  
+  return messages;
+};
+
 export default function Tickets() {
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [loading, setLoading] = useState(true);
@@ -57,21 +89,9 @@ export default function Tickets() {
     setUpdating(true);
     try {
       await adminAPI.updateTicket(ticketId, { status: newStatus });
-      fetchTickets(); // Refresh the list
+      fetchTickets();
     } catch (err) {
       console.error('Error updating ticket status:', err);
-    } finally {
-      setUpdating(false);
-    }
-  };
-
-  const handleAssignTicket = async (ticketId: number, adminId: number) => {
-    setUpdating(true);
-    try {
-      await adminAPI.updateTicket(ticketId, { assigned_to: adminId });
-      fetchTickets(); // Refresh the list
-    } catch (err) {
-      console.error('Error assigning ticket:', err);
     } finally {
       setUpdating(false);
     }
@@ -84,7 +104,7 @@ export default function Tickets() {
     try {
       await adminAPI.updateTicket(ticketId, { message: replyMessage });
       setReplyMessage('');
-      fetchTickets(); // Refresh the list
+      fetchTickets();
     } catch (err) {
       console.error('Error replying to ticket:', err);
     } finally {
@@ -98,7 +118,7 @@ export default function Tickets() {
     setUpdating(true);
     try {
       await adminAPI.deleteTicket(ticketId);
-      fetchTickets(); // Refresh the list
+      fetchTickets();
     } catch (err) {
       console.error('Error deleting ticket:', err);
     } finally {
@@ -191,7 +211,7 @@ export default function Tickets() {
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           {ticket.user_name || `User ${ticket.user_id}`}
                         </td>
-                        <td className="px-6 py-4 text-sm text-gray-900 max-w-xs truncate">
+                        <td className="px-6 py-4 text-sm text-gray-900 max-w-md">
                           {ticket.subject}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
@@ -272,8 +292,31 @@ export default function Tickets() {
                       {selectedTicket.priority}
                     </span>
                   </p>
-                  <div className="bg-gray-50 p-3 rounded-md">
-                    <p className="text-sm text-gray-800">{selectedTicket.description}</p>
+                  
+                  {/* Messages Display */}
+                  <div className="space-y-3 max-h-96 overflow-y-auto">
+                    {parseTicketMessages(selectedTicket.description).map((message, index) => (
+                      <div
+                        key={index}
+                        className={`p-3 rounded-lg ${
+                          message.is_admin
+                            ? 'bg-blue-50 border-l-4 border-blue-400 ml-8'
+                            : 'bg-gray-50 border-l-4 border-gray-400 mr-8'
+                        }`}
+                      >
+                        <div className="flex justify-between items-start mb-1">
+                          <span className={`text-xs font-medium ${
+                            message.is_admin ? 'text-blue-600' : 'text-gray-600'
+                          }`}>
+                            {message.is_admin ? 'Admin' : selectedTicket.user_name || 'User'}
+                          </span>
+                          <span className="text-xs text-gray-500">
+                            {new Date(message.created_at).toLocaleString()}
+                          </span>
+                        </div>
+                        <p className="text-sm text-gray-800">{message.message}</p>
+                      </div>
+                    ))}
                   </div>
                 </div>
 
