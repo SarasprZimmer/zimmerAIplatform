@@ -32,28 +32,47 @@ const parseTicketMessages = (messageString: string) => {
   if (!messageString) return [];
   
   const messages = [];
-  const parts = messageString.split('---');
+  
+  // Split by common separators: "--- Reply from" or just "---"
+  const parts = messageString.split(/\n\n--- Reply from .+ ---\n|^--- Reply from .+ ---\n|^---\n|^--- /);
   
   for (let i = 0; i < parts.length; i++) {
     const part = parts[i].trim();
-    if (part) {
-      // Check if it's a reply from admin
-      if (part.includes('Reply from UniAI Manager') || part.includes('Reply from')) {
+    if (part && part.length > 0) {
+      // Check if it's a reply from admin (contains "Reply from" or starts with admin indicators)
+      const isAdminReply = part.includes('Reply from') || 
+                          part.includes('Admin Reply') || 
+                          part.includes('Manager Reply') ||
+                          (i > 0 && !part.includes('User:') && !part.includes('Customer:'));
+      
+      // Clean the message content
+      let cleanMessage = part
+        .replace(/^Reply from [^-]+ --- /, '')
+        .replace(/^Admin Reply: /, '')
+        .replace(/^Manager Reply: /, '')
+        .replace(/^User: /, '')
+        .replace(/^Customer: /, '')
+        .trim();
+      
+      if (cleanMessage) {
         messages.push({
           id: i,
-          message: part.replace(/^Reply from [^-]+ --- /, ''),
-          is_admin: true,
-          created_at: new Date().toISOString()
-        });
-      } else {
-        messages.push({
-          id: i,
-          message: part,
-          is_admin: false,
+          message: cleanMessage,
+          is_admin: isAdminReply,
           created_at: new Date().toISOString()
         });
       }
     }
+  }
+  
+  // If no messages were parsed, treat the entire string as a user message
+  if (messages.length === 0 && messageString.trim()) {
+    messages.push({
+      id: 0,
+      message: messageString.trim(),
+      is_admin: false,
+      created_at: new Date().toISOString()
+    });
   }
   
   return messages;
@@ -294,27 +313,29 @@ export default function Tickets() {
                   </p>
                   
                   {/* Messages Display */}
-                  <div className="space-y-3 max-h-96 overflow-y-auto">
+                  <div className="space-y-4 max-h-96 overflow-y-auto">
                     {parseTicketMessages(selectedTicket.description).map((message, index) => (
                       <div
                         key={index}
-                        className={`p-3 rounded-lg ${
+                        className={`p-4 rounded-xl shadow-sm border-l-4 ${
                           message.is_admin
-                            ? 'bg-blue-50 border-l-4 border-blue-400 ml-8'
-                            : 'bg-gray-50 border-l-4 border-gray-400 mr-8'
+                            ? 'bg-blue-50 border-blue-400 ml-8'
+                            : 'bg-gray-50 border-gray-400 mr-8'
                         }`}
                       >
-                        <div className="flex justify-between items-start mb-1">
-                          <span className={`text-xs font-medium ${
-                            message.is_admin ? 'text-blue-600' : 'text-gray-600'
+                        <div className="flex justify-between items-center mb-2">
+                          <span className={`text-xs font-semibold px-2 py-1 rounded-full ${
+                            message.is_admin 
+                              ? 'bg-blue-100 text-blue-700' 
+                              : 'bg-gray-100 text-gray-700'
                           }`}>
-                            {message.is_admin ? 'Admin' : selectedTicket.user_name || 'User'}
+                            {message.is_admin ? '👨‍💼 Admin' : `👤 ${selectedTicket.user_name || 'User'}`}
                           </span>
                           <span className="text-xs text-gray-500">
                             {new Date(message.created_at).toLocaleString()}
                           </span>
                         </div>
-                        <p className="text-sm text-gray-800">{message.message}</p>
+                        <p className="text-sm text-gray-800 leading-relaxed whitespace-pre-wrap">{message.message}</p>
                       </div>
                     ))}
                   </div>

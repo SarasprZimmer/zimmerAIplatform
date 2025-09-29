@@ -12,7 +12,6 @@ import {
   QuestionMarkCircleIcon
 } from '@heroicons/react/24/outline'
 import { useAuth } from '@/contexts/AuthContext'
-import ThemeToggle from './ThemeToggle'
 
 const navigationItems = [
   {
@@ -76,10 +75,6 @@ export default function Sidebar() {
                 <h1 className="text-xl font-bold text-gray-900 dark:text-white">Zimmer AI</h1>
                 <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">اتوماسیون هوشمند</p>
               </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-xs text-gray-500 dark:text-gray-400">تم:</span>
-              <ThemeToggle />
             </div>
           </div>
       </div>

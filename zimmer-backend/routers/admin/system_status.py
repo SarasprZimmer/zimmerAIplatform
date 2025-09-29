@@ -7,7 +7,8 @@ from models.automation import Automation
 from models.backup import BackupLog
 from models.payment import Payment
 from models.ticket import Ticket
-from utils.auth_dependency import get_current_admin_user, get_db
+from utils.auth_dependency import get_current_admin_user
+from database import get_db
 from datetime import datetime, timedelta
 import os
 

@@ -490,18 +490,25 @@ export default function SupportPage() {
               
               <div className="p-6 max-h-96 overflow-y-auto space-y-4">
                 {selectedTicket.messages.map(message => (
-                  <div key={message.id} className={`flex ${message.is_from_user ? 'justify-end' : 'justify-start'}`}>
-                    <div className={`max-w-xs p-3 rounded-xl ${
+                  <div key={message.id} className={`flex ${message.is_from_user ? 'justify-end' : 'justify-start'} mb-4`}>
+                    <div className={`max-w-xs p-4 rounded-2xl shadow-sm border-l-4 ${
                       message.is_from_user 
-                        ? 'bg-purple-600 text-white' 
-                        : 'bg-gray-100 text-gray-800'
+                        ? 'bg-purple-600 text-white border-purple-400 ml-8' 
+                        : 'bg-gray-50 text-gray-800 border-gray-400 mr-8'
                     }`}>
-                      <p>{message.content}</p>
-                      <p className={`text-xs mt-1 ${
-                        message.is_from_user ? 'text-purple-100' : 'text-gray-500'
-                      }`}>
-                        {new Date(message.created_at).toLocaleString('fa-IR')}
-                      </p>
+                      <div className="flex items-center justify-between mb-2">
+                        <span className={`text-xs font-medium ${
+                          message.is_from_user ? 'text-purple-100' : 'text-gray-600'
+                        }`}>
+                          {message.is_from_user ? 'شما' : 'پشتیبانی'}
+                        </span>
+                        <span className={`text-xs ${
+                          message.is_from_user ? 'text-purple-100' : 'text-gray-500'
+                        }`}>
+                          {new Date(message.created_at).toLocaleString('fa-IR')}
+                        </span>
+                      </div>
+                      <p className="text-sm leading-relaxed">{message.content}</p>
                     </div>
                   </div>
                 ))}

@@ -3,20 +3,13 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy.orm import Session
 from typing import Optional
 
-from database import SessionLocal
+from database import get_db
 from models.user import User, UserRole
 from utils.jwt import get_user_id_from_access_token
 
 # Security scheme for JWT tokens
 security = HTTPBearer(auto_error=False)
 
-def get_db():
-    """Database session dependency"""
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 def get_current_user(
     credentials: Optional[HTTPAuthorizationCredentials] = Depends(security),

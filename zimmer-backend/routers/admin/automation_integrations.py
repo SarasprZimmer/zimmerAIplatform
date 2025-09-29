@@ -4,7 +4,8 @@ from database import SessionLocal
 from models.automation import Automation
 from models.user import User
 from schemas.automation import TokenRotationResponse, AutomationIntegrationResponse
-from utils.auth_dependency import get_current_admin_user, get_db
+from utils.auth_dependency import get_current_admin_user
+from database import get_db
 from utils.service_tokens import generate_token, hash_token, mask_token
 from datetime import datetime
 import logging

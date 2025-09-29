@@ -6,7 +6,8 @@ from database import SessionLocal
 from models.automation import Automation
 from models.user_automation import UserAutomation
 from models.user import User
-from utils.auth_dependency import get_current_admin_user, get_db
+from utils.auth_dependency import get_current_admin_user
+from database import get_db
 
 router = APIRouter()
 

@@ -8,7 +8,8 @@ from models.automation import Automation
 from models.user_automation import UserAutomation
 from models.user import User
 from schemas.automation import ProvisionRequest, ProvisionResponse
-from utils.auth_dependency import get_current_admin_user, get_current_user, get_db
+from utils.auth_dependency import get_current_admin_user, get_current_user
+from database import get_db
 from utils.service_tokens import verify_token
 from datetime import datetime, timezone
 from services.automation_health import probe, classify

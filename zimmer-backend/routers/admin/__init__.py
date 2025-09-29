@@ -13,7 +13,8 @@ from models.ticket import Ticket
 from models.kb_status_history import KBStatusHistory
 from models.kb_template import KBTemplate
 from schemas.admin import UserListResponse, PaymentListResponse, UserTokenUsageResponse, UserAutomationAdminResponse, PaymentResponse, UsageStatsResponse, PeriodInfo
-from utils.auth_dependency import get_current_admin_user, get_db
+from utils.auth_dependency import get_current_admin_user
+from database import get_db
 from cache_manager import cache as cache_manager
 
 router = APIRouter()

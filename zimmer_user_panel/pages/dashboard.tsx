@@ -7,7 +7,6 @@ import DashboardLayout from '@/components/DashboardLayout'
 import dynamic from "next/dynamic";
 import RecentPayments from "@/components/dashboard/RecentPayments";
 import MyAutomations from "@/components/dashboard/MyAutomations";
-import { ThemeToggleCompact } from "@/components/ThemeToggle";
 
 const WeeklyActivityChart = dynamic(()=>import("@/components/dashboard/WeeklyActivityChart"), { ssr:false });
 const DistributionPie   = dynamic(()=>import("@/components/dashboard/DistributionPie"), { ssr:false });
@@ -54,16 +53,6 @@ export default function DashboardPage() {
   return (
     <DashboardLayout>
       <div className="p-6 space-y-6" dir="rtl">
-        {/* Theme Toggle - Prominent */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-4 mb-6">
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">تنظیمات نمایش</h2>
-            <div className="flex items-center gap-3">
-              <span className="text-sm text-gray-600 dark:text-gray-400">تم:</span>
-              <ThemeToggleCompact />
-            </div>
-          </div>
-        </div>
         
         {/* Dashboard Grid - Matching the image layout exactly */}
         <div className="grid grid-cols-12 gap-6">

@@ -7,7 +7,8 @@ from models.kb_template import KBTemplate
 from models.automation import Automation
 from models.user import User
 from schemas.kb_template import KBTemplateCreate, KBTemplateUpdate, KBTemplateResponse, KBTemplateListResponse
-from utils.auth_dependency import get_current_admin_user, get_db
+from utils.auth_dependency import get_current_admin_user
+from database import get_db
 
 router = APIRouter()
 

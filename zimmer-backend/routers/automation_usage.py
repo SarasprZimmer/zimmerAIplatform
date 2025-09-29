@@ -5,7 +5,7 @@ from database import SessionLocal
 from models.automation import Automation
 from models.user_automation import UserAutomation
 from schemas.automation import UsageConsumeRequest, UsageConsumeResponse
-from utils.auth_dependency import get_db
+from database import get_db
 from utils.service_tokens import verify_token
 from services.token_manager import deduct_tokens
 import logging

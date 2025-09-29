@@ -4,7 +4,6 @@ import { useAuth } from '@/contexts/AuthContext'
 import DashboardLayout from '@/components/DashboardLayout'
 import dynamic from "next/dynamic";
 import ProfileForm from "@/components/settings/ProfileForm";
-import ThemeToggle from "@/components/ThemeToggle";
 const PasswordChangeButton = dynamic(()=>import("@/components/settings/PasswordChangeButton"), { ssr:false });
 const SecurityStatus = dynamic(()=>import("@/components/settings/SecurityStatus"), { ssr:false });
 const DeleteAccountButton = dynamic(()=>import("@/components/settings/DeleteAccountButton"), { ssr:false });
@@ -52,10 +51,6 @@ export default function SettingsPage() {
               <div>
                 <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">تنظیمات حساب کاربری</h1>
                 <p className="text-gray-600 dark:text-gray-400">مدیریت اطلاعات شخصی و تنظیمات حساب کاربری</p>
-              </div>
-              <div className="flex items-center gap-4">
-                <span className="text-sm text-gray-600 dark:text-gray-400">تم:</span>
-                <ThemeToggle />
               </div>
             </div>
           </div>

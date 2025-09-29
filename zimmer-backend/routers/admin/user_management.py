@@ -6,7 +6,8 @@ from datetime import datetime
 from database import SessionLocal
 from models.user import User, UserRole
 from schemas.user import UserCreateRequest, UserUpdateRoleRequest, UserUpdateRequest, UserListResponse
-from utils.auth_dependency import get_current_manager_user, get_db
+from utils.auth_dependency import get_current_manager_user
+from database import get_db
 from utils.security import hash_password
 import logging
 
