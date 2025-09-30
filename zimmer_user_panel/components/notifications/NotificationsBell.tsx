@@ -25,7 +25,7 @@ export default function NotificationsBell(){
     const batch: Notify[] = Array.isArray(j) ? j : (j.items || []);
     if(reset){
       setItems(batch);
-      setUnread(batch.filter(x=>!x.read).length);
+      setUnread(batch.filter(x=>!x.is_read).length);
       setOffset(batch.length);
       setHasMore(batch.length === PAGE_LIMIT);
     }else{
@@ -33,7 +33,7 @@ export default function NotificationsBell(){
       setOffset(o => o + batch.length);
       setHasMore(batch.length === PAGE_LIMIT);
       setUnread(prev => {
-        const newUnread = batch.filter(x=>!x.read).length;
+        const newUnread = batch.filter(x=>!x.is_read).length;
         return prev + newUnread;
       });
     }
@@ -144,7 +144,7 @@ export default function NotificationsBell(){
               {items === null && (<><li className="h-12 animate-pulse bg-gray-100 rounded-xl" /><li className="h-12 animate-pulse bg-gray-100 rounded-xl" /></>)}
               {items && items.length===0 && (<li className="text-sm opacity-70 p-3">اعلانی وجود ندارد.</li>)}
               {items && items.map(n=>(
-                <li key={n.id} className={`rounded-xl border p-3 ${n.read?"opacity-70":""}`}>
+                <li key={n.id} className={`rounded-xl border p-3 ${n.is_read?"opacity-70":""}`}>
                   <div className="flex items-start gap-3">
                     <span className="text-[11px] px-2 py-0.5 rounded-full bg-gray-100">{typeLabel(n.type)}</span>
                     <div className="min-w-0 flex-1">
@@ -152,7 +152,7 @@ export default function NotificationsBell(){
                       {n.body && <div className="text-xs opacity-80 line-clamp-2">{n.body}</div>}
                       <div className="mt-2 flex items-center gap-2">
                         <Link href={routeForNotification(n)} className="text-xs underline">مشاهده</Link>
-                        {!n.read && <button onClick={()=>markOne(n.id)} disabled={busy} className="text-xs underline">خواندم</button>}
+                        {!n.is_read && <button onClick={()=>markOne(n.id)} disabled={busy} className="text-xs underline">خواندم</button>}
                       </div>
                     </div>
                   </div>

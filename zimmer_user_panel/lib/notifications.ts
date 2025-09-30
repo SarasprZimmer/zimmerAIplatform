@@ -6,8 +6,9 @@ export type Notify = {
   title: string;
   body?: string;
   data?: any;
-  read: boolean;
+  is_read: boolean;
   created_at: string;
+  read_at?: string;
 };
 
 export function routeForNotification(n: Notify): string {

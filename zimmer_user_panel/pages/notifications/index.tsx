@@ -120,7 +120,7 @@ export default function NotificationsPage(){
             <div className="text-sm opacity-70">اعلانی وجود ندارد.</div>
           )}
           {items && items.map(n=>(
-            <div key={n.id} className={`rounded-xl border p-3 ${n.read?"opacity-70":""} flex items-start gap-3`}>
+            <div key={n.id} className={`rounded-xl border p-3 ${n.is_read?"opacity-70":""} flex items-start gap-3`}>
               {selectMode
                 ? <input type="checkbox" checked={!!selected[n.id]} onChange={()=>toggle(n.id)} className="mt-1" />
                 : <span className="text-[11px] px-2 py-0.5 rounded-full bg-gray-100">{typeLabel(n.type)}</span>}

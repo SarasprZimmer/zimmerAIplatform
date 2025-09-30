@@ -32,6 +32,7 @@ async def get_unread_count(
         ).count()
         
         return {
+            "count": unread_count,
             "unread_count": unread_count,
             "user_id": current_user.id,
             "timestamp": datetime.utcnow().isoformat()
@@ -72,8 +73,8 @@ async def stream_notifications(
                         "type": "notification",
                         "id": notification.id,
                         "title": notification.title,
-                        "message": notification.message,
-                        "type": notification.type,
+                        "body": notification.body,
+                        "notification_type": notification.type,
                         "created_at": notification.created_at.isoformat(),
                         "read_at": notification.read_at.isoformat() if notification.read_at else None
                     }
@@ -122,8 +123,9 @@ async def get_recent_notifications(
             notification_list.append({
                 "id": notification.id,
                 "title": notification.title,
-                "message": notification.message,
+                "body": notification.body,
                 "type": notification.type,
+                "is_read": notification.is_read,
                 "read_at": notification.read_at.isoformat() if notification.read_at else None,
                 "created_at": notification.created_at.isoformat()
             })

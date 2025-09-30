@@ -76,19 +76,15 @@ export default function AdminNotificationsPage() {
   };
 
   const getTargetedUserIds = (): number[] => {
-    switch (targetMode) {
-      case "all":
-        return users.filter(u => !u.is_admin).map(u => u.id);
-      case "username":
-      case "email":
-        return selectedUsers.map(u => u.id);
-      case "active_automations":
-        // This would need backend support to get users with active automations
-        // For now, return all non-admin users
-        return users.filter(u => !u.is_admin).map(u => u.id);
-      default:
-        return [];
+    if (targetMode === "all") {
+      return users.filter(u => !u.is_admin).map(u => u.id);
+    } else if (targetMode === "username" || targetMode === "email") {
+      return selectedUsers.map(u => u.id);
+    } else if (targetMode === "active_automations") {
+      // This would need to be implemented based on your automation logic
+      return users.filter(u => !u.is_admin).map(u => u.id);
     }
+    return [];
   };
 
   const loadTemplate = (template: string) => {
@@ -246,7 +242,16 @@ export default function AdminNotificationsPage() {
                     <div className="mt-2 max-h-40 overflow-y-auto border rounded-lg p-2 bg-gray-50">
                       <p className="text-xs text-gray-600 mb-2">{selectedUsers.length} کاربر یافت شد:</p>
                       {selectedUsers.map(u => (
-                        <div key={u.id} className="text-sm py-1 px-2 hover:bg-gray-100 rounded">
+                        <div key={u.id} className="text-sm py-1 px-2 hover:bg-gray-100 rounded cursor-pointer" 
+                             onClick={() => {
+                               setUserIds(prev => {
+                                 const ids = prev.split(",").map(s => s.trim()).filter(Boolean);
+                                 if (!ids.includes(u.id.toString())) {
+                                   ids.push(u.id.toString());
+                                 }
+                                 return ids.join(", ");
+                               });
+                             }}>
                           <span className="font-medium">{u.name}</span> - {u.email}
                         </div>
                       ))}
