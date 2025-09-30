@@ -3,7 +3,7 @@ Extended notifications endpoints for Zimmer AI Platform
 Handles unread count, streaming, and advanced notification features
 """
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Request
 from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 from typing import List, Optional
@@ -46,10 +46,47 @@ async def get_unread_count(
 
 @router.get("/stream")
 async def stream_notifications(
-    current_user: User = Depends(get_current_user),
+    request: Request,
     db: Session = Depends(get_db)
 ):
     """Stream notifications using Server-Sent Events (SSE)"""
+    # Handle authentication for SSE (EventSource doesn't support custom headers)
+    from fastapi import Query
+    from utils.auth_dependency import get_current_user
+    
+    # Try to get user from query parameter or Authorization header
+    access_token = request.query_params.get("token")
+    if not access_token:
+        # Fallback to Authorization header
+        auth_header = request.headers.get("Authorization")
+        if auth_header and auth_header.startswith("Bearer "):
+            access_token = auth_header[7:]
+    
+    if not access_token:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Authentication required",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    
+    # Validate token and get user
+    from utils.jwt import get_user_id_from_access_token
+    user_id = get_user_id_from_access_token(access_token)
+    if not user_id:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid or expired access token",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    
+    current_user = db.query(User).filter(User.id == user_id).first()
+    if not current_user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="User not found",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    
     print(f"DEBUG: stream_notifications called for user_id={current_user.id}, email={current_user.email}")
     
     async def event_generator():

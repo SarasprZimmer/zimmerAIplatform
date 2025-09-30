@@ -56,7 +56,7 @@ export default function NotificationsBell(){
     try{
       await apiFetch("/api/notifications/mark-all-read", { method:"POST" });
       // update local state
-      setItems(prev => (prev||[]).map(n => ({...n, read:true})));
+      setItems(prev => (prev||[]).map(n => ({...n, is_read:true})));
       setUnread(0);
     } finally { setBusy(false); }
   }
@@ -69,7 +69,7 @@ export default function NotificationsBell(){
         headers:{"Content-Type":"application/json"},
         body: JSON.stringify({ ids:[id] })
       });
-      setItems(prev => (prev||[]).map(n => n.id===id ? {...n, read:true} : n));
+      setItems(prev => (prev||[]).map(n => n.id===id ? {...n, is_read:true} : n));
       setUnread(u => Math.max(0, u-1));
     } finally { setBusy(false); }
   }
@@ -84,7 +84,11 @@ export default function NotificationsBell(){
 
     if (typeof window !== "undefined" && API) {
       try{
-        es = new EventSource(`${API.replace(/\/+$/,"")}/api/notifications/stream`, { withCredentials: true } as any);
+        const token = localStorage.getItem("access_token");
+        const streamUrl = token 
+          ? `${API.replace(/\/+$/,"")}/api/notifications/stream?token=${encodeURIComponent(token)}`
+          : `${API.replace(/\/+$/,"")}/api/notifications/stream`;
+        es = new EventSource(streamUrl, { withCredentials: true } as any);
         es.onmessage = (ev) => {
           if (closed) return;
           try{

@@ -60,7 +60,7 @@ export default function NotificationsPage(){
         headers:{ "Content-Type":"application/json" },
         body: JSON.stringify({ ids })
       });
-      setItems(prev => (prev||[]).map(n => ids.includes(n.id) ? {...n, read:true} : n));
+      setItems(prev => (prev||[]).map(n => ids.includes(n.id) ? {...n, is_read:true} : n));
       clearSelection();
     } finally { setBusy(false); }
   }
@@ -69,7 +69,7 @@ export default function NotificationsPage(){
     setBusy(true);
     try{
       await apiFetch("/api/notifications/mark-all-read",{ method:"POST" });
-      setItems(prev => (prev||[]).map(n => ({...n, read:true})));
+      setItems(prev => (prev||[]).map(n => ({...n, is_read:true})));
       clearSelection();
     } finally { setBusy(false); }
   }
