@@ -134,8 +134,8 @@ async def create_automation(
             health_status=automation.health_status,
             last_health_at=automation.last_health_at.isoformat() if automation.last_health_at else None,
             is_listed=automation.is_listed,
-            created_at=automation.created_at.isoformat(),
-            updated_at=automation.updated_at.isoformat()
+            created_at=automation.created_at.isoformat() if automation.created_at else None,
+            updated_at=automation.updated_at.isoformat() if automation.updated_at else None
         )
     except Exception as e:
         db.rollback()
@@ -159,61 +159,60 @@ async def update_automation(
         automation = db.query(Automation).filter(Automation.id == automation_id).first()
         if not automation:
             raise HTTPException(status_code=404, detail="Automation not found")
+
+        logger.info(f"Admin {current_admin.email} attempting to delete automation {automation.name} (ID: {automation_id})")
+
+        # Use completely separate database connections to avoid transaction issues
+        from sqlalchemy import create_engine
+        import os
         
-        # Update fields if provided
-        if automation_data:
-            update_data = automation_data.dict(exclude_unset=True)
-            for field, value in update_data.items():
-                if hasattr(automation, field):
-                    setattr(automation, field, value)
-            automation.updated_at = datetime.utcnow()
-            
-            # Run health check if health_check_url was provided or changed
-            if automation.health_check_url:
-                result = await probe(automation.health_check_url)
-                automation.health_status = classify(result)
-                automation.last_health_at = datetime.now(timezone.utc)
-                automation.health_details = result
-                automation.is_listed = (automation.health_status == "healthy")
-            else:
-                automation.health_status = "unknown"
-                automation.is_listed = False
-            
-            db.commit()
-            db.refresh(automation)
+        # Get database URL from environment
+        database_url = os.getenv('DATABASE_URL')
+        if not database_url:
+            raise HTTPException(status_code=500, detail="Database configuration error")
         
-        # Return formatted response
-        return AutomationResponse(
-            id=automation.id,
-            name=automation.name,
-            description=automation.description,
-            price_per_token=automation.price_per_token,
-            pricing_type=automation.pricing_type,
-            status=automation.status,
-            api_base_url=automation.api_base_url,
-            api_provision_url=automation.api_provision_url,
-            api_usage_url=automation.api_usage_url,
-            api_kb_status_url=automation.api_kb_status_url,
-            api_kb_reset_url=automation.api_kb_reset_url,
-            has_service_token=bool(automation.service_token_hash),
-            service_token_masked=(automation.service_token_hash[:8] + "...") if automation.service_token_hash else None,
-            health_check_url=automation.health_check_url,
-            health_status=automation.health_status,
-            last_health_at=automation.last_health_at.isoformat() if automation.last_health_at else None,
-            is_listed=automation.is_listed,
-            created_at=automation.created_at.isoformat(),
-            updated_at=automation.updated_at.isoformat()
-        )
-    except HTTPException:
-        raise
+        # Create a new engine for separate connections
+        separate_engine = create_engine(database_url)
+        
+        # List of tables to clean up
+        cleanup_operations = [
+            ('kb_templates', f'DELETE FROM kb_templates WHERE automation_id = {automation_id}'),
+            ('openai_key_usage', f'DELETE FROM openai_key_usage WHERE openai_key_id IN (SELECT id FROM openai_keys WHERE automation_id = {automation_id})'),
+            ('openai_keys', f'DELETE FROM openai_keys WHERE automation_id = {automation_id}'),
+            ('payments', f'DELETE FROM payments WHERE automation_id = {automation_id}'),
+            ('user_automations', f'DELETE FROM user_automations WHERE automation_id = {automation_id}'),
+            ('kb_status_history', f'DELETE FROM kb_status_history WHERE automation_id = {automation_id}')
+        ]
+        
+        # Clean up each table using separate connections
+        for table_name, sql_query in cleanup_operations:
+            try:
+                # Use a separate connection for each operation
+                with separate_engine.begin() as conn:
+                    conn.execute(text(sql_query))
+                logger.info(f'✅ Deleted from {table_name} for automation {automation_id}')
+            except Exception as e:
+                if "relation "" in str(e) and "" does not exist" in str(e):
+                    logger.warning(f'⚠️  Table {table_name} does not exist, skipping')
+                else:
+                    logger.warning(f'⚠️  Could not delete from {table_name}: {str(e)[:100]}...')
+                # Continue with next table
+        
+        # Finally delete the automation itself using the main session
+        db.query(Automation).filter(Automation.id == automation_id).delete()
+        db.commit()
+        
+        logger.info(f'✅ Successfully deleted automation {automation.name} (ID: {automation_id})')
+        return {"message": f"Automation {automation.name} deleted successfully"}
+        
     except Exception as e:
         db.rollback()
-        logger.error(f"Failed to update automation: {str(e)}")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to update automation: {str(e)}"
-        )
-
+        logger.error(f'❌ Failed to delete automation {automation_id}: {e}')
+        raise HTTPException(status_code=500, detail=f"Failed to delete automation: {str(e)}")
+    finally:
+        # Close the separate engine
+        if 'separate_engine' in locals():
+            separate_engine.dispose()
 @router.delete("/automations/{automation_id}")
 async def delete_automation(
     automation_id: int = Path(...),
@@ -228,64 +227,60 @@ async def delete_automation(
         automation = db.query(Automation).filter(Automation.id == automation_id).first()
         if not automation:
             raise HTTPException(status_code=404, detail="Automation not found")
-        
+
         logger.info(f"Admin {current_admin.email} attempting to delete automation {automation.name} (ID: {automation_id})")
+
+        # Use completely separate database connections to avoid transaction issues
+        from sqlalchemy import create_engine
+        import os
         
-        # Check if automation has active user connections
-        user_automations = db.query(UserAutomation).filter(UserAutomation.automation_id == automation_id).all()
-        if user_automations:
-            logger.warning(f"Automation {automation_id} has {len(user_automations)} active user connections")
-            # Option 1: Prevent deletion if users are connected
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail=f"Cannot delete automation with {len(user_automations)} active user connections. Please deactivate users first."
-            )
+        # Get database URL from environment
+        database_url = os.getenv('DATABASE_URL')
+        if not database_url:
+            raise HTTPException(status_code=500, detail="Database configuration error")
         
-        # Delete related records safely - only delete tables that exist
-        from sqlalchemy import text
+        # Create a new engine for separate connections
+        separate_engine = create_engine(database_url)
         
-        try:
-            # Delete KB templates
-            db.execute(text("DELETE FROM kb_templates WHERE automation_id = :automation_id"), {"automation_id": automation_id})
-        except Exception as e:
-            logger.warning(f"Could not delete kb_templates: {e}")
+        # List of tables to clean up
+        cleanup_operations = [
+            ('kb_templates', f'DELETE FROM kb_templates WHERE automation_id = {automation_id}'),
+            ('openai_key_usage', f'DELETE FROM openai_key_usage WHERE openai_key_id IN (SELECT id FROM openai_keys WHERE automation_id = {automation_id})'),
+            ('openai_keys', f'DELETE FROM openai_keys WHERE automation_id = {automation_id}'),
+            ('payments', f'DELETE FROM payments WHERE automation_id = {automation_id}'),
+            ('user_automations', f'DELETE FROM user_automations WHERE automation_id = {automation_id}'),
+            ('kb_status_history', f'DELETE FROM kb_status_history WHERE automation_id = {automation_id}')
+        ]
         
-        try:
-            # Delete OpenAI keys and their usage
-            db.execute(text("DELETE FROM openai_key_usage WHERE openai_key_id IN (SELECT id FROM openai_keys WHERE automation_id = :automation_id)"), {"automation_id": automation_id})
-            db.execute(text("DELETE FROM openai_keys WHERE automation_id = :automation_id"), {"automation_id": automation_id})
-        except Exception as e:
-            logger.warning(f"Could not delete openai_keys: {e}")
+        # Clean up each table using separate connections
+        for table_name, sql_query in cleanup_operations:
+            try:
+                # Use a separate connection for each operation
+                with separate_engine.begin() as conn:
+                    conn.execute(text(sql_query))
+                logger.info(f'✅ Deleted from {table_name} for automation {automation_id}')
+            except Exception as e:
+                if "relation "" in str(e) and "" does not exist" in str(e):
+                    logger.warning(f'⚠️  Table {table_name} does not exist, skipping')
+                else:
+                    logger.warning(f'⚠️  Could not delete from {table_name}: {str(e)[:100]}...')
+                # Continue with next table
         
-        try:
-            # Delete payments
-            db.execute(text("DELETE FROM payments WHERE automation_id = :automation_id"), {"automation_id": automation_id})
-        except Exception as e:
-            logger.warning(f"Could not delete payments: {e}")
-        
-        try:
-            # Delete KB status history (only if table exists)
-            db.execute(text("DELETE FROM kb_status_history WHERE automation_id = :automation_id"), {"automation_id": automation_id})
-        except Exception as e:
-            logger.warning(f"Could not delete kb_status_history: {e}")
-        
-        # Delete the automation itself
-        db.delete(automation)
+        # Finally delete the automation itself using the main session
+        db.query(Automation).filter(Automation.id == automation_id).delete()
         db.commit()
         
-        logger.info(f"Successfully deleted automation {automation.name} (ID: {automation_id})")
-        return {"message": "Automation deleted successfully"}
+        logger.info(f'✅ Successfully deleted automation {automation.name} (ID: {automation_id})')
+        return {"message": f"Automation {automation.name} deleted successfully"}
         
-    except HTTPException:
-        raise
     except Exception as e:
         db.rollback()
-        logger.error(f"Failed to delete automation {automation_id}: {str(e)}")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to delete automation: {str(e)}"
-        )
-
+        logger.error(f'❌ Failed to delete automation {automation_id}: {e}')
+        raise HTTPException(status_code=500, detail=f"Failed to delete automation: {str(e)}")
+    finally:
+        # Close the separate engine
+        if 'separate_engine' in locals():
+            separate_engine.dispose()
 @router.post("/automations/{automation_id}/provision", response_model=ProvisionResponse)
 async def provision_automation(
     automation_id: int = Path(...),

@@ -557,3 +557,8 @@ export const adminAPI = {
 }
 
 export default api 
+// Generate service token for automation
+export const generateAutomationServiceToken = async (id: number) => {
+  const response = await api.post(`/api/admin/automations/${id}/generate-service-token`);
+  return response.data;
+};

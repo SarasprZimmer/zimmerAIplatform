@@ -58,8 +58,8 @@ class AutomationResponse(BaseModel):
     health_status: str
     last_health_at: Optional[str]
     is_listed: bool
-    created_at: str
-    updated_at: str
+    created_at: Optional[str]
+    updated_at: Optional[str]
 
     class Config:
         from_attributes = True

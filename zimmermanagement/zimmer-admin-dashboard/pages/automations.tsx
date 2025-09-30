@@ -146,6 +146,22 @@ export default function Automations() {
     }
   };
 
+  const handleGenerateToken = async (id: number) => {
+    try {
+      const response = await api.post(`/api/admin/automations/${id}/generate-service-token`);
+      if (response.data.token) {
+        alert(`Service Token Generated:
+
+${response.data.token}
+
+Please save this token securely. It will not be shown again.`);
+      }
+    } catch (error: any) {
+      console.error('Error generating service token:', error);
+      alert('Failed to generate service token');
+    }
+  };
+
   const handleDelete = async () => {
     if (!selectedAutomation) return;
     
