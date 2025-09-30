@@ -8,7 +8,7 @@ interface Automation {
   name: string;
   description: string;
   price_per_token: number;
-  pricing_type: 'token_per_message' | 'per_minute' | 'token_per_session';
+  pricing_type: 'token_per_message' | 'token_per_session';
   status: boolean;
   api_base_url?: string;
   api_provision_url?: string;
@@ -25,7 +25,7 @@ interface AutomationFormData {
   name: string;
   description: string;
   price_per_token: number;
-  pricing_type: 'token_per_message' | 'per_minute' | 'token_per_session';
+  pricing_type: 'token_per_message' | 'token_per_session';
   status: boolean;
   api_base_url: string;
   api_provision_url: string;
@@ -36,7 +36,6 @@ interface AutomationFormData {
 
 const pricingTypeLabels = {
   token_per_message: 'به ازای پیام',
-  per_minute: 'به ازای دقیقه',
   token_per_session: 'به ازای جلسه'
 };
 
@@ -53,7 +52,7 @@ export default function Automations() {
     name: '',
     description: '',
     price_per_token: 0,
-    pricing_type: 'token_per_message',
+    pricing_type: 'token_per_session',
     status: true,
     api_base_url: '',
     api_provision_url: '',
@@ -64,6 +63,8 @@ export default function Automations() {
   const [newToken, setNewToken] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'inactive'>('all');
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
   useEffect(() => {
     fetchAutomations();
@@ -85,19 +86,63 @@ export default function Automations() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
+    setSuccess(null);
+    
     try {
+      // Validate required fields
+      if (!formData.name.trim()) {
+        setError('نام اتوماسیون الزامی است');
+        return;
+      }
+      if (!formData.description.trim()) {
+        setError('توضیحات الزامی است');
+        return;
+      }
+      if (formData.price_per_token <= 0) {
+        setError('قیمت باید بیشتر از صفر باشد');
+        return;
+      }
+
+      // Ensure all required fields are present and properly formatted
+      const submitData = {
+        name: formData.name.trim(),
+        description: formData.description.trim(),
+        price_per_token: Number(formData.price_per_token),
+        pricing_type: formData.pricing_type,
+        status: Boolean(formData.status),
+        api_base_url: formData.api_base_url.trim() || null,
+        api_provision_url: formData.api_provision_url.trim() || null,
+        api_usage_url: formData.api_usage_url.trim() || null,
+        api_kb_status_url: formData.api_kb_status_url.trim() || null,
+        api_kb_reset_url: formData.api_kb_reset_url.trim() || null
+      };
+
+      console.log('Submitting automation data:', submitData);
+
       if (editingAutomation) {
-        await api.put(`/api/admin/automations/${editingAutomation.id}`, formData);
+        const response = await api.put(`/api/admin/automations/${editingAutomation.id}`, submitData);
+        console.log('Update response:', response.data);
+        setSuccess('اتوماسیون با موفقیت به‌روزرسانی شد');
       } else {
-        await api.post('/api/admin/automations', formData);
+        const response = await api.post('/api/admin/automations', submitData);
+        console.log('Create response:', response.data);
+        setSuccess('اتوماسیون با موفقیت ایجاد شد');
       }
       
       setShowForm(false);
       setEditingAutomation(null);
       resetForm();
       fetchAutomations();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error saving automation:', error);
+      if (error.response) {
+        console.error('Error response:', error.response.data);
+        console.error('Error status:', error.response.status);
+        setError(`خطا در ذخیره اتوماسیون: ${error.response.data?.detail || error.response.statusText}`);
+      } else {
+        setError('خطا در ذخیره اتوماسیون. لطفاً دوباره تلاش کنید.');
+      }
     }
   };
 
@@ -108,9 +153,15 @@ export default function Automations() {
       await api.delete(`/api/admin/automations/${selectedAutomation.id}`);
       setShowDeleteConfirm(false);
       setSelectedAutomation(null);
+      setSuccess('اتوماسیون با موفقیت حذف شد');
       fetchAutomations();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error deleting automation:', error);
+      if (error.response) {
+        setError(`خطا در حذف اتوماسیون: ${error.response.data?.detail || error.response.statusText}`);
+      } else {
+        setError('خطا در حذف اتوماسیون. لطفاً دوباره تلاش کنید.');
+      }
     }
   };
 
@@ -131,8 +182,8 @@ export default function Automations() {
     setFormData({
       name: '',
       description: '',
-              price_per_token: 0,
-      pricing_type: 'token_per_message',
+      price_per_token: 0,
+      pricing_type: 'token_per_session',
       status: true,
       api_base_url: '',
       api_provision_url: '',
@@ -143,11 +194,13 @@ export default function Automations() {
   };
 
   const openEditForm = (automation: Automation) => {
+    setError(null);
+    setSuccess(null);
     setEditingAutomation(automation);
     setFormData({
       name: automation.name,
       description: automation.description,
-              price_per_token: automation.price_per_token,
+      price_per_token: automation.price_per_token,
       pricing_type: automation.pricing_type,
       status: automation.status,
       api_base_url: automation.api_base_url || '',
@@ -186,6 +239,35 @@ export default function Automations() {
   return (
     <Layout title="مدیریت اتوماسیون‌ها">
       <div className="space-y-6">
+        {/* Global Messages */}
+        {error && (
+          <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+            <div className="flex justify-between items-center">
+              <span>{error}</span>
+              <button
+                onClick={() => setError(null)}
+                className="text-red-500 hover:text-red-700"
+              >
+                ×
+              </button>
+            </div>
+          </div>
+        )}
+        
+        {success && (
+          <div className="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg">
+            <div className="flex justify-between items-center">
+              <span>{success}</span>
+              <button
+                onClick={() => setSuccess(null)}
+                className="text-green-500 hover:text-green-700"
+              >
+                ×
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Header */}
         <div className="flex justify-between items-center">
           <div>
@@ -193,7 +275,11 @@ export default function Automations() {
             <p className="text-gray-600">ایجاد و مدیریت اتوماسیون‌های سیستم</p>
           </div>
           <button
-            onClick={() => setShowForm(true)}
+            onClick={() => {
+              setError(null);
+              setSuccess(null);
+              setShowForm(true);
+            }}
             className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center gap-2"
           >
             <PlusIcon className="w-5 h-5" />
@@ -344,6 +430,21 @@ export default function Automations() {
             <h2 className="text-xl font-bold mb-4">
               {editingAutomation ? 'ویرایش اتوماسیون' : 'افزودن اتوماسیون جدید'}
             </h2>
+            
+            {/* Error Message */}
+            {error && (
+              <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+                {error}
+              </div>
+            )}
+            
+            {/* Success Message */}
+            {success && (
+              <div className="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg">
+                {success}
+              </div>
+            )}
+            
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* General Information */}
               <div className="border-b pb-4">
@@ -369,7 +470,8 @@ export default function Automations() {
                       type="number"
                       required
                       min="0"
-                                              value={formData.price_per_token}
+                      step="0.01"
+                      value={formData.price_per_token}
                       onChange={(e) => setFormData({...formData, price_per_token: Number(e.target.value)})}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
@@ -380,12 +482,11 @@ export default function Automations() {
                     </label>
                     <select
                       value={formData.pricing_type}
-                      onChange={(e) => setFormData({...formData, pricing_type: e.target.value as any})}
+                      onChange={(e) => setFormData({...formData, pricing_type: e.target.value as 'token_per_message' | 'token_per_session'})}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     >
-                      <option value="token_per_message">به ازای پیام</option>
-                      <option value="per_minute">به ازای دقیقه</option>
                       <option value="token_per_session">به ازای جلسه</option>
+                      <option value="token_per_message">به ازای پیام</option>
                     </select>
                   </div>
                   <div>

@@ -39,7 +39,7 @@ export default function Marketplace(){
   const fetchAutomations = async () => {
     try {
       setLoadingAutomations(true)
-      const response = await apiFetch('/api/automations/available')
+      const response = await apiFetch('/api/optimized/automations/marketplace')
       
       if (response.ok) {
         const data = await response.json()

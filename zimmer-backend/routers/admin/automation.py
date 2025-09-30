@@ -8,6 +8,7 @@ from models.automation import Automation
 from models.user_automation import UserAutomation
 from models.user import User
 from schemas.automation import ProvisionRequest, ProvisionResponse
+from schemas.automation_admin import AutomationCreateRequest, AutomationUpdateRequest, AutomationResponse
 from utils.auth_dependency import get_current_admin_user, get_current_user
 from database import get_db
 from utils.service_tokens import verify_token
@@ -71,9 +72,9 @@ async def get_automations(
             detail=f"Failed to retrieve automations: {str(e)}"
         )
 
-@router.post("/automations")
+@router.post("/automations", response_model=AutomationResponse)
 async def create_automation(
-    automation_data: dict,
+    automation_data: AutomationCreateRequest,
     db: Session = Depends(get_db),
     current_admin: User = Depends(get_current_admin_user)
 ):
@@ -81,7 +82,21 @@ async def create_automation(
     Create a new automation (admin only)
     """
     try:
-        automation = Automation(**automation_data)
+        # Create automation with validated data
+        automation = Automation(
+            name=automation_data.name,
+            description=automation_data.description,
+            price_per_token=automation_data.price_per_token,
+            pricing_type=automation_data.pricing_type,
+            status=automation_data.status,
+            api_base_url=automation_data.api_base_url,
+            api_provision_url=automation_data.api_provision_url,
+            api_usage_url=automation_data.api_usage_url,
+            api_kb_status_url=automation_data.api_kb_status_url,
+            api_kb_reset_url=automation_data.api_kb_reset_url,
+            health_check_url=automation_data.health_check_url
+        )
+        
         db.add(automation)
         db.commit()
         db.refresh(automation)
@@ -99,7 +114,29 @@ async def create_automation(
         
         db.commit()
         db.refresh(automation)
-        return automation
+        
+        # Return formatted response
+        return AutomationResponse(
+            id=automation.id,
+            name=automation.name,
+            description=automation.description,
+            price_per_token=automation.price_per_token,
+            pricing_type=automation.pricing_type,
+            status=automation.status,
+            api_base_url=automation.api_base_url,
+            api_provision_url=automation.api_provision_url,
+            api_usage_url=automation.api_usage_url,
+            api_kb_status_url=automation.api_kb_status_url,
+            api_kb_reset_url=automation.api_kb_reset_url,
+            has_service_token=bool(automation.service_token_hash),
+            service_token_masked=(automation.service_token_hash[:8] + "...") if automation.service_token_hash else None,
+            health_check_url=automation.health_check_url,
+            health_status=automation.health_status,
+            last_health_at=automation.last_health_at.isoformat() if automation.last_health_at else None,
+            is_listed=automation.is_listed,
+            created_at=automation.created_at.isoformat(),
+            updated_at=automation.updated_at.isoformat()
+        )
     except Exception as e:
         db.rollback()
         logger.error(f"Failed to create automation: {str(e)}")
@@ -108,10 +145,10 @@ async def create_automation(
             detail=f"Failed to create automation: {str(e)}"
         )
 
-@router.put("/automations/{automation_id}")
+@router.put("/automations/{automation_id}", response_model=AutomationResponse)
 async def update_automation(
     automation_id: int = Path(...),
-    automation_data: dict = None,
+    automation_data: AutomationUpdateRequest = None,
     db: Session = Depends(get_db),
     current_admin: User = Depends(get_current_admin_user)
 ):
@@ -125,7 +162,8 @@ async def update_automation(
         
         # Update fields if provided
         if automation_data:
-            for field, value in automation_data.items():
+            update_data = automation_data.dict(exclude_unset=True)
+            for field, value in update_data.items():
                 if hasattr(automation, field):
                     setattr(automation, field, value)
             automation.updated_at = datetime.utcnow()
@@ -144,7 +182,28 @@ async def update_automation(
             db.commit()
             db.refresh(automation)
         
-        return automation
+        # Return formatted response
+        return AutomationResponse(
+            id=automation.id,
+            name=automation.name,
+            description=automation.description,
+            price_per_token=automation.price_per_token,
+            pricing_type=automation.pricing_type,
+            status=automation.status,
+            api_base_url=automation.api_base_url,
+            api_provision_url=automation.api_provision_url,
+            api_usage_url=automation.api_usage_url,
+            api_kb_status_url=automation.api_kb_status_url,
+            api_kb_reset_url=automation.api_kb_reset_url,
+            has_service_token=bool(automation.service_token_hash),
+            service_token_masked=(automation.service_token_hash[:8] + "...") if automation.service_token_hash else None,
+            health_check_url=automation.health_check_url,
+            health_status=automation.health_status,
+            last_health_at=automation.last_health_at.isoformat() if automation.last_health_at else None,
+            is_listed=automation.is_listed,
+            created_at=automation.created_at.isoformat(),
+            updated_at=automation.updated_at.isoformat()
+        )
     except HTTPException:
         raise
     except Exception as e:

@@ -210,7 +210,9 @@ app.include_router(telegram.router)
 from routers.password_reset import router as password_reset_router
 app.include_router(password_reset_router, prefix="/api", tags=["password-reset"])
 from routers.admin.automation import router as admin_automation_router
+from routers.admin.automation_validation import router as automation_validation_router
 app.include_router(admin_automation_router, prefix="/api/admin", tags=["automation"])
+app.include_router(automation_validation_router, prefix="/api/admin", tags=["automation-validation"])
 from routers.admin.kb_monitoring import router as kb_monitoring_router
 app.include_router(kb_monitoring_router, prefix="/api/admin", tags=["kb-monitoring"])
 from routers.admin.kb_monitoring_simple import router as kb_monitoring_simple_router
