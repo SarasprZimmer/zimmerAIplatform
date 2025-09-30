@@ -181,38 +181,34 @@ async def delete_automation(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=f"Cannot delete automation with {len(user_automations)} active user connections. Please deactivate users first."
             )
-            
-            # Option 2: Force delete all user connections (uncomment if you want this behavior)
-            # for ua in user_automations:
-            #     # Delete related records first
-            #     db.query(KBStatusHistory).filter(KBStatusHistory.user_automation_id == ua.id).delete()
-            #     db.query(TokenAdjustment).filter(TokenAdjustment.user_automation_id == ua.id).delete()
-            #     db.query(TokenUsage).filter(TokenUsage.user_automation_id == ua.id).delete()
-            #     db.query(FallbackLog).filter(FallbackLog.user_automation_id == ua.id).delete()
-            #     # Delete user automation
-            #     db.delete(ua)
         
-        # Delete related records that don't have CASCADE
-        from models.kb_template import KBTemplate
-        from models.openai_key import OpenAIKey
-        from models.openai_key_usage import OpenAIKeyUsage
-        from models.payment import Payment
-        from models.kb_status_history import KBStatusHistory
+        # Delete related records safely - only delete tables that exist
+        from sqlalchemy import text
         
-        # Delete KB templates
-        db.query(KBTemplate).filter(KBTemplate.automation_id == automation_id).delete()
+        try:
+            # Delete KB templates
+            db.execute(text("DELETE FROM kb_templates WHERE automation_id = :automation_id"), {"automation_id": automation_id})
+        except Exception as e:
+            logger.warning(f"Could not delete kb_templates: {e}")
         
-        # Delete OpenAI keys and their usage
-        openai_keys = db.query(OpenAIKey).filter(OpenAIKey.automation_id == automation_id).all()
-        for key in openai_keys:
-            db.query(OpenAIKeyUsage).filter(OpenAIKeyUsage.openai_key_id == key.id).delete()
-            db.delete(key)
+        try:
+            # Delete OpenAI keys and their usage
+            db.execute(text("DELETE FROM openai_key_usage WHERE openai_key_id IN (SELECT id FROM openai_keys WHERE automation_id = :automation_id)"), {"automation_id": automation_id})
+            db.execute(text("DELETE FROM openai_keys WHERE automation_id = :automation_id"), {"automation_id": automation_id})
+        except Exception as e:
+            logger.warning(f"Could not delete openai_keys: {e}")
         
-        # Delete payments
-        db.query(Payment).filter(Payment.automation_id == automation_id).delete()
+        try:
+            # Delete payments
+            db.execute(text("DELETE FROM payments WHERE automation_id = :automation_id"), {"automation_id": automation_id})
+        except Exception as e:
+            logger.warning(f"Could not delete payments: {e}")
         
-        # Delete KB status history
-        db.query(KBStatusHistory).filter(KBStatusHistory.automation_id == automation_id).delete()
+        try:
+            # Delete KB status history (only if table exists)
+            db.execute(text("DELETE FROM kb_status_history WHERE automation_id = :automation_id"), {"automation_id": automation_id})
+        except Exception as e:
+            logger.warning(f"Could not delete kb_status_history: {e}")
         
         # Delete the automation itself
         db.delete(automation)

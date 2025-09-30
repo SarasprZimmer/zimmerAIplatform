@@ -8,8 +8,7 @@ from database import Base
 
 class PricingType(str, enum.Enum):
     token_per_session = 'token_per_session'
-    token_per_step = 'token_per_step'
-    flat_fee = 'flat_fee'
+    token_per_message = 'token_per_message'
 
 class Automation(Base):
     __tablename__ = 'automations'

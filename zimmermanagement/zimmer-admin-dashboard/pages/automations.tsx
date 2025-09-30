@@ -8,7 +8,7 @@ interface Automation {
   name: string;
   description: string;
   price_per_token: number;
-  pricing_type: 'per_message' | 'per_minute' | 'per_session';
+  pricing_type: 'token_per_message' | 'per_minute' | 'token_per_session';
   status: boolean;
   api_base_url?: string;
   api_provision_url?: string;
@@ -25,7 +25,7 @@ interface AutomationFormData {
   name: string;
   description: string;
   price_per_token: number;
-  pricing_type: 'per_message' | 'per_minute' | 'per_session';
+  pricing_type: 'token_per_message' | 'per_minute' | 'token_per_session';
   status: boolean;
   api_base_url: string;
   api_provision_url: string;
@@ -35,9 +35,9 @@ interface AutomationFormData {
 }
 
 const pricingTypeLabels = {
-  per_message: 'به ازای پیام',
+  token_per_message: 'به ازای پیام',
   per_minute: 'به ازای دقیقه',
-  per_session: 'به ازای جلسه'
+  token_per_session: 'به ازای جلسه'
 };
 
 export default function Automations() {
@@ -53,7 +53,7 @@ export default function Automations() {
     name: '',
     description: '',
     price_per_token: 0,
-    pricing_type: 'per_message',
+    pricing_type: 'token_per_message',
     status: true,
     api_base_url: '',
     api_provision_url: '',
@@ -132,7 +132,7 @@ export default function Automations() {
       name: '',
       description: '',
               price_per_token: 0,
-      pricing_type: 'per_message',
+      pricing_type: 'token_per_message',
       status: true,
       api_base_url: '',
       api_provision_url: '',
@@ -383,9 +383,9 @@ export default function Automations() {
                       onChange={(e) => setFormData({...formData, pricing_type: e.target.value as any})}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     >
-                      <option value="per_message">به ازای پیام</option>
+                      <option value="token_per_message">به ازای پیام</option>
                       <option value="per_minute">به ازای دقیقه</option>
-                      <option value="per_session">به ازای جلسه</option>
+                      <option value="token_per_session">به ازای جلسه</option>
                     </select>
                   </div>
                   <div>
