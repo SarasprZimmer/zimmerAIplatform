@@ -149,16 +149,32 @@ export default function Automations() {
   const handleGenerateToken = async (id: number) => {
     try {
       const response = await api.post(`/api/admin/automations/${id}/generate-service-token`);
-      if (response.data.token) {
-        alert(`Service Token Generated:
+      if (response.data.service_token) {
+        // Show token in a modal-like alert with better formatting
+        const token = response.data.service_token;
+        const message = `🔑 Service Token Generated Successfully!
 
-${response.data.token}
+Token: ${token}
 
-Please save this token securely. It will not be shown again.`);
+⚠️ IMPORTANT: Save this token securely. It will not be shown again.
+
+📋 Instructions for Automation Developer:
+1. Add this token to your automation's environment variables
+2. Verify the X-Zimmer-Service-Token header in incoming requests
+3. Only process requests with valid tokens
+4. Return 401 error for invalid tokens
+
+Environment Variable: AUTOMATION_${id}_SERVICE_TOKEN=${token}`;
+        
+        alert(message);
+        
+        // Refresh the automations list to show updated token status
+        fetchAutomations();
       }
     } catch (error: any) {
       console.error('Error generating service token:', error);
-      alert('Failed to generate service token');
+      const errorMessage = error.response?.data?.detail || error.message || 'Failed to generate service token';
+      alert(`❌ Error: ${errorMessage}`);
     }
   };
 
@@ -392,6 +408,13 @@ Please save this token securely. It will not be shown again.`);
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                       <div className="flex gap-2">
+                        <button
+                          onClick={() => handleGenerateToken(automation.id)}
+                          className="text-green-600 hover:text-green-900"
+                          title="تولید توکن سرویس"
+                        >
+                          <KeyIcon className="w-4 h-4" />
+                        </button>
                         <button
                           onClick={() => openIntegrationPanel(automation)}
                           className="text-blue-600 hover:text-blue-900"
