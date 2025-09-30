@@ -65,6 +65,9 @@ export default function Automations() {
   const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'inactive'>('all');
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [showTokenModal, setShowTokenModal] = useState(false);
+  const [generatedToken, setGeneratedToken] = useState<string | null>(null);
+  const [tokenAutomationId, setTokenAutomationId] = useState<number | null>(null);
 
   useEffect(() => {
     fetchAutomations();
@@ -150,31 +153,35 @@ export default function Automations() {
     try {
       const response = await api.post(`/api/admin/automations/${id}/generate-service-token`);
       if (response.data.service_token) {
-        // Show token in a modal-like alert with better formatting
-        const token = response.data.service_token;
-        const message = `🔑 Service Token Generated Successfully!
-
-Token: ${token}
-
-⚠️ IMPORTANT: Save this token securely. It will not be shown again.
-
-📋 Instructions for Automation Developer:
-1. Add this token to your automation's environment variables
-2. Verify the X-Zimmer-Service-Token header in incoming requests
-3. Only process requests with valid tokens
-4. Return 401 error for invalid tokens
-
-Environment Variable: AUTOMATION_${id}_SERVICE_TOKEN=${token}`;
-        
-        alert(message);
+        setGeneratedToken(response.data.service_token);
+        setTokenAutomationId(id);
+        setShowTokenModal(true);
         
         // Refresh the automations list to show updated token status
         fetchAutomations();
       }
     } catch (error: any) {
       console.error('Error generating service token:', error);
-      const errorMessage = error.response?.data?.detail || error.message || 'Failed to generate service token';
-      alert(`❌ Error: ${errorMessage}`);
+      const errorMessage = error.response?.data?.detail || error.message || 'خطا در تولید توکن سرویس';
+      setError(errorMessage);
+    }
+  };
+
+  const copyTokenToClipboard = async () => {
+    if (generatedToken) {
+      try {
+        await navigator.clipboard.writeText(generatedToken);
+        setSuccess('توکن با موفقیت کپی شد');
+      } catch (err) {
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = generatedToken;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        setSuccess('توکن با موفقیت کپی شد');
+      }
     }
   };
 
@@ -787,6 +794,108 @@ Environment Variable: AUTOMATION_${id}_SERVICE_TOKEN=${token}`;
                 className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
               >
                 حذف
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Token Generation Modal */}
+      {showTokenModal && generatedToken && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+                <KeyIcon className="w-6 h-6 text-green-600" />
+                توکن سرویس تولید شد
+              </h3>
+              <button
+                onClick={() => {
+                  setShowTokenModal(false);
+                  setGeneratedToken(null);
+                  setTokenAutomationId(null);
+                }}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            
+            <div className="space-y-4">
+              {/* Token Display */}
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  توکن سرویس:
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={generatedToken}
+                    readOnly
+                    className="flex-1 border border-gray-300 rounded px-3 py-2 font-mono text-sm bg-white"
+                  />
+                  <button
+                    onClick={copyTokenToClipboard}
+                    className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 flex items-center gap-2"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                    </svg>
+                    کپی
+                  </button>
+                </div>
+              </div>
+
+              {/* Warning */}
+              <div className="bg-yellow-100 border border-yellow-400 text-yellow-800 p-4 rounded-lg">
+                <div className="flex items-center gap-2">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                  </svg>
+                  <span className="font-semibold">مهم:</span>
+                </div>
+                <p className="mt-2">این توکن فقط یک بار نمایش داده می‌شود. لطفاً آن را در جای امنی ذخیره کنید.</p>
+              </div>
+
+              {/* Instructions */}
+              <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg">
+                <h4 className="font-semibold text-blue-800 mb-3 flex items-center gap-2">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                  </svg>
+                  راهنمای توسعه‌دهنده اتوماسیون:
+                </h4>
+                <ol className="text-sm text-blue-700 space-y-2 list-decimal list-inside">
+                  <li>این توکن را به متغیرهای محیطی اتوماسیون خود اضافه کنید</li>
+                  <li>هدر X-Zimmer-Service-Token را در درخواست‌های ورودی بررسی کنید</li>
+                  <li>فقط درخواست‌هایی با توکن معتبر را پردازش کنید</li>
+                  <li>برای توکن‌های نامعتبر خطای 401 برگردانید</li>
+                </ol>
+              </div>
+
+              {/* Environment Variable */}
+              <div className="bg-gray-100 p-4 rounded-lg">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  متغیر محیطی:
+                </label>
+                <code className="text-sm bg-white p-2 rounded border block">
+                  AUTOMATION_{tokenAutomationId}_SERVICE_TOKEN={generatedToken}
+                </code>
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-3 mt-6">
+              <button
+                onClick={() => {
+                  setShowTokenModal(false);
+                  setGeneratedToken(null);
+                  setTokenAutomationId(null);
+                }}
+                className="bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600"
+              >
+                بستن
               </button>
             </div>
           </div>
