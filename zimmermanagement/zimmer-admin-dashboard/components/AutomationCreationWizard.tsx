@@ -70,6 +70,14 @@ export default function AutomationCreationWizard({ isOpen, onClose, onSuccess }:
     }
   }, [isOpen]);
 
+  // Cleanup sensitive data when component unmounts
+  useEffect(() => {
+    return () => {
+      setAdminPassword('');
+      setServiceToken(null);
+    };
+  }, []);
+
   const resetWizard = () => {
     setCurrentStep(1);
     setStep1Data({ name: '', description: '' });
@@ -94,6 +102,9 @@ export default function AutomationCreationWizard({ isOpen, onClose, onSuccess }:
   };
 
   const handleClose = () => {
+    // Clear sensitive data immediately
+    setAdminPassword('');
+    setServiceToken(null);
     resetWizard();
     onClose();
   };
@@ -402,15 +413,32 @@ export default function AutomationCreationWizard({ isOpen, onClose, onSuccess }:
                   </div>
                 </div>
                 
-                <div className="flex items-center space-x-4">
+                <form 
+                  key="service-token-form"
+                  onSubmit={(e) => e.preventDefault()} 
+                  autoComplete="off"
+                  className="flex items-center space-x-4"
+                >
+                  {/* Hidden fields to confuse autofill */}
+                  <input type="text" style={{display: 'none'}} tabIndex={-1} autoComplete="off" />
+                  <input type="password" style={{display: 'none'}} tabIndex={-1} autoComplete="off" />
+                  
                   <input
                     type="password"
                     value={adminPassword}
                     onChange={(e) => setAdminPassword(e.target.value)}
                     className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder="رمز عبور ادمین"
-                    autoComplete="new-password"
-                    name="admin-password"
+                    autoComplete="off"
+                    autoCorrect="off"
+                    autoCapitalize="off"
+                    spellCheck="false"
+                    name="service-token-admin-password"
+                    id="service-token-admin-password"
+                    data-form-type="other"
+                    data-lpignore="true"
+                    data-1p-ignore="true"
+                    tabIndex={1}
                   />
                   <button
                     type="button"
@@ -420,7 +448,7 @@ export default function AutomationCreationWizard({ isOpen, onClose, onSuccess }:
                   >
                     {loading ? 'در حال تولید...' : 'تولید توکن'}
                   </button>
-                </div>
+                </form>
               </div>
             ) : (
               <div className="border-t pt-6">
