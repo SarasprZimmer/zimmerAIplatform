@@ -63,6 +63,13 @@ export default function AutomationCreationWizard({ isOpen, onClose, onSuccess }:
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
+  // Clear any existing form data when component mounts
+  useEffect(() => {
+    if (isOpen) {
+      resetWizard();
+    }
+  }, [isOpen]);
+
   const resetWizard = () => {
     setCurrentStep(1);
     setStep1Data({ name: '', description: '' });
@@ -321,7 +328,7 @@ export default function AutomationCreationWizard({ isOpen, onClose, onSuccess }:
 
         {/* Step 1: Basic Information & Token Generation */}
         {currentStep === 1 && (
-          <div className="space-y-6">
+          <form className="space-y-6" autoComplete="off">
             <h3 className="text-xl font-semibold">اطلاعات پایه و تولید توکن</h3>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -336,6 +343,8 @@ export default function AutomationCreationWizard({ isOpen, onClose, onSuccess }:
                   onChange={(e) => setStep1Data({...step1Data, name: e.target.value})}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="نام اتوماسیون خود را وارد کنید"
+                  autoComplete="off"
+                  name="automation-name"
                 />
               </div>
               <div>
@@ -349,6 +358,8 @@ export default function AutomationCreationWizard({ isOpen, onClose, onSuccess }:
                   onChange={(e) => setStep1Data({...step1Data, description: e.target.value})}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="توضیحات کوتاه"
+                  autoComplete="off"
+                  name="automation-description"
                 />
               </div>
             </div>
@@ -378,6 +389,8 @@ export default function AutomationCreationWizard({ isOpen, onClose, onSuccess }:
                     onChange={(e) => setAdminPassword(e.target.value)}
                     className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder="رمز عبور ادمین"
+                    autoComplete="new-password"
+                    name="admin-password"
                   />
                   <button
                     onClick={handleGenerateToken}
@@ -440,7 +453,7 @@ export default function AutomationCreationWizard({ isOpen, onClose, onSuccess }:
                 مرحله بعد
               </button>
             </div>
-          </div>
+          </form>
         )}
 
         {/* Step 2: Pricing */}
