@@ -136,7 +136,7 @@ export default function AutomationCreationWizard({ isOpen, onClose, onSuccess }:
       }
 
       // Use direct fetch with absolute URL to avoid any routing issues
-      const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api.zimmerai.com';
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_BASE_URL || 'https://api.zimmerai.com';
       const response = await fetch(`${baseUrl}/api/admin/automations/generate-token`, {
         method: 'POST',
         headers: {
@@ -374,7 +374,16 @@ export default function AutomationCreationWizard({ isOpen, onClose, onSuccess }:
 
         {/* Step 1: Basic Information & Token Generation */}
         {currentStep === 1 && (
-          <form className="space-y-6" autoComplete="off">
+          <form 
+            id="automation-wizard-form"
+            className="space-y-6" 
+            autoComplete="off"
+            onSubmit={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              return false;
+            }}
+          >
             <h3 className="text-xl font-semibold">اطلاعات پایه و تولید توکن</h3>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -390,7 +399,13 @@ export default function AutomationCreationWizard({ isOpen, onClose, onSuccess }:
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="نام اتوماسیون خود را وارد کنید"
                   autoComplete="off"
+                  autoCorrect="off"
+                  autoCapitalize="off"
+                  spellCheck="false"
                   name="automation-name"
+                  data-form-type="other"
+                  data-lpignore="true"
+                  data-1p-ignore="true"
                 />
               </div>
               <div>
@@ -405,7 +420,13 @@ export default function AutomationCreationWizard({ isOpen, onClose, onSuccess }:
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="توضیحات کوتاه"
                   autoComplete="off"
+                  autoCorrect="off"
+                  autoCapitalize="off"
+                  spellCheck="false"
                   name="automation-description"
+                  data-form-type="other"
+                  data-lpignore="true"
+                  data-1p-ignore="true"
                 />
               </div>
             </div>
