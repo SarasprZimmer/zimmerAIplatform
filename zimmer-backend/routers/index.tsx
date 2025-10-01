@@ -167,7 +167,7 @@ export default function AdminNotificationsPage() {
   };
 
   return (
-    <Layout title="ارسال اعلان">
+    <Layout>
       <div className="p-6">
         <h1 className="text-2xl font-bold mb-6">ارسال اعلان</h1>
         

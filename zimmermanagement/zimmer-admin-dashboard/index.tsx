@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import Layout from "../../components/Layout";
-import { useAuth } from "../../contexts/AuthContext";
-import { authClient } from "../../lib/auth-client";
-import { adminAPI } from "../../lib/api";
+import Layout from "./components/Layout";
+import { useAuth } from "./contexts/AuthContext";
+import { authClient } from "./lib/auth-client";
+import { adminAPI } from "./lib/api";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "https://api.zimmerai.com";
 
