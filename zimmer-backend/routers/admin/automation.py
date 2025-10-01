@@ -15,6 +15,7 @@ from schemas.automation_admin import AutomationCreateRequest, AutomationUpdateRe
 from utils.auth_dependency import get_current_admin_user, get_current_user
 from database import get_db
 from utils.service_tokens import verify_token
+from utils.security import verify_password
 from datetime import datetime, timezone
 from services.automation_health import probe, classify
 import logging
@@ -32,8 +33,7 @@ async def generate_service_token(
     Requires admin password verification
     """
     try:
-        # Verify admin password
-        from utils.auth import verify_password
+        # Verify admin password using the correct function
         if not verify_password(password_data.get("password", ""), current_admin.password_hash):
             raise HTTPException(
                 status_code=401,
@@ -75,22 +75,20 @@ async def get_automations(
     try:
         query = db.query(Automation)
         
-        # Apply filters if provided
         if status is not None:
             query = query.filter(Automation.status == status)
         
-        # Get automations ordered by newest first
-        automations = query.order_by(Automation.created_at.desc()).all()
+        automations = query.all()
         
         # Format response
-        formatted_automations = []
+        automation_list = []
         for automation in automations:
-            formatted_automations.append({
+            automation_list.append({
                 "id": automation.id,
                 "name": automation.name,
                 "description": automation.description,
-                "pricing_type": automation.pricing_type,
                 "price_per_token": automation.price_per_token,
+                "pricing_type": automation.pricing_type,
                 "status": automation.status,
                 "api_base_url": automation.api_base_url,
                 "api_provision_url": automation.api_provision_url,
@@ -98,19 +96,19 @@ async def get_automations(
                 "api_kb_status_url": automation.api_kb_status_url,
                 "api_kb_reset_url": automation.api_kb_reset_url,
                 "has_service_token": bool(automation.service_token_hash),
-                "service_token_masked": (automation.service_token_hash[:8] + "...") if automation.service_token_hash else None,
+                "service_token_masked": automation.service_token_masked,
                 "health_check_url": automation.health_check_url,
                 "health_status": automation.health_status,
-                "last_health_at": automation.last_health_at,
+                "last_health_at": automation.last_health_at.isoformat() if automation.last_health_at else None,
                 "is_listed": automation.is_listed,
-                "created_at": automation.created_at,
-                "updated_at": automation.updated_at
+                "created_at": automation.created_at.isoformat() if automation.created_at else None,
+                "updated_at": automation.updated_at.isoformat() if automation.updated_at else None
             })
         
-        return formatted_automations
+        return {"automations": automation_list}
         
     except Exception as e:
-        logger.error(f"Failed to retrieve automations: {str(e)}")
+        logger.error(f"Failed to retrieve automations: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to retrieve automations: {str(e)}"
@@ -182,7 +180,7 @@ async def create_automation(
             api_kb_status_url=automation.api_kb_status_url,
             api_kb_reset_url=automation.api_kb_reset_url,
             has_service_token=bool(automation.service_token_hash),
-            service_token_masked=(automation.service_token_hash[:8] + "...") if automation.service_token_hash else None,
+            service_token_masked=automation.service_token_masked,
             health_check_url=automation.health_check_url,
             health_status=automation.health_status,
             last_health_at=automation.last_health_at.isoformat() if automation.last_health_at else None,
@@ -190,9 +188,10 @@ async def create_automation(
             created_at=automation.created_at.isoformat() if automation.created_at else None,
             updated_at=automation.updated_at.isoformat() if automation.updated_at else None
         )
+        
     except Exception as e:
         db.rollback()
-        logger.error(f"Failed to create automation: {str(e)}")
+        logger.error(f"Failed to create automation: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to create automation: {str(e)}"
@@ -291,6 +290,7 @@ async def update_automation(
             status_code=500,
             detail=f"Failed to update automation: {str(e)}"
         )
+
 @router.delete("/automations/{automation_id}")
 async def delete_automation(
     automation_id: int = Path(...),
@@ -298,8 +298,7 @@ async def delete_automation(
     current_admin: User = Depends(get_current_admin_user)
 ):
     """
-    Delete an automation (admin only)
-    Handles foreign key constraints by deleting related records first
+    Delete an automation and all related data (admin only)
     """
     try:
         automation = db.query(Automation).filter(Automation.id == automation_id).first()
@@ -359,6 +358,52 @@ async def delete_automation(
         # Close the separate engine
         if 'separate_engine' in locals():
             separate_engine.dispose()
+
+@router.post("/automations/{automation_id}/generate-token")
+async def generate_automation_token(
+    automation_id: int = Path(...),
+    db: Session = Depends(get_db),
+    current_admin: User = Depends(get_current_admin_user)
+):
+    """
+    Generate a new service token for an existing automation (admin only)
+    """
+    try:
+        automation = db.query(Automation).filter(Automation.id == automation_id).first()
+        if not automation:
+            raise HTTPException(status_code=404, detail="Automation not found")
+
+        # Generate a new secure random token
+        service_token = secrets.token_urlsafe(32)
+        
+        # Hash the token for storage
+        token_hash = hashlib.sha256(service_token.encode()).hexdigest()
+        
+        # Update automation with new token hash
+        automation.service_token_hash = token_hash
+        automation.updated_at = datetime.now(timezone.utc)
+        
+        db.commit()
+        db.refresh(automation)
+        
+        logger.info(f"Admin {current_admin.email} generated new service token for automation {automation.name} (ID: {automation_id})")
+        
+        return {
+            "token": service_token,
+            "message": "توکن سرویس جدید با موفقیت تولید شد",
+            "warning": "این توکن فقط یک بار نمایش داده می‌شود"
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        db.rollback()
+        logger.error(f"Failed to generate service token for automation {automation_id}: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"خطا در تولید توکن سرویس: {str(e)}"
+        )
+
 @router.post("/automations/{automation_id}/provision", response_model=ProvisionResponse)
 async def provision_automation(
     automation_id: int = Path(...),
@@ -366,62 +411,43 @@ async def provision_automation(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    """
-    Provision a user automation with the external automation service
-    """
-    # Fetch automation
     automation = db.query(Automation).filter(Automation.id == automation_id).first()
     if not automation:
         raise HTTPException(status_code=404, detail="Automation not found")
-    
-    # Verify user automation belongs to current user
+
     user_automation = db.query(UserAutomation).filter(
         UserAutomation.id == provision_data.user_automation_id,
         UserAutomation.user_id == current_user.id,
         UserAutomation.automation_id == automation_id
     ).first()
-    
+
     if not user_automation:
         raise HTTPException(status_code=404, detail="User automation not found")
-    
-    # Check if automation has provision URL
+
     if not automation.api_provision_url:
-        raise HTTPException(
-            status_code=400, 
-            detail="این اتوماسیون قابلیت اتصال مستقیم ندارد"
-        )
-    
-    # Get service token from environment (for MVP)
-    # TODO: Replace with secure secret manager in production
+        raise HTTPException(status_code=400, detail="این اتوماسیون قابلیت اتصال مستقیم ندارد")
+
     service_token = os.getenv(f"AUTOMATION_{automation_id}_SERVICE_TOKEN")
     if not service_token:
         logger.error(f"No service token found for automation {automation_id}")
-        raise HTTPException(
-            status_code=500,
-            detail="خطا در پیکربندی سرویس"
-        )
-    
-    # Verify service token hash
+        raise HTTPException(status_code=500, detail="خطا در پیکربندی سرویس")
+
     if not verify_token(service_token, automation.service_token_hash):
         logger.error(f"Invalid service token for automation {automation_id}")
-        raise HTTPException(
-            status_code=500,
-            detail="خطا در احراز هویت سرویس"
-        )
-    
-    # Prepare request to external automation
+        raise HTTPException(status_code=500, detail="خطا در احراز هویت سرویس")
+
     provision_payload = {
         "user_automation_id": user_automation.id,
         "user_id": current_user.id,
         "bot_token": provision_data.bot_token,
         "demo_tokens": user_automation.demo_tokens
     }
-    
+
     headers = {
         "X-Zimmer-Service-Token": service_token,
         "Content-Type": "application/json"
     }
-    
+
     try:
         async with httpx.AsyncClient(timeout=30.0) as client:
             response = await client.post(
@@ -429,20 +455,12 @@ async def provision_automation(
                 json=provision_payload,
                 headers=headers
             )
-            
+
             if response.status_code == 200:
-                # Update user automation with provision info
                 user_automation.provisioned_at = datetime.utcnow()
                 user_automation.integration_status = "active"
-                
-                # Save any returned fields from external service
-                response_data = response.json()
-                if "webhook_url" in response_data:
-                    # Store webhook URL if provided
-                    pass  # Add field to UserAutomation if needed
-                
                 db.commit()
-                
+
                 return ProvisionResponse(
                     success=True,
                     message="اتصال با سرویس اتوماسیون برقرار شد ✅",
@@ -451,20 +469,11 @@ async def provision_automation(
                 )
             else:
                 logger.error(f"External automation returned {response.status_code}: {response.text}")
-                raise HTTPException(
-                    status_code=502,
-                    detail="اتصال با سرویس اتوماسیون برقرار نشد. لطفاً بعداً دوباره تلاش کنید."
-                )
-                
+                raise HTTPException(status_code=502, detail="اتصال با سرویس اتوماسیون برقرار نشد. لطفاً بعداً دوباره تلاش کنید.")
+
     except httpx.RequestError as e:
         logger.error(f"Network error calling external automation: {e}")
-        raise HTTPException(
-            status_code=502,
-            detail="اتصال با سرویس اتوماسیون برقرار نشد. لطفاً بعداً دوباره تلاش کنید."
-        )
+        raise HTTPException(status_code=502, detail="اتصال با سرویس اتوماسیون برقرار نشد. لطفاً بعداً دوباره تلاش کنید.")
     except Exception as e:
         logger.error(f"Unexpected error during provision: {e}")
-        raise HTTPException(
-            status_code=500,
-            detail="خطای غیرمنتظره در اتصال به سرویس"
-        )
+        raise HTTPException(status_code=500, detail="خطای غیرمنتظره در اتصال")
