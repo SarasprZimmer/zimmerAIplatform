@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { CheckCircleIcon, XCircleIcon, ExclamationTriangleIcon, EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import api from '../lib/api';
 
@@ -62,6 +62,9 @@ export default function AutomationCreationWizard({ isOpen, onClose, onSuccess }:
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  
+  // Ref for the password form to prevent any interference
+  const passwordFormRef = useRef<HTMLFormElement>(null);
 
   // Clear any existing form data when component mounts
   useEffect(() => {
@@ -110,7 +113,13 @@ export default function AutomationCreationWizard({ isOpen, onClose, onSuccess }:
   };
 
   // Step 1: Generate service token using direct fetch to avoid API client interference
-  const handleGenerateServiceToken = async () => {
+  const handleGenerateServiceToken = async (e?: React.MouseEvent) => {
+    // Prevent any default behavior
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
     if (!adminPassword.trim()) {
       setError('لطفاً رمز عبور ادمین را وارد کنید');
       return;
@@ -126,14 +135,17 @@ export default function AutomationCreationWizard({ isOpen, onClose, onSuccess }:
         throw new Error('No access token found');
       }
 
-      // Use direct fetch to avoid any API client interference
-      const response = await fetch('/api/admin/automations/generate-token', {
+      // Use direct fetch with absolute URL to avoid any routing issues
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api.zimmerai.com';
+      const response = await fetch(`${baseUrl}/api/admin/automations/generate-token`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${accessToken}`
+          'Authorization': `Bearer ${accessToken}`,
+          'X-Requested-With': 'XMLHttpRequest' // Prevent CSRF issues
         },
-        body: JSON.stringify({ password: adminPassword })
+        body: JSON.stringify({ password: adminPassword }),
+        credentials: 'include' // Include cookies for CSRF
       });
 
       if (!response.ok) {
@@ -147,6 +159,9 @@ export default function AutomationCreationWizard({ isOpen, onClose, onSuccess }:
       setServiceToken(data.token);
       setShowServiceTokenGeneration(true);
       setSuccess('توکن سرویس با موفقیت تولید شد');
+      
+      // Clear the password immediately after successful generation
+      setAdminPassword('');
     } catch (error: any) {
       setError(error.message || 'خطا در تولید توکن سرویس');
     } finally {
@@ -414,10 +429,22 @@ export default function AutomationCreationWizard({ isOpen, onClose, onSuccess }:
                 </div>
                 
                 <form 
+                  ref={passwordFormRef}
                   key="service-token-form"
-                  onSubmit={(e) => e.preventDefault()} 
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                  }} 
                   autoComplete="off"
                   className="flex items-center space-x-4"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handleGenerateServiceToken();
+                    }
+                  }}
                 >
                   {/* Hidden fields to confuse autofill */}
                   <input type="text" style={{display: 'none'}} tabIndex={-1} autoComplete="off" />
@@ -427,6 +454,13 @@ export default function AutomationCreationWizard({ isOpen, onClose, onSuccess }:
                     type="password"
                     value={adminPassword}
                     onChange={(e) => setAdminPassword(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleGenerateServiceToken();
+                      }
+                    }}
                     className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder="رمز عبور ادمین"
                     autoComplete="off"
