@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Layout from '../components/Layout';
 import { PlusIcon, PencilIcon, TrashIcon, EyeIcon, KeyIcon } from '@heroicons/react/24/outline';
 import api from '../lib/api';
+import AutomationCreationWizard from '../components/AutomationCreationWizard';
 
 interface Automation {
   id: number;
@@ -68,6 +69,7 @@ export default function Automations() {
   const [showTokenModal, setShowTokenModal] = useState(false);
   const [generatedToken, setGeneratedToken] = useState<string | null>(null);
   const [tokenAutomationId, setTokenAutomationId] = useState<number | null>(null);
+  const [showWizard, setShowWizard] = useState(false);
 
   useEffect(() => {
     fetchAutomations();
@@ -317,7 +319,7 @@ export default function Automations() {
             onClick={() => {
               setError(null);
               setSuccess(null);
-              setShowForm(true);
+              setShowWizard(true);
             }}
             className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center gap-2"
           >
@@ -460,7 +462,7 @@ export default function Automations() {
           <div className="text-center py-12">
             <div className="text-gray-400 text-lg">هیچ اتوماسیونی یافت نشد</div>
             <button
-              onClick={() => setShowForm(true)}
+              onClick={() => setShowWizard(true)}
               className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
             >
               افزودن اولین اتوماسیون
@@ -469,7 +471,17 @@ export default function Automations() {
         )}
       </div>
 
-      {/* Automation Form Modal */}
+      {/* Automation Creation Wizard */}
+      <AutomationCreationWizard
+        isOpen={showWizard}
+        onClose={() => setShowWizard(false)}
+        onSuccess={() => {
+          setShowWizard(false);
+          fetchAutomations();
+        }}
+      />
+
+      {/* Automation Form Modal (for editing) */}
       {showForm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">

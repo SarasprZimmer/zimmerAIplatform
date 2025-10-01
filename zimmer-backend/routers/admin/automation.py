@@ -1,8 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Path, Query
 from sqlalchemy.orm import Session
+from sqlalchemy import text
 from typing import Optional
 import httpx
 import os
+import secrets
+import hashlib
 from database import SessionLocal
 from models.automation import Automation
 from models.user_automation import UserAutomation
@@ -18,6 +21,47 @@ import logging
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
+
+@router.post("/automations/generate-token")
+async def generate_service_token(
+    password_data: dict,
+    current_admin: User = Depends(get_current_admin_user)
+):
+    """
+    Generate a service token for a new automation (admin only)
+    Requires admin password verification
+    """
+    try:
+        # Verify admin password
+        from utils.auth import verify_password
+        if not verify_password(password_data.get("password", ""), current_admin.password_hash):
+            raise HTTPException(
+                status_code=401,
+                detail="رمز عبور ادمین نادرست است"
+            )
+
+        # Generate a secure random token
+        service_token = secrets.token_urlsafe(32)
+        
+        # Hash the token for storage
+        token_hash = hashlib.sha256(service_token.encode()).hexdigest()
+        
+        logger.info(f"Admin {current_admin.email} generated a new service token")
+        
+        return {
+            "token": service_token,
+            "message": "توکن سرویس با موفقیت تولید شد. لطفاً آن را در جای امنی ذخیره کنید.",
+            "warning": "این توکن فقط یک بار نمایش داده می‌شود"
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Failed to generate service token: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"خطا در تولید توکن سرویس: {str(e)}"
+        )
 
 @router.get("/automations")
 async def get_automations(
@@ -74,7 +118,7 @@ async def get_automations(
 
 @router.post("/automations", response_model=AutomationResponse)
 async def create_automation(
-    automation_data: AutomationCreateRequest,
+    automation_data: dict,
     db: Session = Depends(get_db),
     current_admin: User = Depends(get_current_admin_user)
 ):
@@ -82,19 +126,28 @@ async def create_automation(
     Create a new automation (admin only)
     """
     try:
+        # Extract service token if provided
+        service_token = automation_data.pop('service_token', None)
+        service_token_hash = None
+        
+        if service_token:
+            # Hash the service token for storage
+            service_token_hash = hashlib.sha256(service_token.encode()).hexdigest()
+        
         # Create automation with validated data
         automation = Automation(
-            name=automation_data.name,
-            description=automation_data.description,
-            price_per_token=automation_data.price_per_token,
-            pricing_type=automation_data.pricing_type,
-            status=automation_data.status,
-            api_base_url=automation_data.api_base_url,
-            api_provision_url=automation_data.api_provision_url,
-            api_usage_url=automation_data.api_usage_url,
-            api_kb_status_url=automation_data.api_kb_status_url,
-            api_kb_reset_url=automation_data.api_kb_reset_url,
-            health_check_url=automation_data.health_check_url
+            name=automation_data.get('name'),
+            description=automation_data.get('description'),
+            price_per_token=automation_data.get('price_per_token', 0),
+            pricing_type=automation_data.get('pricing_type', 'token_per_session'),
+            status=automation_data.get('status', True),
+            api_base_url=automation_data.get('api_base_url'),
+            api_provision_url=automation_data.get('api_provision_url'),
+            api_usage_url=automation_data.get('api_usage_url'),
+            api_kb_status_url=automation_data.get('api_kb_status_url'),
+            api_kb_reset_url=automation_data.get('api_kb_reset_url'),
+            health_check_url=automation_data.get('health_check_url'),
+            service_token_hash=service_token_hash
         )
         
         db.add(automation)
@@ -160,59 +213,84 @@ async def update_automation(
         if not automation:
             raise HTTPException(status_code=404, detail="Automation not found")
 
-        logger.info(f"Admin {current_admin.email} attempting to delete automation {automation.name} (ID: {automation_id})")
+        logger.info(f"Admin {current_admin.email} attempting to update automation {automation.name} (ID: {automation_id})")
 
-        # Use completely separate database connections to avoid transaction issues
-        from sqlalchemy import create_engine
-        import os
+        # Update only the fields that are provided in the request
+        if automation_data.name is not None:
+            automation.name = automation_data.name
+        if automation_data.description is not None:
+            automation.description = automation_data.description
+        if automation_data.price_per_token is not None:
+            automation.price_per_token = automation_data.price_per_token
+        if automation_data.pricing_type is not None:
+            automation.pricing_type = automation_data.pricing_type
+        if automation_data.status is not None:
+            automation.status = automation_data.status
+        if automation_data.api_base_url is not None:
+            automation.api_base_url = automation_data.api_base_url
+        if automation_data.api_provision_url is not None:
+            automation.api_provision_url = automation_data.api_provision_url
+        if automation_data.api_usage_url is not None:
+            automation.api_usage_url = automation_data.api_usage_url
+        if automation_data.api_kb_status_url is not None:
+            automation.api_kb_status_url = automation_data.api_kb_status_url
+        if automation_data.api_kb_reset_url is not None:
+            automation.api_kb_reset_url = automation_data.api_kb_reset_url
+        if automation_data.health_check_url is not None:
+            automation.health_check_url = automation_data.health_check_url
+
+        # Update the updated_at timestamp
+        automation.updated_at = datetime.now(timezone.utc)
         
-        # Get database URL from environment
-        database_url = os.getenv('DATABASE_URL')
-        if not database_url:
-            raise HTTPException(status_code=500, detail="Database configuration error")
-        
-        # Create a new engine for separate connections
-        separate_engine = create_engine(database_url)
-        
-        # List of tables to clean up
-        cleanup_operations = [
-            ('kb_templates', f'DELETE FROM kb_templates WHERE automation_id = {automation_id}'),
-            ('openai_key_usage', f'DELETE FROM openai_key_usage WHERE openai_key_id IN (SELECT id FROM openai_keys WHERE automation_id = {automation_id})'),
-            ('openai_keys', f'DELETE FROM openai_keys WHERE automation_id = {automation_id}'),
-            ('payments', f'DELETE FROM payments WHERE automation_id = {automation_id}'),
-            ('user_automations', f'DELETE FROM user_automations WHERE automation_id = {automation_id}'),
-            ('kb_status_history', f'DELETE FROM kb_status_history WHERE automation_id = {automation_id}')
-        ]
-        
-        # Clean up each table using separate connections
-        for table_name, sql_query in cleanup_operations:
-            try:
-                # Use a separate connection for each operation
-                with separate_engine.begin() as conn:
-                    conn.execute(text(sql_query))
-                logger.info(f'✅ Deleted from {table_name} for automation {automation_id}')
-            except Exception as e:
-                if "relation "" in str(e) and "" does not exist" in str(e):
-                    logger.warning(f'⚠️  Table {table_name} does not exist, skipping')
-                else:
-                    logger.warning(f'⚠️  Could not delete from {table_name}: {str(e)[:100]}...')
-                # Continue with next table
-        
-        # Finally delete the automation itself using the main session
-        db.query(Automation).filter(Automation.id == automation_id).delete()
         db.commit()
+        db.refresh(automation)
         
-        logger.info(f'✅ Successfully deleted automation {automation.name} (ID: {automation_id})')
-        return {"message": f"Automation {automation.name} deleted successfully"}
+        # Run health check if health_check_url is provided
+        if automation.health_check_url:
+            result = await probe(automation.health_check_url)
+            automation.health_status = classify(result)
+            automation.last_health_at = datetime.now(timezone.utc)
+            automation.health_details = result
+            automation.is_listed = (automation.health_status == "healthy")
+        else:
+            automation.health_status = "unknown"
+            automation.is_listed = False
+        
+        db.commit()
+        db.refresh(automation)
+        
+        logger.info(f'✅ Successfully updated automation {automation.name} (ID: {automation_id})')
+        
+        # Return formatted response
+        return AutomationResponse(
+            id=automation.id,
+            name=automation.name,
+            description=automation.description,
+            price_per_token=automation.price_per_token,
+            pricing_type=automation.pricing_type,
+            status=automation.status,
+            api_base_url=automation.api_base_url,
+            api_provision_url=automation.api_provision_url,
+            api_usage_url=automation.api_usage_url,
+            api_kb_status_url=automation.api_kb_status_url,
+            api_kb_reset_url=automation.api_kb_reset_url,
+            has_service_token=bool(automation.service_token_hash),
+            service_token_masked=automation.service_token_masked,
+            health_check_url=automation.health_check_url,
+            health_status=automation.health_status,
+            last_health_at=automation.last_health_at.isoformat() if automation.last_health_at else None,
+            is_listed=automation.is_listed,
+            created_at=automation.created_at.isoformat() if automation.created_at else None,
+            updated_at=automation.updated_at.isoformat() if automation.updated_at else None
+        )
         
     except Exception as e:
         db.rollback()
-        logger.error(f'❌ Failed to delete automation {automation_id}: {e}')
-        raise HTTPException(status_code=500, detail=f"Failed to delete automation: {str(e)}")
-    finally:
-        # Close the separate engine
-        if 'separate_engine' in locals():
-            separate_engine.dispose()
+        logger.error(f'❌ Failed to update automation {automation_id}: {e}')
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to update automation: {str(e)}"
+        )
 @router.delete("/automations/{automation_id}")
 async def delete_automation(
     automation_id: int = Path(...),
