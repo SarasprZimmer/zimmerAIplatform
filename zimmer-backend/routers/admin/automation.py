@@ -145,7 +145,8 @@ async def create_automation(
             api_kb_status_url=automation_data.get('api_kb_status_url'),
             api_kb_reset_url=automation_data.get('api_kb_reset_url'),
             health_check_url=automation_data.get('health_check_url'),
-            service_token_hash=service_token_hash
+            service_token_hash=service_token_hash,
+            service_token_masked=service_token[:8] + "..." if service_token else None
         )
         
         db.add(automation)

@@ -26,6 +26,7 @@ class Automation(Base):
     api_kb_status_url = Column(String, nullable=True)
     api_kb_reset_url = Column(String, nullable=True)
     service_token_hash = Column(String, nullable=True)
+    service_token_masked = Column(String(50), nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
     

@@ -391,8 +391,8 @@ export default function AutomationCreationWizard({ isOpen, onClose, onSuccess }:
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   نام اتوماسیون
                 </label>
-                <input
-                  type="text"
+                <textarea
+                  rows={2}
                   required
                   value={step1Data.name}
                   onChange={(e) => setStep1Data({...step1Data, name: e.target.value})}
@@ -412,8 +412,8 @@ export default function AutomationCreationWizard({ isOpen, onClose, onSuccess }:
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   توضیحات
                 </label>
-                <input
-                  type="text"
+                <textarea
+                  rows={2}
                   required
                   value={step1Data.description}
                   onChange={(e) => setStep1Data({...step1Data, description: e.target.value})}
@@ -423,7 +423,7 @@ export default function AutomationCreationWizard({ isOpen, onClose, onSuccess }:
                   autoCorrect="off"
                   autoCapitalize="off"
                   spellCheck="false"
-                  name="automation-description"
+                  name={`automation-description-${Date.now()}`}
                   data-form-type="other"
                   data-lpignore="true"
                   data-1p-ignore="true"
@@ -529,15 +529,9 @@ export default function AutomationCreationWizard({ isOpen, onClose, onSuccess }:
                 </div>
                 
                 <div className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    id="serviceTokenConfirmed"
-                    checked={serviceTokenConfirmed}
-                    onChange={(e) => setServiceTokenConfirmed(e.target.checked)}
-                    className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                  />
-                  <label htmlFor="serviceTokenConfirmed" className="text-sm text-gray-700">
-                    تأیید می‌کنم که توکن را کپی کرده و در جای امنی ذخیره کرده‌ام
+                  <label className="flex items-center space-x-2">
+                    <input type="checkbox" id="serviceTokenConfirmed" checked={serviceTokenConfirmed} onChange={(e) => setServiceTokenConfirmed(e.target.checked)} className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" />
+                    <span className="text-sm text-gray-700">من توکن را کپی کرده و در متغیرهای محیطی قرار داده‌ام</span>
                   </label>
                 </div>
               </div>
