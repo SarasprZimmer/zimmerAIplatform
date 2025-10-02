@@ -16,6 +16,7 @@ interface Automation {
   api_usage_url?: string;
   api_kb_status_url?: string;
   api_kb_reset_url?: string;
+  dashboard_url?: string;
   service_token_masked?: string;
   has_service_token: boolean;
   created_at: string;
@@ -60,6 +61,7 @@ export default function Automations() {
     api_provision_url: '',
     api_usage_url: '',
     api_kb_status_url: '',
+    api_kb_reset_url: '',
     dashboard_url: ''
   });
   const [newToken, setNewToken] = useState('');
@@ -121,7 +123,8 @@ export default function Automations() {
         api_provision_url: formData.api_provision_url.trim() || null,
         api_usage_url: formData.api_usage_url.trim() || null,
         api_kb_status_url: formData.api_kb_status_url.trim() || null,
-        api_kb_reset_url: formData.api_kb_reset_url.trim() || null
+        api_kb_reset_url: formData.api_kb_reset_url.trim() || null,
+        dashboard_url: formData.dashboard_url.trim() || null
       };
 
       console.log('Submitting automation data:', submitData);
@@ -231,7 +234,8 @@ export default function Automations() {
       api_provision_url: '',
       api_usage_url: '',
       api_kb_status_url: '',
-    dashboard_url: ''
+      api_kb_reset_url: '',
+      dashboard_url: ''
     });
   };
 
@@ -246,11 +250,11 @@ export default function Automations() {
       price_per_token: automation.price_per_token,
       pricing_type: automation.pricing_type,
       status: automation.status,
-      api_base_url: automation.api_base_url || ''
-      api_provision_url: automation.api_provision_url || ''
-      api_usage_url: automation.api_usage_url || ''
-      api_kb_status_url: automation.api_kb_status_url || ''
-      api_kb_reset_url: automation.api_kb_reset_url || ''
+      api_base_url: automation.api_base_url || '',
+      api_provision_url: automation.api_provision_url || '',
+      api_usage_url: automation.api_usage_url || '',
+      api_kb_status_url: automation.api_kb_status_url || '',
+      api_kb_reset_url: automation.api_kb_reset_url || '',
       dashboard_url: automation.dashboard_url || ''
     });
     setShowForm(true);
@@ -642,6 +646,19 @@ export default function Automations() {
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       />
                     </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        آدرس داشبورد اتوماسیون
+                      </label>
+                      <input
+                        type="url"
+                        value={formData.dashboard_url}
+                        onChange={(e) => setFormData({...formData, dashboard_url: e.target.value})}
+                        placeholder="https://your-automation.com/dashboard"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      />
+                      <p className="text-xs text-gray-500 mt-1">آدرس داشبورد خارجی اتوماسیون که کاربران به آن هدایت می‌شوند</p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -720,6 +737,15 @@ export default function Automations() {
                   <input
                     type="text"
                     value={selectedAutomation.api_kb_reset_url || ''}
+                    readOnly
+                    className="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-lg"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">آدرس داشبورد اتوماسیون</label>
+                  <input
+                    type="text"
+                    value={selectedAutomation.dashboard_url || ''}
                     readOnly
                     className="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-lg"
                   />
