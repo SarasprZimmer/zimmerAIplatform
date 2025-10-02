@@ -4,7 +4,7 @@ import { apiFetch } from "@/lib/apiClient";
 import { Skeleton, Card } from "@/components/ui/Kit";
 import { motion } from "framer-motion";
 
-type UA = { id:number; name:string; description?:string; tokens_remaining?:number; demo_tokens?:number; provisioned_at?:string; expiry_date?:string; };
+type UA = { id:number; automation_id:number; name:string; description?:string; tokens_remaining?:number; demo_tokens?:number; provisioned_at?:string; expiry_date?:string; };
 
 export default function MyAutomations() {
   const [items,setItems]=useState<UA[]|null>(null);
@@ -32,7 +32,7 @@ export default function MyAutomations() {
           {items.slice(0,2).map((a,idx)=>(
             <motion.a
               key={a.id}
-              href={`/automations/${a.id}`}
+              href={`/automations/${a.automation_id}`}
               className="rounded-xl border-2 p-4 bg-white hover:shadow-lg transition-all duration-200"
               initial={{opacity:0, y:10}}
               animate={{opacity:1, y:0}}

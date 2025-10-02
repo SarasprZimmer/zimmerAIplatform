@@ -89,7 +89,7 @@ async def get_automations(
                 "description": automation.description,
                 "price_per_token": automation.price_per_token,
                 "pricing_type": automation.pricing_type,
-                "status": automation.status,
+                "status": "active" if automation.status == True else "inactive",
                 "api_base_url": automation.api_base_url,
                 "api_provision_url": automation.api_provision_url,
                 "api_usage_url": automation.api_usage_url,
@@ -105,7 +105,7 @@ async def get_automations(
                 "updated_at": automation.updated_at.isoformat() if automation.updated_at else None
             })
         
-        return {"automations": automation_list}
+        return {"total_count": len(automation_list), "automations": automation_list}
         
     except Exception as e:
         logger.error(f"Failed to retrieve automations: {e}")
@@ -138,7 +138,7 @@ async def create_automation(
             description=automation_data.get('description'),
             price_per_token=automation_data.get('price_per_token', 0),
             pricing_type=automation_data.get('pricing_type', 'token_per_session'),
-            status=automation_data.get('status', True),
+            status=automation_data.get('status', "active"),
             api_base_url=automation_data.get('api_base_url'),
             api_provision_url=automation_data.get('api_provision_url'),
             api_usage_url=automation_data.get('api_usage_url'),
@@ -174,7 +174,7 @@ async def create_automation(
             description=automation.description,
             price_per_token=automation.price_per_token,
             pricing_type=automation.pricing_type,
-            status=automation.status,
+            status="active" if automation.status == True else "inactive",
             api_base_url=automation.api_base_url,
             api_provision_url=automation.api_provision_url,
             api_usage_url=automation.api_usage_url,
@@ -183,6 +183,7 @@ async def create_automation(
             has_service_token=bool(automation.service_token_hash),
             service_token_masked=automation.service_token_masked,
             health_check_url=automation.health_check_url,
+        dashboard_url=automation.dashboard_url,
             health_status=automation.health_status,
             last_health_at=automation.last_health_at.isoformat() if automation.last_health_at else None,
             is_listed=automation.is_listed,
@@ -268,7 +269,7 @@ async def update_automation(
             description=automation.description,
             price_per_token=automation.price_per_token,
             pricing_type=automation.pricing_type,
-            status=automation.status,
+            status="active" if automation.status == True else "inactive",
             api_base_url=automation.api_base_url,
             api_provision_url=automation.api_provision_url,
             api_usage_url=automation.api_usage_url,
@@ -277,6 +278,7 @@ async def update_automation(
             has_service_token=bool(automation.service_token_hash),
             service_token_masked=automation.service_token_masked,
             health_check_url=automation.health_check_url,
+        dashboard_url=automation.dashboard_url,
             health_status=automation.health_status,
             last_health_at=automation.last_health_at.isoformat() if automation.last_health_at else None,
             is_listed=automation.is_listed,

@@ -33,6 +33,7 @@ interface AutomationFormData {
   api_usage_url: string;
   api_kb_status_url: string;
   api_kb_reset_url: string;
+  dashboard_url: string;
 }
 
 const pricingTypeLabels = {
@@ -59,7 +60,7 @@ export default function Automations() {
     api_provision_url: '',
     api_usage_url: '',
     api_kb_status_url: '',
-    api_kb_reset_url: ''
+    dashboard_url: ''
   });
   const [newToken, setNewToken] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
@@ -230,9 +231,10 @@ export default function Automations() {
       api_provision_url: '',
       api_usage_url: '',
       api_kb_status_url: '',
-      api_kb_reset_url: ''
+    dashboard_url: ''
     });
   };
+
 
   const openEditForm = (automation: Automation) => {
     setError(null);
@@ -244,11 +246,12 @@ export default function Automations() {
       price_per_token: automation.price_per_token,
       pricing_type: automation.pricing_type,
       status: automation.status,
-      api_base_url: automation.api_base_url || '',
-      api_provision_url: automation.api_provision_url || '',
-      api_usage_url: automation.api_usage_url || '',
-      api_kb_status_url: automation.api_kb_status_url || '',
+      api_base_url: automation.api_base_url || ''
+      api_provision_url: automation.api_provision_url || ''
+      api_usage_url: automation.api_usage_url || ''
+      api_kb_status_url: automation.api_kb_status_url || ''
       api_kb_reset_url: automation.api_kb_reset_url || ''
+      dashboard_url: automation.dashboard_url || ''
     });
     setShowForm(true);
   };

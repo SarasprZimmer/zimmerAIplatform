@@ -110,6 +110,7 @@ async def auth_optimization_middleware(request: Request, call_next):
     # Skip auth middleware for public endpoints
     public_endpoints = [
         "/api/automations/marketplace",
+        "/api/automations/available",
         "/api/optimized/automations/marketplace",
         "/api/optimized/cache/stats",
         "/health",
@@ -306,7 +307,7 @@ app.include_router(admin_dashboard_router, prefix="/api", tags=["admin-dashboard
 
 # Import missing admin endpoints router
 from routers.admin_missing_endpoints import router as admin_missing_router
-app.include_router(admin_missing_router, tags=["admin-missing"])
+app.include_router(admin_missing_router, prefix="/api/admin", tags=["admin-missing"])
 
 # Import all models to ensure they're registered with Base
 from models.user import User

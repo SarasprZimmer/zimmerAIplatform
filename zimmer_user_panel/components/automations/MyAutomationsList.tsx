@@ -5,7 +5,7 @@ import { apiFetch } from "@/lib/apiClient";
 import { Card, Skeleton } from "@/components/Skeleton";
 import { motion } from "framer-motion";
 
-type UA = {
+type UA = { automation_id:number;
   id:number;
   name:string;
   description?:string;
@@ -188,13 +188,13 @@ export default function MyAutomationsList(){
                   {/* Action Buttons */}
                   <div className="mt-6 flex space-x-3 space-x-reverse">
                     <Link
-                      href={`/automations/${a.id}/dashboard`}
+                      href={`/automations/${a.automation_id}/dashboard`}
                       className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors text-center font-medium"
                     >
                       رفتن به داشبورد
                     </Link>
                     <Link
-                      href={`/automations/${a.id}/tokens`}
+                      href={`/automations/${a.automation_id}/tokens`}
                       className="flex-1 bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors text-center font-medium"
                     >
                       خرید توکن

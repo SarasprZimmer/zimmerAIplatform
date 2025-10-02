@@ -25,6 +25,7 @@ interface Step3Data {
   api_kb_status_url: string;
   api_kb_reset_url: string;
   health_check_url: string;
+  dashboard_url: string;
 }
 
 interface EndpointValidation {
@@ -44,7 +45,8 @@ export default function AutomationCreationWizard({ isOpen, onClose, onSuccess }:
     api_usage_url: '',
     api_kb_status_url: '',
     api_kb_reset_url: '',
-    health_check_url: ''
+    health_check_url: '',
+    dashboard_url: ''
   });
   
   // Service token generation state - using different variable names to avoid conflicts
@@ -91,7 +93,8 @@ export default function AutomationCreationWizard({ isOpen, onClose, onSuccess }:
       api_usage_url: '',
       api_kb_status_url: '',
       api_kb_reset_url: '',
-      health_check_url: ''
+      health_check_url: '',
+    dashboard_url: ''
     });
     setShowServiceTokenGeneration(false);
     setServiceToken(null);

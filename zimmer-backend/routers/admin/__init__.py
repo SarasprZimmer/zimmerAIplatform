@@ -383,7 +383,7 @@ async def get_tickets(
             detail=f"Failed to retrieve tickets: {str(e)}"
         )
 
-@router.get("/automations")
+@router.get("/automations/simple")
 async def get_automations(
     db: Session = Depends(get_db),
     current_admin: User = Depends(get_current_admin_user)

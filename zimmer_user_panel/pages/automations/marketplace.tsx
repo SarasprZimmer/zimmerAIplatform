@@ -43,7 +43,7 @@ export default function Marketplace(){
       
       if (response.ok) {
         const data = await response.json()
-        setAutomations(data)
+        setAutomations(data.automations || [])
       } else {
         setError('خطا در بارگذاری اتوماسیون‌ها')
       }

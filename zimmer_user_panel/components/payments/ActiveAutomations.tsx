@@ -5,7 +5,7 @@ import { apiFetch } from "@/lib/apiClient";
 import { Card, Skeleton } from "@/components/Skeleton";
 import { motion } from "framer-motion";
 
-type UA = { id:number; name:string; description?:string; tokens_remaining?:number; demo_tokens?:number; };
+type UA = { automation_id:number; id:number; name:string; description?:string; tokens_remaining?:number; demo_tokens?:number; };
 
 export default function ActiveAutomations(){
   const [items,setItems] = useState<UA[]|null>(null);
@@ -35,7 +35,7 @@ export default function ActiveAutomations(){
       {items && items.length>0 && (
         <div className="grid grid-cols-2 gap-4">
           {items.slice(0,2).map((a, idx)=>(
-            <motion.a key={a.id} href={`/automations/${a.id}`}
+            <motion.a key={a.id} href={`/automations/${a.automation_id}`}
               className={`rounded-xl border-2 p-4 hover:shadow-lg transition-all duration-200 ${
                 idx === 1 ? 'bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200' : 'bg-white border-gray-200'
               }`}
