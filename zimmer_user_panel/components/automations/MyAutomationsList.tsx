@@ -18,6 +18,7 @@ type UA = { automation_id:number;
   last_run?: string;
   next_run?: string;
   created_at?: string;
+  dashboard_url?: string;
   usage_stats?: {
     tokens_used_today: number;
     tokens_used_this_month: number;
@@ -187,12 +188,23 @@ export default function MyAutomationsList(){
 
                   {/* Action Buttons */}
                   <div className="mt-6 flex space-x-3 space-x-reverse">
-                    <Link
-                      href={`/automations/${a.automation_id}/dashboard`}
-                      className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors text-center font-medium"
-                    >
-                      رفتن به داشبورد
-                    </Link>
+                    {a.dashboard_url ? (
+                      <a
+                        href={a.dashboard_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors text-center font-medium"
+                      >
+                        رفتن به داشبورد
+                      </a>
+                    ) : (
+                      <Link
+                        href={`/automations/${a.automation_id}/dashboard`}
+                        className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors text-center font-medium"
+                      >
+                        رفتن به داشبورد
+                      </Link>
+                    )}
                     <Link
                       href={`/automations/${a.automation_id}/tokens`}
                       className="flex-1 bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors text-center font-medium"

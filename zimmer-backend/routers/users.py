@@ -584,7 +584,8 @@ async def get_user_automations(
             Automation.description,
             Automation.pricing_type,
             Automation.price_per_token,
-            Automation.status
+            Automation.status,
+            Automation.dashboard_url
         ).join(
             Automation, UserAutomation.automation_id == Automation.id
         ).filter(
@@ -595,7 +596,7 @@ async def get_user_automations(
         
         # Format response
         automations = []
-        for ua, name, description, pricing_type, price_per_token, automation_status in user_automations:
+        for ua, name, description, pricing_type, price_per_token, automation_status, dashboard_url in user_automations:
             automations.append({
                 "id": ua.id,
                 "automation_id": ua.automation_id,
@@ -608,6 +609,7 @@ async def get_user_automations(
                 "demo_tokens": ua.demo_tokens,
                 "is_demo_active": ua.is_demo_active,
                 "demo_expired": ua.demo_expired,
+                "dashboard_url": dashboard_url,
                 "created_at": ua.created_at
             })
         
