@@ -86,7 +86,7 @@ async def get_analytics(
         
         # Get automation statistics
         total_automations = db.query(Automation).count()
-        active_automations = db.query(Automation).filter(Automation.status == "active").count()
+        active_automations = db.query(Automation).filter(Automation.status == True).count()
         
         # Get payment statistics
         total_payments = db.query(Payment).count()
