@@ -118,7 +118,7 @@ export default function Automations() {
         description: formData.description.trim(),
         price_per_token: Number(formData.price_per_token),
         pricing_type: formData.pricing_type,
-        status: Boolean(formData.status),
+        status: formData.status, // Already boolean from formData
         api_base_url: formData.api_base_url.trim() || null,
         api_provision_url: formData.api_provision_url.trim() || null,
         api_usage_url: formData.api_usage_url.trim() || null,
@@ -950,24 +950,143 @@ export default function Automations() {
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
                   </svg>
-                  راهنمای توسعه‌دهنده اتوماسیون:
+                  راهنمای کامل توسعه‌دهنده اتوماسیون:
                 </h4>
-                <ol className="text-sm text-blue-700 space-y-2 list-decimal list-inside">
-                  <li>این توکن را به متغیرهای محیطی اتوماسیون خود اضافه کنید</li>
-                  <li>هدر X-Zimmer-Service-Token را در درخواست‌های ورودی بررسی کنید</li>
-                  <li>فقط درخواست‌هایی با توکن معتبر را پردازش کنید</li>
-                  <li>برای توکن‌های نامعتبر خطای 401 برگردانید</li>
-                </ol>
+                <div className="text-sm text-blue-700 space-y-3">
+                  <div>
+                    <h5 className="font-semibold mb-2">1. تنظیم متغیر محیطی:</h5>
+                    <p className="mb-2">این توکن را در فایل .env یا متغیرهای محیطی سرور خود قرار دهید:</p>
+                    <code className="bg-white p-2 rounded border block text-xs">
+                      ZIMMER_SERVICE_TOKEN={generatedToken}
+                    </code>
+                  </div>
+                  
+                  <div>
+                    <h5 className="font-semibold mb-2">2. پیاده‌سازی احراز هویت:</h5>
+                    <p className="mb-2">در تمام endpoint های خود این کد را اضافه کنید:</p>
+                    
+                    <div className="space-y-3">
+                      <div>
+                        <p className="text-xs font-medium text-gray-600 mb-1">Python (FastAPI):</p>
+                        <pre className="bg-white p-2 rounded border text-xs overflow-x-auto">
+{`from fastapi import HTTPException, Header
+import os
+
+def verify_service_token(x_zimmer_service_token: str = Header(None)):
+    expected_token = os.getenv('ZIMMER_SERVICE_TOKEN')
+    if not expected_token or x_zimmer_service_token != expected_token:
+        raise HTTPException(status_code=401, detail="Invalid service token")
+    return True
+
+@app.post("/your-endpoint")
+async def your_endpoint(
+    request: YourRequest,
+    _: bool = Depends(verify_service_token)
+):
+    # کد endpoint شما
+    pass`}
+                        </pre>
+                      </div>
+
+                      <div>
+                        <p className="text-xs font-medium text-gray-600 mb-1">Node.js (Express):</p>
+                        <pre className="bg-white p-2 rounded border text-xs overflow-x-auto">
+{`const express = require('express');
+const app = express();
+
+const verifyServiceToken = (req, res, next) => {
+    const token = req.headers['x-zimmer-service-token'];
+    const expectedToken = process.env.ZIMMER_SERVICE_TOKEN;
+    
+    if (!expectedToken || token !== expectedToken) {
+        return res.status(401).json({ error: 'Invalid service token' });
+    }
+    next();
+};
+
+app.post('/your-endpoint', verifyServiceToken, (req, res) => {
+    // کد endpoint شما
+});`}
+                        </pre>
+                      </div>
+
+                      <div>
+                        <p className="text-xs font-medium text-gray-600 mb-1">PHP (Laravel):</p>
+                        <pre className="bg-white p-2 rounded border text-xs overflow-x-auto">
+{`// در Middleware
+public function handle($request, Closure $next)
+{
+    $token = $request->header('X-Zimmer-Service-Token');
+    $expectedToken = env('ZIMMER_SERVICE_TOKEN');
+    
+    if (!$expectedToken || $token !== $expectedToken) {
+        return response()->json(['error' => 'Invalid service token'], 401);
+    }
+    
+    return $next($request);
+}`}
+                        </pre>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h5 className="font-semibold mb-2">3. Endpoint های مورد نیاز:</h5>
+                    <ul className="list-disc list-inside space-y-1">
+                      <li><code>/provision</code> - راه‌اندازی کاربر جدید</li>
+                      <li><code>/usage</code> - گزارش مصرف توکن</li>
+                      <li><code>/kb/status</code> - وضعیت پایگاه دانش</li>
+                      <li><code>/kb/reset</code> - بازنشانی پایگاه دانش</li>
+                      <li><code>/health</code> - بررسی سلامت سرویس</li>
+                    </ul>
+                  </div>
+
+                  <div>
+                    <h5 className="font-semibold mb-2">4. نمونه درخواست از پلتفرم:</h5>
+                    <pre className="bg-white p-2 rounded border text-xs overflow-x-auto">
+{`POST /your-automation.com/provision
+Headers:
+  X-Zimmer-Service-Token: {generatedToken}
+  Content-Type: application/json
+
+Body:
+{
+  "user_id": 123,
+  "user_name": "John Doe",
+  "user_email": "john@example.com",
+  "tokens_allocated": 100,
+  "platform_url": "https://platform.com"
+}`}
+                    </pre>
+                  </div>
+                </div>
               </div>
 
-              {/* Environment Variable */}
+              {/* Environment Variable Examples */}
               <div className="bg-gray-100 p-4 rounded-lg">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  متغیر محیطی:
+                  نمونه‌های متغیر محیطی:
                 </label>
-                <code className="text-sm bg-white p-2 rounded border block">
-                  AUTOMATION_{tokenAutomationId}_SERVICE_TOKEN={generatedToken}
-                </code>
+                <div className="space-y-2">
+                  <div>
+                    <p className="text-xs text-gray-600 mb-1">فایل .env:</p>
+                    <code className="text-xs bg-white p-2 rounded border block">
+                      ZIMMER_SERVICE_TOKEN={generatedToken}
+                    </code>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-600 mb-1">Docker Compose:</p>
+                    <code className="text-xs bg-white p-2 rounded border block">
+                      environment: ZIMMER_SERVICE_TOKEN={generatedToken}
+                    </code>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-600 mb-1">System Environment:</p>
+                    <code className="text-xs bg-white p-2 rounded border block">
+                      export ZIMMER_SERVICE_TOKEN="{generatedToken}"
+                    </code>
+                  </div>
+                </div>
               </div>
             </div>
 
