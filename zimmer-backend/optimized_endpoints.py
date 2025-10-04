@@ -150,12 +150,13 @@ async def get_marketplace_automations_optimized(
         if cached_data:
             return cached_data
 
-        # Optimized query with proper indexing - use string comparisons
+        # Optimized query with proper indexing - use boolean comparisons
         automations = db.query(Automation).filter(
             and_(
-                Automation.status == "active",  # Changed from True to "active"
-                Automation.is_listed == "true",  # Changed from True to "true"
-                Automation.health_status == "healthy"
+                Automation.status == True,  # Boolean comparison
+                Automation.is_listed == True,  # Boolean comparison
+                Automation.health_status == "healthy",
+                Automation.service_token_hash.isnot(None)  # Must have service token
             )
         ).order_by(Automation.created_at.desc()).all()
 

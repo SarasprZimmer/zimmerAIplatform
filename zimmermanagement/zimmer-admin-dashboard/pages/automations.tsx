@@ -223,6 +223,37 @@ export default function Automations() {
     }
   };
 
+  const handleStatusToggle = async (automationId: number, newStatus: boolean) => {
+    try {
+      await api.put(`/api/admin/automations/${automationId}`, {
+        status: newStatus
+      });
+      setSuccess(`اتوماسیون ${newStatus ? 'فعال' : 'غیرفعال'} شد`);
+      fetchAutomations();
+    } catch (error: any) {
+      console.error('Error updating status:', error);
+      setError(`خطا در تغییر وضعیت: ${error.response?.data?.detail || error.message}`);
+    }
+  };
+
+  const handleConnectionToggle = async (automationId: number, connect: boolean) => {
+    try {
+      if (connect) {
+        // Generate new service token to connect
+        const response = await api.post(`/api/admin/automations/${automationId}/generate-service-token`);
+        setSuccess('اتوماسیون متصل شد');
+      } else {
+        // Remove service token to disconnect
+        await api.delete(`/api/admin/automations/${automationId}/service-token`);
+        setSuccess('اتوماسیون قطع شد');
+      }
+      fetchAutomations();
+    } catch (error: any) {
+      console.error('Error toggling connection:', error);
+      setError(`خطا در تغییر اتصال: ${error.response?.data?.detail || error.message}`);
+    }
+  };
+
   const resetForm = () => {
     setFormData({
       name: '',
@@ -400,25 +431,38 @@ export default function Automations() {
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                        automation.status
-                          ? 'bg-green-100 text-green-800'
-                          : 'bg-red-100 text-red-800'
-                      }`}>
-                        {automation.status ? 'فعال' : 'غیرفعال'}
-                      </span>
+                      <select
+                        value={automation.status ? 'true' : 'false'}
+                        onChange={(e) => handleStatusToggle(automation.id, e.target.value === 'true')}
+                        className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full border-0 cursor-pointer ${
+                          automation.status
+                            ? 'bg-green-100 text-green-800 hover:bg-green-200'
+                            : 'bg-red-100 text-red-800 hover:bg-red-200'
+                        }`}
+                      >
+                        <option value="true">فعال</option>
+                        <option value="false">غیرفعال</option>
+                      </select>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center gap-2">
                         {automation.has_service_token ? (
-                          <span className="inline-flex items-center px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
+                          <button
+                            onClick={() => handleConnectionToggle(automation.id, false)}
+                            className="inline-flex items-center px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800 hover:bg-blue-200 cursor-pointer border-0"
+                            title="کلیک کنید برای قطع اتصال"
+                          >
                             <KeyIcon className="w-3 h-3 mr-1" />
                             متصل
-                          </span>
+                          </button>
                         ) : (
-                          <span className="inline-flex items-center px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">
+                          <button
+                            onClick={() => handleConnectionToggle(automation.id, true)}
+                            className="inline-flex items-center px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800 hover:bg-gray-200 cursor-pointer border-0"
+                            title="کلیک کنید برای اتصال"
+                          >
                             غیرمتصل
-                          </span>
+                          </button>
                         )}
                       </div>
                     </td>
@@ -559,7 +603,7 @@ export default function Automations() {
                       وضعیت
                     </label>
                     <select
-                      value={formData.status.toString()}
+                      value={formData.status ? 'true' : 'false'}
                       onChange={(e) => setFormData({...formData, status: e.target.value === 'true'})}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     >

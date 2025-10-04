@@ -13,6 +13,7 @@ class AutomationCreateRequest(BaseModel):
     api_usage_url: Optional[str] = Field(None, description="Usage API URL")
     api_kb_status_url: Optional[str] = Field(None, description="KB Status API URL")
     api_kb_reset_url: Optional[str] = Field(None, description="KB Reset API URL")
+    dashboard_url: Optional[str] = Field(None, description="Dashboard URL")
     health_check_url: Optional[str] = Field(None, description="Health check URL")
 
     @validator('api_base_url', 'api_provision_url', 'api_usage_url', 'api_kb_status_url', 'api_kb_reset_url', 'health_check_url')
@@ -32,6 +33,7 @@ class AutomationUpdateRequest(BaseModel):
     api_usage_url: Optional[str] = Field(None, description="Usage API URL")
     api_kb_status_url: Optional[str] = Field(None, description="KB Status API URL")
     api_kb_reset_url: Optional[str] = Field(None, description="KB Reset API URL")
+    dashboard_url: Optional[str] = Field(None, description="Dashboard URL")
     health_check_url: Optional[str] = Field(None, description="Health check URL")
 
     @validator('api_base_url', 'api_provision_url', 'api_usage_url', 'api_kb_status_url', 'api_kb_reset_url', 'health_check_url')
@@ -52,6 +54,7 @@ class AutomationResponse(BaseModel):
     api_usage_url: Optional[str]
     api_kb_status_url: Optional[str]
     api_kb_reset_url: Optional[str]
+    dashboard_url: Optional[str]
     has_service_token: bool
     service_token_masked: Optional[str]
     health_check_url: Optional[str]

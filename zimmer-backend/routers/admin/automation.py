@@ -95,6 +95,7 @@ async def get_automations(
                 "api_usage_url": automation.api_usage_url,
                 "api_kb_status_url": automation.api_kb_status_url,
                 "api_kb_reset_url": automation.api_kb_reset_url,
+                "dashboard_url": automation.dashboard_url,
                 "has_service_token": bool(automation.service_token_hash),
                 "service_token_masked": automation.service_token_masked,
                 "health_check_url": automation.health_check_url,
@@ -144,6 +145,7 @@ async def create_automation(
             api_usage_url=automation_data.get('api_usage_url'),
             api_kb_status_url=automation_data.get('api_kb_status_url'),
             api_kb_reset_url=automation_data.get('api_kb_reset_url'),
+            dashboard_url=automation_data.get('dashboard_url'),
             health_check_url=automation_data.get('health_check_url'),
             service_token_hash=service_token_hash,
             service_token_masked=service_token[:8] + "..." if service_token else None
@@ -159,7 +161,12 @@ async def create_automation(
             automation.health_status = classify(result)
             automation.last_health_at = datetime.now(timezone.utc)
             automation.health_details = result
-            automation.is_listed = (automation.health_status == "healthy")
+            # Only list in marketplace if healthy AND has service token AND is active
+            automation.is_listed = (
+                automation.health_status == "healthy" and 
+                automation.service_token_hash is not None and 
+                automation.status == True
+            )
         else:
             automation.health_status = "unknown"
             automation.is_listed = False
@@ -183,7 +190,7 @@ async def create_automation(
             has_service_token=bool(automation.service_token_hash),
             service_token_masked=automation.service_token_masked,
             health_check_url=automation.health_check_url,
-        dashboard_url=automation.dashboard_url,
+            dashboard_url=automation.dashboard_url,
             health_status=automation.health_status,
             last_health_at=automation.last_health_at.isoformat() if automation.last_health_at else None,
             is_listed=automation.is_listed,
@@ -197,6 +204,46 @@ async def create_automation(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to create automation: {str(e)}"
+        )
+
+@router.delete("/automations/{automation_id}/service-token")
+async def remove_service_token(
+    automation_id: int = Path(...),
+    db: Session = Depends(get_db),
+    current_admin: User = Depends(get_current_admin_user)
+):
+    """
+    Remove service token from automation (admin only)
+    This will disconnect the automation from the platform
+    """
+    try:
+        automation = db.query(Automation).filter(Automation.id == automation_id).first()
+        if not automation:
+            raise HTTPException(status_code=404, detail="Automation not found")
+
+        logger.info(f"Admin {current_admin.email} removing service token from automation {automation.name} (ID: {automation_id})")
+
+        # Remove service token
+        automation.service_token_hash = None
+        automation.service_token_masked = None
+        automation.is_listed = False  # Remove from marketplace
+        
+        # Update the updated_at timestamp
+        automation.updated_at = datetime.now(timezone.utc)
+        
+        db.commit()
+        db.refresh(automation)
+        
+        logger.info(f'✅ Successfully removed service token from automation {automation.name} (ID: {automation_id})')
+        
+        return {"message": "Service token removed successfully", "automation_id": automation_id}
+        
+    except Exception as e:
+        db.rollback()
+        logger.error(f'❌ Failed to remove service token from automation {automation_id}: {e}')
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to remove service token: {str(e)}"
         )
 
 @router.put("/automations/{automation_id}", response_model=AutomationResponse)
@@ -227,6 +274,12 @@ async def update_automation(
             automation.pricing_type = automation_data.pricing_type
         if automation_data.status is not None:
             automation.status = automation_data.status
+            # Update marketplace visibility when status changes
+            automation.is_listed = (
+                automation.health_status == "healthy" and 
+                automation.service_token_hash is not None and 
+                automation.status == True
+            )
         if automation_data.api_base_url is not None:
             automation.api_base_url = automation_data.api_base_url
         if automation_data.api_provision_url is not None:
@@ -237,6 +290,8 @@ async def update_automation(
             automation.api_kb_status_url = automation_data.api_kb_status_url
         if automation_data.api_kb_reset_url is not None:
             automation.api_kb_reset_url = automation_data.api_kb_reset_url
+        if automation_data.dashboard_url is not None:
+            automation.dashboard_url = automation_data.dashboard_url
         if automation_data.health_check_url is not None:
             automation.health_check_url = automation_data.health_check_url
 
@@ -252,7 +307,12 @@ async def update_automation(
             automation.health_status = classify(result)
             automation.last_health_at = datetime.now(timezone.utc)
             automation.health_details = result
-            automation.is_listed = (automation.health_status == "healthy")
+            # Only list in marketplace if healthy AND has service token AND is active
+            automation.is_listed = (
+                automation.health_status == "healthy" and 
+                automation.service_token_hash is not None and 
+                automation.status == True
+            )
         else:
             automation.health_status = "unknown"
             automation.is_listed = False
@@ -278,7 +338,7 @@ async def update_automation(
             has_service_token=bool(automation.service_token_hash),
             service_token_masked=automation.service_token_masked,
             health_check_url=automation.health_check_url,
-        dashboard_url=automation.dashboard_url,
+            dashboard_url=automation.dashboard_url,
             health_status=automation.health_status,
             last_health_at=automation.last_health_at.isoformat() if automation.last_health_at else None,
             is_listed=automation.is_listed,

@@ -26,9 +26,10 @@ def list_automations(db: Session = Depends(get_db)):
 def get_marketplace_automations(db: Session = Depends(get_db)):
     """Get automations available in the marketplace (public endpoint)"""
     automations = db.query(Automation).filter(
-        Automation.status == "active",
-        Automation.is_listed == "true",
-        Automation.health_status == "healthy"
+        Automation.status == True,
+        Automation.is_listed == True,
+        Automation.health_status == "healthy",
+        Automation.service_token_hash.isnot(None)  # Must have service token
     ).all()
 
     marketplace_data = []
@@ -55,9 +56,10 @@ def get_available_automations(db: Session = Depends(get_db)):
     """Get available automations for users (public endpoint)"""
     try:
         automations = db.query(Automation).filter(
-            Automation.status == "active",
-            Automation.is_listed == "true",
-            Automation.health_status == "healthy"
+            Automation.status == True,
+            Automation.is_listed == True,
+            Automation.health_status == "healthy",
+            Automation.service_token_hash.isnot(None)  # Must have service token
         ).all()
 
         available_data = []
