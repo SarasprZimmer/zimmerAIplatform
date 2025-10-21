@@ -264,7 +264,7 @@ async def get_payments(
 #             detail=f"Failed to retrieve user token usage: {str(e)}"
 #         )
 
-@router.get("/user-automations", response_model=List[UserAutomationAdminResponse])
+@router.get("/user-automations", response_model=dict)
 async def get_user_automations_admin(
     user_id: Optional[int] = Query(None, description="Filter by user ID"),
     demo_only: Optional[bool] = Query(None, description="Show only demo users"),
@@ -313,7 +313,7 @@ async def get_user_automations_admin(
                 "created_at": ua.created_at
             })
         
-        return formatted_automations
+        return {"user_automations": formatted_automations}
         
     except Exception as e:
         raise HTTPException(

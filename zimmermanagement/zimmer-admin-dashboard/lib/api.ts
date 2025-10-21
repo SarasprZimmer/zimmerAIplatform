@@ -1,10 +1,8 @@
 import axios, { AxiosInstance, AxiosResponse, AxiosError } from 'axios'
-import { authClient, redirectToLogin } from './auth-client'
+import { authClient, redirectToLogin, handleTokenRefresh } from './auth-client'
 import { toast } from '../components/Toast'
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_BASE_URL || "https://api.zimmerai.com"
-
-
 
 // Error message mapping
 const ERROR_MESSAGES = {
@@ -77,14 +75,42 @@ api.interceptors.request.use(
   }
 )
 
-// Response interceptor - simplified to avoid infinite loops
+// Response interceptor - handle 401 errors and token refresh
 api.interceptors.response.use(
   (response: AxiosResponse) => {
     return response
   },
   async (error: AxiosError) => {
-    // Just log the error and reject - no automatic token refresh
+    const originalRequest = error.config as any
+
+    // Handle 401 errors (unauthorized)
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true
+
+      try {
+        // Try to refresh the token
+        const refreshSuccess = await handleTokenRefresh()
+        
+        if (refreshSuccess) {
+          // Retry the original request with new token
+          const newToken = authClient.getAccessToken()
+          if (newToken) {
+            originalRequest.headers.Authorization = `Bearer ${newToken}`
+            return api(originalRequest)
+          }
+        }
+      } catch (refreshError) {
+        console.error('Token refresh failed:', refreshError)
+      }
+
+      // If refresh failed, redirect to login
+      redirectToLogin('expired')
+      return Promise.reject(error)
+    }
+
+    // For other errors, just show the error message
     console.error('API Error:', error.response?.status, error.message)
+    showErrorToast(error)
     return Promise.reject(error)
   }
 )
@@ -165,10 +191,10 @@ export const authAPI = {
       console.log('🔐 Attempting login to:', BASE_URL + '/api/auth/login')
       console.log('📧 Email:', email)
       console.log('🔑 Password:', password ? '[HIDDEN]' : '[MISSING]')
-      
+
       const response = await api.post('/api/auth/login', { email, password })
       console.log('✅ Login response received:', response.status)
-      
+
       const data = response.data
       authClient.setAccessToken(data.access_token)
       toast.success('ورود با موفقیت انجام شد')
@@ -556,9 +582,9 @@ export const adminAPI = {
   }
 }
 
-export default api 
+export default api
 // Generate service token for automation
-export const generateAutomationServiceToken = async (id: number) => {
-  const response = await api.post(`/api/admin/automations/${id}/generate-service-token`);
+export const generateAutomationServiceToken = async (id: number, password: string) => {
+  const response = await api.post(`/api/admin/automations/${id}/generate-service-token`, { password });
   return response.data;
 };

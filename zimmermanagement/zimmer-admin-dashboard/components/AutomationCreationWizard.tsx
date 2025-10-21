@@ -133,7 +133,7 @@ export default function AutomationCreationWizard({ isOpen, onClose, onSuccess }:
 
     try {
       // Get the current access token from localStorage
-      const accessToken = localStorage.getItem('access_token');
+      const accessToken = localStorage.getItem('zimmer_admin_access_token');
       if (!accessToken) {
         throw new Error('No access token found');
       }

@@ -139,7 +139,7 @@ async def create_automation(
             description=automation_data.get('description'),
             price_per_token=automation_data.get('price_per_token', 0),
             pricing_type=automation_data.get('pricing_type', 'token_per_session'),
-            status=automation_data.get('status', "active"),
+            status=automation_data.get('status', True),
             api_base_url=automation_data.get('api_base_url'),
             api_provision_url=automation_data.get('api_provision_url'),
             api_usage_url=automation_data.get('api_usage_url'),
