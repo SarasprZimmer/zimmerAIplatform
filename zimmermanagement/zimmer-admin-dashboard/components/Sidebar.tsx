@@ -19,6 +19,7 @@ const navigation = [
   { name: 'کدهای تخفیف', href: '/discounts', icon: '🎫', managerOnly: true },
   { name: 'لاگ‌های خطا', href: '/fallbacks', icon: '⚠️' },
   { name: 'اعلان‌ها', href: '/notifications', icon: '🔔', managerOnly: true },
+  { name: 'مدیریت ساخت', href: '/construction-management', icon: '🚧', managerOnly: true },
 ];
 
 const Sidebar = () => {

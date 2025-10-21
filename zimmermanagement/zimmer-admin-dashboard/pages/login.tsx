@@ -14,6 +14,7 @@ export default function Login() {
 
   useEffect(() => {
     setMounted(true)
+    
     if (isAuthenticated) {
       router.push('/')
     }

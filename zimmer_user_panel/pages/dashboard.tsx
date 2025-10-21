@@ -7,6 +7,7 @@ import DashboardLayout from '@/components/DashboardLayout'
 import dynamic from "next/dynamic";
 import RecentPayments from "@/components/dashboard/RecentPayments";
 import MyAutomations from "@/components/dashboard/MyAutomations";
+import { isUnderConstruction } from '@/lib/construction-config';
 
 const WeeklyActivityChart = dynamic(()=>import("@/components/dashboard/WeeklyActivityChart"), { ssr:false });
 const DistributionPie   = dynamic(()=>import("@/components/dashboard/DistributionPie"), { ssr:false });
@@ -21,6 +22,13 @@ export default function DashboardPage() {
 
 
   useEffect(() => {
+    // 🚧 UNDER CONSTRUCTION: Redirect to maintenance page
+    // Change UNDER_CONSTRUCTION in construction-config.ts to false when construction is complete
+    if (isUnderConstruction()) {
+      router.push('/under-construction');
+      return;
+    }
+    
     if (!loading && !isAuthenticated) {
       router.push('/login')
     }

@@ -7,6 +7,7 @@ import { useRouter } from 'next/router'
 import { fetchCsrf } from '@/lib/csrf'
 import TwoFADialog from '@/components/TwoFADialog'
 import { Toast } from '@/components/Toast'
+import { isUnderConstruction } from '@/lib/construction-config'
 
 // Google Login Button Component
 function GoogleLoginButton() {
@@ -42,6 +43,14 @@ export default function LoginPage() {
 
   useEffect(() => {
     setMounted(true)
+    
+    // 🚧 UNDER CONSTRUCTION: Redirect to maintenance page
+    // Change UNDER_CONSTRUCTION in construction-config.ts to false when construction is complete
+    if (isUnderConstruction()) {
+      router.push('/under-construction')
+      return
+    }
+    
     if (isAuthenticated) {
       router.push('/dashboard')
     }

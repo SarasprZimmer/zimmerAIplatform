@@ -333,6 +333,14 @@ app.include_router(admin_dashboard_router, prefix="/api", tags=["admin-dashboard
 from routers.admin_missing_endpoints import router as admin_missing_router
 app.include_router(admin_missing_router, prefix="/api/admin", tags=["admin-missing"])
 
+# Import construction router
+from routers.construction import router as construction_router
+app.include_router(construction_router, prefix="/api/construction", tags=["construction"])
+
+# Import construction config router
+from routers.admin.construction_config import router as construction_config_router
+app.include_router(construction_config_router, prefix="/api/admin", tags=["admin-construction-config"])
+
 # Import all models to ensure they're registered with Base
 from models.user import User
 from models.automation import Automation
@@ -353,6 +361,7 @@ from models.token_adjustment import TokenAdjustment
 from models.session import Session
 from models.notification import Notification
 from models.discount import DiscountCode, DiscountCodeAutomation, DiscountRedemption
+from models.construction import ConstructionEmail
 
 # Note: Database tables are now managed by Alembic migrations
 # Run 'alembic upgrade head' to create/update tables
