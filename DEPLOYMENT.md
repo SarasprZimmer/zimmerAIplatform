@@ -2,6 +2,32 @@
 
 This guide covers deploying the Zimmer Platform directly on a server without Docker.
 
+## 🚨 **IMPORTANT UPDATE (January 2025)**
+
+### **Recent Changes Requiring Deployment**
+- **Route Conflicts Fixed**: Marketplace endpoints now work correctly
+- **Admin Endpoints Added**: 20+ new admin endpoints implemented
+- **Security Patches**: Authentication bypass vulnerabilities fixed
+- **Server Restart Required**: Latest changes need to be deployed
+
+### **Deployment Status**
+- ✅ **Code Changes**: All fixes committed to GitHub
+- ⏳ **Production Deployment**: Server restart required
+- ⏳ **Verification**: Post-deployment testing needed
+
+### **Critical Fixes Applied**
+1. **Marketplace Route Conflicts**: Fixed FastAPI route matching issues
+2. **Admin Endpoints**: Implemented 20+ missing admin endpoints
+3. **Security Vulnerabilities**: Patched authentication bypass issues
+4. **Method Not Allowed**: Resolved 405 errors on admin endpoints
+
+### **Post-Deployment Verification**
+After server restart, verify:
+- ✅ `/api/automations/marketplace` returns 200 (public access)
+- ✅ `/api/automations/available` returns 200 (public access)
+- ✅ All admin endpoints return 403 for unauthorized access
+- ✅ Admin dashboard functionality works correctly
+
 ## Prerequisites
 
 - Ubuntu 20.04+ or similar Linux distribution
