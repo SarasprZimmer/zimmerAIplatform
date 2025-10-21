@@ -1,0 +1,222 @@
+{
+  "total_tests": 30,
+  "passed": 23,
+  "failed": 6,
+  "warnings": 1,
+  "skipped": 0,
+  "success_rate": 76.66666666666667,
+  "security_tests": 8,
+  "security_passed": 8,
+  "results": [
+    {
+      "test_name": "User Setup",
+      "status": "PASS",
+      "details": "Test user login successful",
+      "timestamp": 1761044581.813755,
+      "additional_data": {}
+    },
+    {
+      "test_name": "Invalid Input - Invalid email format, weak password, empty name, password mismatch",
+      "status": "PASS",
+      "details": "Properly rejected with 422",
+      "timestamp": 1761044582.3274167,
+      "additional_data": {}
+    },
+    {
+      "test_name": "Invalid Input - Non-existent automation ID with invalid data",
+      "status": "FAIL",
+      "details": "Unexpected response: 404",
+      "timestamp": 1761044583.067827,
+      "additional_data": {}
+    },
+    {
+      "test_name": "Invalid Input - Invalid automation ID, negative amount, empty return path",
+      "status": "PASS",
+      "details": "Properly rejected with 422",
+      "timestamp": 1761044583.6483305,
+      "additional_data": {}
+    },
+    {
+      "test_name": "Auth Error - No Token",
+      "status": "FAIL",
+      "details": "Unexpected response: 200",
+      "timestamp": 1761044584.1112509,
+      "additional_data": {}
+    },
+    {
+      "test_name": "Auth Error - Invalid Token",
+      "status": "FAIL",
+      "details": "Unexpected response: 200",
+      "timestamp": 1761044584.6031723,
+      "additional_data": {}
+    },
+    {
+      "test_name": "Auth Error - Malformed Token",
+      "status": "FAIL",
+      "details": "Unexpected response: 200",
+      "timestamp": 1761044585.0860722,
+      "additional_data": {}
+    },
+    {
+      "test_name": "AuthZ Error - /api/admin/dashboard/stats",
+      "status": "PASS",
+      "details": "Properly rejected admin access",
+      "timestamp": 1761044585.5504804,
+      "additional_data": {}
+    },
+    {
+      "test_name": "AuthZ Error - /api/admin/users",
+      "status": "PASS",
+      "details": "Properly rejected admin access",
+      "timestamp": 1761044586.052259,
+      "additional_data": {}
+    },
+    {
+      "test_name": "AuthZ Error - /api/admin/user-automations",
+      "status": "PASS",
+      "details": "Properly rejected admin access",
+      "timestamp": 1761044586.5370233,
+      "additional_data": {}
+    },
+    {
+      "test_name": "AuthZ Error - /api/admin/automations",
+      "status": "PASS",
+      "details": "Properly rejected admin access",
+      "timestamp": 1761044587.184551,
+      "additional_data": {}
+    },
+    {
+      "test_name": "AuthZ Error - /api/admin/tokens/adjust",
+      "status": "FAIL",
+      "details": "Unexpected response: 405",
+      "timestamp": 1761044588.0086353,
+      "additional_data": {}
+    },
+    {
+      "test_name": "Not Found - /api/nonexistent/endpoint",
+      "status": "PASS",
+      "details": "Properly returned 404",
+      "timestamp": 1761044588.485521,
+      "additional_data": {}
+    },
+    {
+      "test_name": "Not Found - /api/user/automations/999999",
+      "status": "FAIL",
+      "details": "Unexpected response: 200",
+      "timestamp": 1761044588.9752378,
+      "additional_data": {}
+    },
+    {
+      "test_name": "Not Found - /api/automations/999999",
+      "status": "PASS",
+      "details": "Properly returned 404",
+      "timestamp": 1761044589.4838603,
+      "additional_data": {}
+    },
+    {
+      "test_name": "Not Found - /api/payments/invalid-gateway/init",
+      "status": "PASS",
+      "details": "Properly returned 404",
+      "timestamp": 1761044589.9839191,
+      "additional_data": {}
+    },
+    {
+      "test_name": "Method Not Allowed - PUT on GET-only endpoint",
+      "status": "PASS",
+      "details": "Properly returned 405",
+      "timestamp": 1761044590.457042,
+      "additional_data": {}
+    },
+    {
+      "test_name": "Method Not Allowed - DELETE on GET-only endpoint",
+      "status": "PASS",
+      "details": "Properly returned 405",
+      "timestamp": 1761044590.9956777,
+      "additional_data": {}
+    },
+    {
+      "test_name": "Method Not Allowed - GET on POST-only endpoint",
+      "status": "PASS",
+      "details": "Properly returned 405",
+      "timestamp": 1761044592.53501,
+      "additional_data": {}
+    },
+    {
+      "test_name": "Large Payload",
+      "status": "PASS",
+      "details": "Handled gracefully with 413",
+      "timestamp": 1761044593.403587,
+      "additional_data": {}
+    },
+    {
+      "test_name": "SQL Injection - '; DROP TABLE users;...",
+      "status": "PASS",
+      "details": "Properly rejected",
+      "timestamp": 1761044595.1592786,
+      "additional_data": {}
+    },
+    {
+      "test_name": "SQL Injection - 1' OR '1'='1...",
+      "status": "PASS",
+      "details": "Properly rejected",
+      "timestamp": 1761044595.640736,
+      "additional_data": {}
+    },
+    {
+      "test_name": "SQL Injection - admin'--...",
+      "status": "PASS",
+      "details": "Properly rejected",
+      "timestamp": 1761044596.4672723,
+      "additional_data": {}
+    },
+    {
+      "test_name": "SQL Injection - 1' UNION SELECT * FR...",
+      "status": "PASS",
+      "details": "Properly rejected",
+      "timestamp": 1761044596.9600203,
+      "additional_data": {}
+    },
+    {
+      "test_name": "XSS Protection - <script>alert('xss')...",
+      "status": "PASS",
+      "details": "Properly rejected",
+      "timestamp": 1761044597.4582834,
+      "additional_data": {}
+    },
+    {
+      "test_name": "XSS Protection - javascript:alert('xs...",
+      "status": "PASS",
+      "details": "Properly rejected",
+      "timestamp": 1761044597.9686234,
+      "additional_data": {}
+    },
+    {
+      "test_name": "XSS Protection - <img src=x onerror=a...",
+      "status": "PASS",
+      "details": "Properly rejected",
+      "timestamp": 1761044598.4509697,
+      "additional_data": {}
+    },
+    {
+      "test_name": "XSS Protection - ';alert('xss');//...",
+      "status": "PASS",
+      "details": "Properly rejected",
+      "timestamp": 1761044599.309287,
+      "additional_data": {}
+    },
+    {
+      "test_name": "Concurrent Error Handling",
+      "status": "PASS",
+      "details": "All 20 requests handled properly",
+      "timestamp": 1761044601.7916758,
+      "additional_data": {}
+    },
+    {
+      "test_name": "Data Consistency",
+      "status": "WARN",
+      "details": "Unexpected response: 404",
+      "timestamp": 1761044602.2884493,
+      "additional_data": {}
+    }
+  ]
+}

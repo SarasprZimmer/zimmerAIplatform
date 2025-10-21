@@ -188,6 +188,11 @@ app.include_router(auth.router, tags=["auth"])
 # Import and include Google OAuth router
 from routers.auth_google import router as auth_google_router
 app.include_router(auth_google_router, tags=["auth-google"])
+
+# Import automations router FIRST to avoid route conflicts with parameterized routes
+from routers.automations import router as automations_router
+app.include_router(automations_router, prefix="/api", tags=["automations"])
+
 app.include_router(users.router, prefix="/api", tags=["users"])
 
 # Import and include auth sessions router
@@ -226,8 +231,6 @@ from routers.admin.kb_templates import router as kb_templates_router
 app.include_router(kb_templates_router, prefix="/api/admin", tags=["kb-templates"])
 from routers.admin.automation_integrations import router as automation_integrations_router
 app.include_router(automation_integrations_router, prefix="/api/admin", tags=["automation-integrations"])
-from routers.automations import router as automations_router
-app.include_router(automations_router, prefix="/api", tags=["automations"])
 from routers.automation_usage import router as automation_usage_router
 app.include_router(automation_usage_router, prefix="/api", tags=["automation-usage"])
 
@@ -266,6 +269,27 @@ app.include_router(discounts_router, prefix="/api", tags=["discounts"])
 
 from routers.admin.openai_keys import router as openai_keys_router
 app.include_router(openai_keys_router, prefix="/api/admin", tags=["openai-keys"])
+
+# Import new admin routers
+from routers.admin.token_management import router as token_management_router
+app.include_router(token_management_router, tags=["admin-token-management"])
+
+from routers.admin.usage_stats import router as usage_stats_router
+app.include_router(usage_stats_router, tags=["admin-usage-stats"])
+
+from routers.admin.system_monitoring import router as system_monitoring_router
+app.include_router(system_monitoring_router, tags=["admin-system-monitoring"])
+
+from routers.admin.kb_extended import router as kb_extended_router
+app.include_router(kb_extended_router, tags=["admin-kb-extended"])
+
+# Note: Using existing backup and notification routers instead of new ones to avoid conflicts
+# from routers.admin.backup_management import router as backup_management_router
+# app.include_router(backup_management_router, tags=["admin-backup-management"])
+
+# from routers.admin.notification_management import router as notification_management_router
+# app.include_router(notification_management_router, tags=["admin-notification-management"])
+
 from routers.admin.user_management import router as user_management_router
 app.include_router(user_management_router, prefix="/api/admin", tags=["user-management"])
 

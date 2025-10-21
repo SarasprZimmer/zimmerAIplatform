@@ -155,25 +155,12 @@ async def register(user_data: UserSignupRequest, db: Session = Depends(get_db)):
 @router.post("/refresh")
 async def refresh_token():
     """
-    Refresh access token endpoint
+    Refresh access token endpoint - DISABLED FOR SECURITY
     """
-    try:
-        # In a real implementation, you would validate the refresh token from cookies
-        # For now, we'll return a new token for testing
-        
-        # Create a new access token (in production, validate refresh token first)
-        access_token = create_access_token(1, False)  # Mock user ID and admin status
-        
-        return {
-            "access_token": access_token,
-            "token_type": "bearer"
-        }
-        
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f"Token refresh failed: {str(e)}"
-        )
+    raise HTTPException(
+        status_code=status.HTTP_501_NOT_IMPLEMENTED,
+        detail="Token refresh endpoint is not implemented for security reasons"
+    )
 
 @router.post("/logout")
 @auth_circuit_breaker
@@ -303,8 +290,15 @@ async def verify_2fa(
                 detail="User not found"
             )
         
-        # In a real implementation, you would verify the OTP code
-        # For now, we'll accept any 6-digit code
+        # Verify the OTP code format
+        if not otp_code.isdigit() or len(otp_code) != 6:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="OTP code must be a 6-digit number"
+            )
+        
+        # TODO: Implement actual OTP verification with external service
+        # For now, we'll validate format but not the actual code
         
         # Create access token
         access_token = create_access_token(user.id)
@@ -334,28 +328,6 @@ async def verify_2fa(
             detail=f"2FA verification failed: {str(e)}"
         )
 
-@router.get("/me")
-async def get_current_user():
-    """
-    Get current user information
-    """
-    try:
-        # For now, return mock user data
-        # In production, you would validate the token and get real user data
-        return {
-            "id": 1,
-            "email": "test@example.com",
-            "name": "Test User",
-            "role": "user",
-            "is_admin": False,
-            "email_verified": True
-        }
-        
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to get user info: {str(e)}"
-        )
 
 @router.post("/send-email-verification")
 async def send_email_verification(

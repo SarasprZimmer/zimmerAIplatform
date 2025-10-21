@@ -1,0 +1,174 @@
+{
+  "total_tests": 14,
+  "passed": 13,
+  "failed": 1,
+  "warnings": 0,
+  "skipped": 0,
+  "success_rate": 92.85714285714286,
+  "response_times": [
+    0.5448732376098633,
+    0.7277567386627197,
+    0.3567483425140381,
+    0.399885892868042,
+    0.36861181259155273,
+    0.35469484329223633,
+    0.3860936164855957,
+    0.38321399688720703,
+    0.40194201469421387,
+    1.1822893619537354,
+    0.45676732063293457,
+    0.37767473856608075,
+    0.3964279492696126,
+    0.38420605182647705
+  ],
+  "results": [
+    {
+      "test_name": "User Signup",
+      "status": "PASS",
+      "details": "Test user already exists",
+      "response_time": 0.5448732376098633,
+      "timestamp": 1761042135.151916,
+      "additional_data": {}
+    },
+    {
+      "test_name": "User Login",
+      "status": "PASS",
+      "details": "Login successful",
+      "response_time": 0.7277567386627197,
+      "timestamp": 1761042135.8806658,
+      "additional_data": {}
+    },
+    {
+      "test_name": "Performance - Health check",
+      "status": "PASS",
+      "details": "Response time within limits",
+      "response_time": 0.3567483425140381,
+      "timestamp": 1761042136.2374141,
+      "additional_data": {
+        "max_expected": 0.5
+      }
+    },
+    {
+      "test_name": "Performance - User info",
+      "status": "PASS",
+      "details": "Response time within limits",
+      "response_time": 0.399885892868042,
+      "timestamp": 1761042136.6384106,
+      "additional_data": {
+        "max_expected": 1.0
+      }
+    },
+    {
+      "test_name": "Performance - User dashboard",
+      "status": "PASS",
+      "details": "Response time within limits",
+      "response_time": 0.36861181259155273,
+      "timestamp": 1761042137.008007,
+      "additional_data": {
+        "max_expected": 2.0
+      }
+    },
+    {
+      "test_name": "Performance - User automations",
+      "status": "PASS",
+      "details": "Response time within limits",
+      "response_time": 0.35469484329223633,
+      "timestamp": 1761042137.3636892,
+      "additional_data": {
+        "max_expected": 1.5
+      }
+    },
+    {
+      "test_name": "Performance - Token usage",
+      "status": "PASS",
+      "details": "Response time within limits",
+      "response_time": 0.3860936164855957,
+      "timestamp": 1761042137.7497828,
+      "additional_data": {
+        "max_expected": 1.0
+      }
+    },
+    {
+      "test_name": "Performance - Marketplace",
+      "status": "FAIL",
+      "details": "HTTP 401",
+      "response_time": 0.38321399688720703,
+      "timestamp": 1761042138.1339927,
+      "additional_data": {}
+    },
+    {
+      "test_name": "Performance - Notifications",
+      "status": "PASS",
+      "details": "Response time within limits",
+      "response_time": 0.40194201469421387,
+      "timestamp": 1761042138.537388,
+      "additional_data": {
+        "max_expected": 1.0
+      }
+    },
+    {
+      "test_name": "Concurrent Requests",
+      "status": "PASS",
+      "details": "All 10 requests successful",
+      "response_time": 1.1822893619537354,
+      "timestamp": 1761042139.7196774,
+      "additional_data": {
+        "successful": 10,
+        "total": 10,
+        "avg_response_time": 1.1196183443069458,
+        "max_response_time": 1.1619937419891357,
+        "min_response_time": 1.0015645027160645
+      }
+    },
+    {
+      "test_name": "DB Performance - Token usage history",
+      "status": "PASS",
+      "details": "Average response time acceptable",
+      "response_time": 0.45676732063293457,
+      "timestamp": 1761042141.3990698,
+      "additional_data": {
+        "avg": 0.45676732063293457,
+        "max": 0.5380334854125977,
+        "min": 0.38224267959594727
+      }
+    },
+    {
+      "test_name": "DB Performance - User automations with joins",
+      "status": "PASS",
+      "details": "Average response time acceptable",
+      "response_time": 0.37767473856608075,
+      "timestamp": 1761042142.8383553,
+      "additional_data": {
+        "avg": 0.37767473856608075,
+        "max": 0.3870086669921875,
+        "min": 0.36668968200683594
+      }
+    },
+    {
+      "test_name": "DB Performance - User notifications",
+      "status": "PASS",
+      "details": "Average response time acceptable",
+      "response_time": 0.3964279492696126,
+      "timestamp": 1761042144.3333337,
+      "additional_data": {
+        "avg": 0.3964279492696126,
+        "max": 0.3969540596008301,
+        "min": 0.3954801559448242
+      }
+    },
+    {
+      "test_name": "Memory Usage",
+      "status": "PASS",
+      "details": "No significant performance degradation",
+      "response_time": 0.38420605182647705,
+      "timestamp": 1761042166.1395836,
+      "additional_data": {
+        "total_requests": 50,
+        "errors": 0,
+        "avg_response_time": 0.38420605182647705,
+        "max_response_time": 0.46024489402770996,
+        "performance_degradation": "0.9%"
+      }
+    }
+  ]
+}
